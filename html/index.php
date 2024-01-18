@@ -1,12 +1,83 @@
 <!doctype html>
 <html lang="en">
+<?php
+include 'dbconnect.php';
 
+// Initialize variables with default values
+$year = '';
+$quarter = '';
+$month = '';
+$sql = "";
+
+// Check if the POST variables are set before accessing them
+if (isset($_POST['yearDropdown'])) {
+    $year = $_POST['yearDropdown'];
+}
+if (isset($_POST['quarterDropdown'])) {
+    $quarter = $_POST['quarterDropdown'];
+}
+if (isset($_POST['monthDropdown'])) {
+    $month = $_POST['monthDropdown'];
+}
+
+// Determine which SQL query to execute
+if (!empty($quarter)) {
+    // 每季 SQL query
+    $sql = "WITH TopProducts AS (
+                SELECT 商品英文代碼, SUM(年化保費) as 總銷售額
+                FROM 保單資料
+                WHERE YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter'
+                GROUP BY 商品英文代碼
+                ORDER BY 總銷售額 DESC
+                LIMIT 3
+            )
+            SELECT TP.商品英文代碼, MONTH(保單生效日) as 月份, SUM(年化保費) as 月銷售額
+            FROM 保單資料 PD
+            JOIN TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
+            WHERE YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter'
+            GROUP BY TP.商品英文代碼, 月份
+            ORDER BY TP.商品英文代碼, 月份";
+} elseif (!empty($month)) {
+    // 每天 SQL query
+    $sql = "WITH TopProducts AS (
+                SELECT 商品英文代碼, SUM(年化保費) as 總銷售額
+                FROM 保單資料
+                WHERE YEAR(保單生效日) = '$year' and MONTH(保單生效日) = '$month'
+                GROUP BY 商品英文代碼
+                ORDER BY 總銷售額 DESC
+                LIMIT 3
+            )
+            SELECT TP.商品英文代碼, DAY(保單生效日) as 日期, SUM(年化保費) as 日銷售額
+            FROM 保單資料 PD
+            JOIN TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
+            WHERE YEAR(保單生效日) = '$year' and MONTH(保單生效日) = '$month'
+            GROUP BY TP.商品英文代碼, 月份, 日期
+            ORDER BY TP.商品英文代碼, 月份, 日期";
+} else {
+    // 每年 SQL query
+    $sql = "WITH TopProducts AS (
+                SELECT 商品英文代碼, SUM(年化保費) as 總銷售額
+                FROM 保單資料
+                WHERE YEAR(保單生效日) = '$year'
+                GROUP BY 商品英文代碼
+                ORDER BY 總銷售額 DESC
+                LIMIT 3
+            )
+            SELECT TP.商品英文代碼, MONTH(保單生效日) as 月份, SUM(年化保費) as 月銷售額
+            FROM 保單資料 PD
+            JOIN TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
+            WHERE YEAR(保單生效日) = '$year'
+            GROUP BY TP.商品英文代碼, 月份
+            ORDER BY TP.商品英文代碼, 月份";
+}
+?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modernize Free</title>
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  
 </head>
 
 <body>
@@ -125,17 +196,6 @@
               </a>
             </li>
           </ul>
-          <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
-            <div class="d-flex">
-              <div class="unlimited-access-title me-3">
-                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
-                <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank" class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
-              </div>
-              <div class="unlimited-access-img">
-                <img src="../assets/images/backgrounds/rocket.png" alt="" class="img-fluid">
-              </div>
-            </div>
-          </div>
         </nav>
         <!-- End Sidebar navigation -->
       </div>
@@ -162,7 +222,6 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
@@ -202,12 +261,88 @@
                     <h5 class="card-title fw-semibold">Sales Overview</h5>
                   </div>
                   <div>
-                    <select class="form-select">
-                      <option value="1">March 2023</option>
-                      <option value="2">April 2023</option>
-                      <option value="3">May 2023</option>
-                      <option value="4">June 2023</option>
-                    </select>
+                    <select id="yearDropdown">
+                      <!-- Options will be populated dynamically -->
+                  </select>
+                  
+                  <select id="quarterDropdown" >
+                      <option value="">Select Quarter</option>
+                      <option value="1">Q1</option>
+                      <option value="2">Q2</option>
+                      <option value="3">Q3</option>
+                      <option value="4">Q4</option>
+                  </select>
+                  
+                  <select id="monthDropdown" >
+                      <!-- Options will be populated dynamically -->
+                  </select>
+                  <button id="resetButton">Reset</button>
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                      // Populate year dropdown with the past 10 years
+                      const yearDropdown = document.getElementById('yearDropdown');
+                      const currentYear = new Date().getFullYear();
+                      for (let year = currentYear; year > currentYear - 10; year--) {
+                          let option = document.createElement('option');
+                          option.value = year;
+                          option.textContent = year;
+                          yearDropdown.appendChild(option);
+                      }
+                  
+                      // Handle quarter and month dropdown logic
+                      const quarterDropdown = document.getElementById('quarterDropdown');
+                      const monthDropdown = document.getElementById('monthDropdown');
+                  
+                      quarterDropdown.addEventListener('change', function() {
+                          if (this.value) {
+                              monthDropdown.disabled = true;
+                              monthDropdown.value = '';
+                          } else {
+                              monthDropdown.disabled = false;
+                          }
+                          // Call function to update chart
+                          updateChart();
+                      });
+                  
+                      monthDropdown.addEventListener('change', function() {
+                          if (this.value) {
+                              quarterDropdown.disabled = true;
+                          } else {
+                              quarterDropdown.disabled = false;
+                          }
+                          // Call function to update chart
+                          updateChart();
+                      });
+                  
+                      // Populate month dropdown
+                      for (let month = 1; month <= 12; month++) {
+                          let option = document.createElement('option');
+                          option.value = month;
+                          option.textContent = month;
+                          monthDropdown.appendChild(option);
+                      }
+                      document.getElementById('resetButton').addEventListener('click', function() {
+                        document.getElementById('yearDropdown').selectedIndex = 0;
+                        document.getElementById('quarterDropdown').selectedIndex = 0;
+                        document.getElementById('monthDropdown').selectedIndex = 0;
+                        document.getElementById('quarterDropdown').disabled = false;
+                        document.getElementById('monthDropdown').disabled = false;
+                        updateChart();
+                    });
+                  });
+                  
+                  // Function to update chart based on selections
+                  function updateChart() {
+                      // Retrieve selected values
+                      const selectedYear = document.getElementById('yearDropdown').value;
+                      const selectedQuarter = document.getElementById('quarterDropdown').value;
+                      const selectedMonth = document.getElementById('monthDropdown').value;
+                  
+                      // Logic to determine which SQL query to use and fetch data accordingly
+                      // This will be implemented in the next step
+                  }
+                  
+                  </script>
                   </div>
                 </div>
                 <div id="chart"></div>
@@ -454,90 +589,9 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-6 col-xl-3">
-            <div class="card overflow-hidden rounded-2">
-              <div class="position-relative">
-                <a href="javascript:void(0)"><img src="../assets/images/products/s4.jpg" class="card-img-top rounded-0" alt="..."></a>
-                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
-              <div class="card-body pt-3 p-4">
-                <h6 class="fw-semibold fs-4">Boat Headphone</h6>
-                <div class="d-flex align-items-center justify-content-between">
-                  <h6 class="fw-semibold fs-4 mb-0">$50 <span class="ms-2 fw-normal text-muted fs-3"><del>$65</del></span></h6>
-                  <ul class="list-unstyled d-flex align-items-center mb-0">
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-xl-3">
-            <div class="card overflow-hidden rounded-2">
-              <div class="position-relative">
-                <a href="javascript:void(0)"><img src="../assets/images/products/s5.jpg" class="card-img-top rounded-0" alt="..."></a>
-                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
-              <div class="card-body pt-3 p-4">
-                <h6 class="fw-semibold fs-4">MacBook Air Pro</h6>
-                <div class="d-flex align-items-center justify-content-between">
-                  <h6 class="fw-semibold fs-4 mb-0">$650 <span class="ms-2 fw-normal text-muted fs-3"><del>$900</del></span></h6>
-                  <ul class="list-unstyled d-flex align-items-center mb-0">
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-xl-3">
-            <div class="card overflow-hidden rounded-2">
-              <div class="position-relative">
-                <a href="javascript:void(0)"><img src="../assets/images/products/s7.jpg" class="card-img-top rounded-0" alt="..."></a>
-                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
-              <div class="card-body pt-3 p-4">
-                <h6 class="fw-semibold fs-4">Red Valvet Dress</h6>
-                <div class="d-flex align-items-center justify-content-between">
-                  <h6 class="fw-semibold fs-4 mb-0">$150 <span class="ms-2 fw-normal text-muted fs-3"><del>$200</del></span></h6>
-                  <ul class="list-unstyled d-flex align-items-center mb-0">
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-xl-3">
-            <div class="card overflow-hidden rounded-2">
-              <div class="position-relative">
-                <a href="javascript:void(0)"><img src="../assets/images/products/s11.jpg" class="card-img-top rounded-0" alt="..."></a>
-                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
-              <div class="card-body pt-3 p-4">
-                <h6 class="fw-semibold fs-4">Cute Soft Teddybear</h6>
-                <div class="d-flex align-items-center justify-content-between">
-                  <h6 class="fw-semibold fs-4 mb-0">$285 <span class="ms-2 fw-normal text-muted fs-3"><del>$345</del></span></h6>
-                  <ul class="list-unstyled d-flex align-items-center mb-0">
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
         <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
+          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a></p>
         </div>
       </div>
     </div>
@@ -549,6 +603,7 @@
   <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
+  
 </body>
 
 </html>
