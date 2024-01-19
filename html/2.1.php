@@ -42,11 +42,18 @@
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
 
-        fetch(`get21Data.php?year=${year}&quarter=${quarter}&month=${month}`)
-          .then(response => response.json())
-          .then(data => updateTable(data))
-          .catch(error => console.error('Error:', error));
-      });
+        var url = `get21Data.php?year=${year}`;
+        if (quarter) {
+          url += `&quarter=${quarter}`;
+        } else if (month) {
+          url += `&month=${month}`;
+        }
+
+      fetch(url)
+      .then(response => response.json())
+      .then(data => updateTable(data))
+      .catch(error => console.error('Error:', error));
+});
 
 
       document.getElementById('resetButton').addEventListener('click', function () {
