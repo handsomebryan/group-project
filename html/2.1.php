@@ -42,18 +42,18 @@
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
 
-        var url = `get21Data.php?year=${year}`;
+        var url = `getBSData.php?year=${year}`;
         if (quarter) {
           url += `&quarter=${quarter}`;
         } else if (month) {
           url += `&month=${month}`;
         }
 
-      fetch(url)
-      .then(response => response.json())
-      .then(data => updateTable(data))
-      .catch(error => console.error('Error:', error));
-});
+        fetch(url)
+          .then(response => response.json())
+          .then(data => updateTable(data))
+          .catch(error => console.error('Error:', error));
+      });
 
 
       document.getElementById('resetButton').addEventListener('click', function () {
@@ -123,9 +123,9 @@
   <table id="data_table">
     <thead>
       <tr>
-        <th>Product Code</th>
-        <th>Month</th>
-        <th>Monthly Sales</th>
+        <th>| Product Code </th>
+        <th>| Month /Daily </th>
+        <th>| Monthly / Daily Sales |</th>
       </tr>
     </thead>
     <tbody>
