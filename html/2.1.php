@@ -69,7 +69,7 @@
           salesChart.destroy();
         }
 
-        var specificColors = ['#ed5739', '#64b579', '#a46ce0']; 
+        var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
         //  unique labels for the x-axis
         var labels = [...new Set(data.map(item => item[1]))];
@@ -111,34 +111,35 @@
 </head>
 
 <body>
-  <select id="yearDropdown">
-    <option value="">Select Year</option>
-  </select>
-  <select id="quarterDropdown">
-    <option value="">Select Quarter</option>
-    <option value="1">Q1</option>
-    <option value="2">Q2</option>
-    <option value="3">Q3</option>
-    <option value="4">Q4</option>
-  </select>
-  <select id="monthDropdown">
-    <option value="">Select Month</option>
-    <option value="1">Jan</option>
-    <option value="2">Feb</option>
-    <option value="3">Mar</option>
-    <option value="4">Apr</option>
-    <option value="5">May</option>
-    <option value="6">Jun</option>
-    <option value="7">Jul</option>
-    <option value="8">Aug</option>
-    <option value="9">Sep</option>
-    <option value="10">Oct</option>
-    <option value="11">Nov</option>
-    <option value="12">Dec</option>
-  </select>
-  <button id="searchButton">Search</button>
-  <button id="resetButton">Reset</button>
-  <canvas id="salesChart" width="400" height="200"></canvas>
+    <div><select id="yearDropdown">
+        <option value="">Select Year</option>
+      </select>
+      <select id="quarterDropdown">
+        <option value="">Select Quarter</option>
+        <option value="1">Q1</option>
+        <option value="2">Q2</option>
+        <option value="3">Q3</option>
+        <option value="4">Q4</option>
+      </select>
+      <select id="monthDropdown">
+        <option value="">Select Month</option>
+        <option value="1">Jan</option>
+        <option value="2">Feb</option>
+        <option value="3">Mar</option>
+        <option value="4">Apr</option>
+        <option value="5">May</option>
+        <option value="6">Jun</option>
+        <option value="7">Jul</option>
+        <option value="8">Aug</option>
+        <option value="9">Sep</option>
+        <option value="10">Oct</option>
+        <option value="11">Nov</option>
+        <option value="12">Dec</option>
+      </select>
+      <button id="searchButton">Search</button>
+      <button id="resetButton">Reset</button>
+    </div>
+    <canvas id="salesChart" width="400" height="200"></canvas>
 </body>
 
 </html>
