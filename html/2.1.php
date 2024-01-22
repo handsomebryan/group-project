@@ -3,8 +3,11 @@
 
 <head>
   <title>Insurance Sales Data</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      var salesChart; // Variable for the chart instance
+
       fetch('getYears.php')
         .then(response => response.json())
         .then(years => {
@@ -17,30 +20,24 @@
           });
         })
         .catch(error => console.error('Error:', error));
+
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
 
       quarterDropdown.addEventListener('change', function () {
-        if (this.value) {
-          monthDropdown.disabled = true;
-          monthDropdown.value = '';
-        } else {
-          monthDropdown.disabled = false;
-        }
+        monthDropdown.disabled = !!this.value;
+        monthDropdown.value = '';
       });
 
       monthDropdown.addEventListener('change', function () {
-        if (this.value) {
-          quarterDropdown.disabled = true;
-        } else {
-          quarterDropdown.disabled = false;
-        }
+        quarterDropdown.disabled = !!this.value;
       });
 
       document.getElementById('searchButton').addEventListener('click', function () {
         var year = document.getElementById('yearDropdown').value;
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
+        var isSpecificMonth = !!month;
 
         var url = `getBSData.php?year=${year}`;
         if (quarter) {
@@ -51,39 +48,65 @@
 
         fetch(url)
           .then(response => response.json())
-          .then(data => updateTable(data))
+          .then(data => updateChart(data, isSpecificMonth))
           .catch(error => console.error('Error:', error));
       });
 
-
       document.getElementById('resetButton').addEventListener('click', function () {
         document.getElementById('yearDropdown').selectedIndex = 0;
-
-        var quarterDropdown = document.getElementById('quarterDropdown');
-        var monthDropdown = document.getElementById('monthDropdown');
-
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
-
         quarterDropdown.disabled = false;
         monthDropdown.disabled = false;
-
-        updateTable([]); // Clear the table
+        if (salesChart) {
+          salesChart.destroy();
+        }
       });
 
-    });
+      function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
 
-    function updateTable(data) {
-      var table = document.getElementById('data_table').getElementsByTagName('tbody')[0];
-      table.innerHTML = '';
-      data.forEach(function (row) {
-        var newRow = table.insertRow();
-        row.forEach(function (cell) {
-          var newCell = newRow.insertCell();
-          newCell.textContent = cell;
+        var specificColors = ['#ed5739', '#64b579', '#a46ce0']; 
+
+        //  unique labels for the x-axis
+        var labels = [...new Set(data.map(item => item[1]))];
+
+        var datasets = [];
+        var groupedData = data.reduce(function (acc, item) {
+          if (!acc[item[0]]) {
+            acc[item[0]] = Array(labels.length).fill(0);
+          }
+          var index = labels.indexOf(item[1]);
+          acc[item[0]][index] = item[2];
+          return acc;
+        }, {});
+
+        Object.keys(groupedData).forEach(function (key, index) {
+          datasets.push({
+            label: key, // 商品中文名稱(商品英文代碼)
+            data: groupedData[key],
+            borderColor: specificColors[index % specificColors.length],
+            fill: false
+          });
         });
-      });
-    }
+
+        salesChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true },
+            }
+          }
+        });
+      }
+    });
   </script>
 </head>
 
@@ -91,7 +114,6 @@
   <select id="yearDropdown">
     <option value="">Select Year</option>
   </select>
-  <!-- Quarter Dropdown -->
   <select id="quarterDropdown">
     <option value="">Select Quarter</option>
     <option value="1">Q1</option>
@@ -99,8 +121,6 @@
     <option value="3">Q3</option>
     <option value="4">Q4</option>
   </select>
-
-  <!-- Month Dropdown -->
   <select id="monthDropdown">
     <option value="">Select Month</option>
     <option value="1">Jan</option>
@@ -116,22 +136,9 @@
     <option value="11">Nov</option>
     <option value="12">Dec</option>
   </select>
-
   <button id="searchButton">Search</button>
   <button id="resetButton">Reset</button>
-
-  <table id="data_table">
-    <thead>
-      <tr>
-        <th>| Product Code </th>
-        <th>| Month /Daily </th>
-        <th>| Monthly / Daily Sales |</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Data rows will go here -->
-    </tbody>
-  </table>
+  <canvas id="salesChart" width="400" height="200"></canvas>
 </body>
 
 </html>
