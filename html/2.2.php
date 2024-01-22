@@ -3,8 +3,13 @@
 
 <head>
     <title>Insurance Sales Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Wait for the DOM content to be fully loaded
         document.addEventListener('DOMContentLoaded', function () {
+            var salesChart;
+
+            // Fetch years from server
             fetch('getYears.php')
                 .then(response => response.json())
                 .then(years => {
@@ -21,31 +26,35 @@
             var quarterDropdown = document.getElementById('quarterDropdown');
             var monthDropdown = document.getElementById('monthDropdown');
 
+            // Disable month dropdown if quarter is selected
             quarterDropdown.addEventListener('change', function () {
-                if (this.value) {
-                    monthDropdown.disabled = true;
-                    monthDropdown.value = '';
-                } else {
-                    monthDropdown.disabled = false;
-                }
+                monthDropdown.disabled = !!this.value;
             });
 
+            // Disable quarter dropdown if month is selected
             monthDropdown.addEventListener('change', function () {
-                if (this.value) {
-                    quarterDropdown.disabled = true;
-                } else {
-                    quarterDropdown.disabled = false;
-                }
+                quarterDropdown.disabled = !!this.value;
             });
 
+            // search button click
             document.getElementById('searchButton').addEventListener('click', function () {
+                fetchData();
+            });
+
+            // reset button click
+            document.getElementById('resetButton').addEventListener('click', function () {
+                resetForm();
+            });
+
+            //fetch data based on selected filters
+            function fetchData() {
+                // Get values
                 var id = document.getElementById('idInput').value;
                 var year = document.getElementById('yearDropdown').value;
                 var quarter = document.getElementById('quarterDropdown').value;
                 var month = document.getElementById('monthDropdown').value;
 
-                console.log("Search button clicked. ID:", id, "Year:", year, "Quarter:", quarter, "Month:", month); // Debugging
-
+                // Construct the query URL with selected parameters
                 var url = `getCASData.php`;
                 var queryParams = [];
                 if (id) queryParams.push(`id=${id}`);
@@ -53,90 +62,87 @@
                 if (quarter) queryParams.push(`quarter=${quarter}`);
                 if (month) queryParams.push(`month=${month}`);
 
+                // Fetch data and update the chart
                 if (queryParams.length > 0) {
                     url += '?' + queryParams.join('&');
-                    console.log("URL being fetched:", url); // Debugging
-
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
-                            console.log("Data received:", data); // Debugging
-                            updateTable(data);
+                            updateChart(data); // Update chart 
                         })
                         .catch(error => console.error('Fetch error:', error));
                 } else {
                     alert("Please enter a User ID or select a Year.");
                 }
-            });
+            }
 
-
-            document.getElementById('resetButton').addEventListener('click', function () {
+            // reset the form and chart
+            function resetForm() {
+                // Reset dropdowns and input field
                 document.getElementById('yearDropdown').selectedIndex = 0;
                 quarterDropdown.selectedIndex = 0;
                 monthDropdown.selectedIndex = 0;
                 quarterDropdown.disabled = false;
                 monthDropdown.disabled = false;
                 document.getElementById('idInput').value = '';
-                updateTable([]); // Clear the table
-            });
-        });
 
-        function updateTable(data) {
-            var table = document.getElementById('data_table').getElementsByTagName('tbody')[0];
-            table.innerHTML = '';
-
-            // Assuming the longest array will determine the number of rows
-            let maxRows = Math.max(data.user.length, data.T1.length, data.T2.length);
-
-            for (let i = 0; i < maxRows; i++) {
-                var newRow = table.insertRow();
-
-                // Add user-specific data
-                addUserDataToRow(newRow, data.user[i], 3); // 3 columns for user data
-
-                // Add top 1 salesperson data
-                addUserDataToRow(newRow, data.T1[i], 3); 
-
-                // Add top 2 salesperson data
-                addUserDataToRow(newRow, data.T2[i], 3);
-            }
-        }
-
-        function addUserDataToRow(row, userData, columns) {
-            if (!userData) {
-                // If userData is null or undefined, add empty cells for the number of columns
-                for (let i = 0; i < columns; i++) {
-                    addCell(row, '');
+                // Destroy the current chart
+                if (salesChart) {
+                    salesChart.destroy();
                 }
-                return;
             }
 
-            // Add ID cell
-            addCell(row, userData.業務員序號 || '');
+            //create or update sales chart
+            function updateChart(data) {
+                var ctx = document.getElementById('salesChart').getContext('2d');
 
-            // Determine and add the time frame cell
-            var timeFrame = userData.Date ? userData.Date :
-                (userData.Year && userData.Month ? `${userData.Year}-${userData.Month}` : '');
-            addCell(row, timeFrame);
+                // Destroy old chart
+                if (salesChart) {
+                    salesChart.destroy();
+                }
 
-            // Add Total Sales cell
-            addCell(row, userData.TotalSales || '');
-        }
-
-        function addCell(row, text) {
-            var cell = row.insertCell();
-            cell.textContent = text;
-        }
-
+                // Create a new bar chart with fetched data
+                salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
+                        datasets: [{
+                            label: 'ID: ' + (data.user.length > 0 ? data.user[0].業務員序號 : 'N/A') + '',
+                            data: data.user.map(d => d.TotalSales),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Top 1 Sales',
+                            data: data.T1.map(d => d.TotalSales),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Top 2 Sales',
+                            data: data.T2.map(d => d.TotalSales),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
     </script>
-
 </head>
 
 <body>
     <select id="yearDropdown">
         <option value="">Select Year</option>
     </select>
-    <!-- Quarter Dropdown -->
     <select id="quarterDropdown">
         <option value="">Select Quarter</option>
         <option value="1">Q1</option>
@@ -144,9 +150,8 @@
         <option value="3">Q3</option>
         <option value="4">Q4</option>
     </select>
-
-    <!-- Month Dropdown -->
     <select id="monthDropdown">
+        <option value="">Select Month</option>
         <option value="">Select Month</option>
         <option value="1">Jan</option>
         <option value="2">Feb</option>
@@ -162,27 +167,8 @@
         <option value="12">Dec</option>
     </select>
     <input type="text" id="idInput" placeholder="業務員序號(後5碼)">
-
     <button id="searchButton">Search</button>
     <button id="resetButton">Reset</button>
-
-    <table id="data_table">
-        <thead>
-            <tr>
-                <th>| ID(search by user) </th>
-                <th>| Date </th>
-                <th>| Monthly / Daily Sales |</th>
-                <th> ID(of Top 1 sales) </th>
-                <th>| Date(of Top 1 sales) </th>
-                <th>| Monthly / Daily Sales(of Top 1 sales) |</th>
-                <th> ID(Top 2) </th>
-                <th>| Date </th>
-                <th>| Monthly / Daily Sales |</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data rows will go here -->
-        </tbody>
-    </table>
+    <canvas id="salesChart" width="800" height="400"></canvas>
 </body>
 </html>
