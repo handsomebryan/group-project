@@ -322,21 +322,22 @@
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">Sales Overview</h5>
+                    <h5 class="card-title fw-semibold">業務員的銷售業績</h5>
                   </div>
                 </div>
-                <div><select id="yearDropdown">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <select id="yearDropdown" class="form-select ">
                     <option value="">Select Year</option>
                   </select>
-                  <select id="quarterDropdown">
+                  <select id="quarterDropdown" class="form-select ">
                     <option value="">Select Quarter</option>
                     <option value="1">Q1</option>
                     <option value="2">Q2</option>
                     <option value="3">Q3</option>
                     <option value="4">Q4</option>
                   </select>
-                  <select id="monthDropdown">
-                    <option value="">Select Month</option>
+                  <select id="monthDropdown" class="form-select ">
                     <option value="">Select Month</option>
                     <option value="1">Jan</option>
                     <option value="2">Feb</option>
@@ -351,11 +352,14 @@
                     <option value="11">Nov</option>
                     <option value="12">Dec</option>
                   </select>
-                  <input type="text" id="idInput" placeholder="業務員序號(後5碼)">
-                  <button id="searchButton">Search</button>
-                  <button id="resetButton">Reset</button>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
+                  <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
+                  <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
                 </div>
-                <canvas id="salesChart" width="800" height="400"></canvas>
+                </div>
+                </div>
+                <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>
           </div>
