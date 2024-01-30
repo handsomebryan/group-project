@@ -59,7 +59,7 @@ try:
  
         plt.tight_layout()
         plt.savefig("/xampp/htdocs/web/photo/image.png")
-        plt.show()
+        # plt.show()
 
         
         
