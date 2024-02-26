@@ -1,50 +1,126 @@
 <!doctype html>
 <html lang="en">
+<?php
+session_start();
+
+
+if (!isset($_SESSION["username"])) {
+  header("location:authentication-login.php");
+}
+
+?>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modernize Free</title>
-  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('searchButton').addEventListener('click', function () {
-        var gender = document.getElementById('gender').value;
-        var postalCode = document.getElementById('postalCode').value;
-        var age = document.getElementById('age').value;
+      var salesChart; // Variable for the chart instance
 
-        fetch(`getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
+      fetch('../getYears.php')
         .then(response => response.json())
-        .then(data => updateTable(data))
+        .then(years => {
+          var select = document.getElementById('yearDropdown');
+          years.forEach(function (year) {
+            var option = document.createElement('option');
+            option.text = year;
+            option.value = year;
+            select.add(option);
+          });
+        })
         .catch(error => console.error('Error:', error));
+
+      var quarterDropdown = document.getElementById('quarterDropdown');
+      var monthDropdown = document.getElementById('monthDropdown');
+
+      quarterDropdown.addEventListener('change', function () {
+        monthDropdown.disabled = !!this.value;
+        monthDropdown.value = '';
+      });
+
+      monthDropdown.addEventListener('change', function () {
+        quarterDropdown.disabled = !!this.value;
+      });
+
+      document.getElementById('searchButton').addEventListener('click', function () {
+        var year = document.getElementById('yearDropdown').value;
+        var quarter = document.getElementById('quarterDropdown').value;
+        var month = document.getElementById('monthDropdown').value;
+        var isSpecificMonth = !!month;
+
+        var url = `getBSData.php?year=${year}`;
+        if (quarter) {
+          url += `&quarter=${quarter}`;
+        } else if (month) {
+          url += `&month=${month}`;
+        }
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => updateChart(data, isSpecificMonth))
+          .catch(error => console.error('Error:', error));
       });
 
       document.getElementById('resetButton').addEventListener('click', function () {
-        document.getElementById('gender').value = '';
-        document.getElementById('postalCode').value = '';
-        document.getElementById('age').value = '';
-        updateTable([]); // Clear the table
+        document.getElementById('yearDropdown').selectedIndex = 0;
+        quarterDropdown.selectedIndex = 0;
+        monthDropdown.selectedIndex = 0;
+        quarterDropdown.disabled = false;
+        monthDropdown.disabled = false;
+        if (salesChart) {
+          salesChart.destroy();
+        }
       });
-    });
 
-    function updateTable(data) {
-      var table = document.getElementById('data_table').getElementsByTagName('tbody')[0];
-      table.innerHTML = '';
-      data.forEach(function (row, index) {
-        var newRow = table.insertRow();
-        var listingCell = newRow.insertCell();
-        listingCell.textContent = index + 1; // Add listing number
+      function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
 
-        row.forEach(function (cell) {
-          var newCell = newRow.insertCell();
-          newCell.textContent = cell;
+        var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
+
+        //  unique labels for the x-axis
+        var labels = [...new Set(data.map(item => item[1]))];
+
+        var datasets = [];
+        var groupedData = data.reduce(function (acc, item) {
+          if (!acc[item[0]]) {
+            acc[item[0]] = Array(labels.length).fill(0);
+          }
+          var index = labels.indexOf(item[1]);
+          acc[item[0]][index] = item[2];
+          return acc;
+        }, {});
+
+        Object.keys(groupedData).forEach(function (key, index) {
+          datasets.push({
+            label: key, // 商品中文名稱(商品英文代碼)
+            data: groupedData[key],
+            borderColor: specificColors[index % specificColors.length],
+            fill: false
+          });
         });
-      });
-    }
-  </script>
 
+        salesChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true },
+            }
+          }
+        });
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -57,7 +133,7 @@
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="./index.html" class="text-nowrap logo-img">
-            <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" />
+            <img src="../../assets/images/logos/dark-logo.svg" width="180" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -91,7 +167,7 @@
               <span class="hide-menu"><b>銷售業績分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index21.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index21.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-arrows-vertical"></i>
                 </span>
@@ -99,7 +175,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index22.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index22.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-brand-cashapp"></i>
                 </span>
@@ -147,7 +223,7 @@
               <span class="hide-menu"><b>產品推薦介面</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./indexre.html" aria-expanded="false">
+              <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-compass"></i>
                 </span>
@@ -180,11 +256,14 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              
+              <h5>Welcome back!
+                <?php echo $_SESSION["username"] ?>
+              </h5>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
+                    class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -200,7 +279,7 @@
                       <i class="ti ti-list-check fs-6"></i>
                       <p class="mb-0 fs-3">My Task</p>
                     </a>
-                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -209,6 +288,7 @@
         </nav>
       </header>
       <!--  Header End -->
+
       <div class="container-fluid">
         <!--  Row 1 -->
         <div class="row">
@@ -217,38 +297,41 @@
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">客戶產品推薦</h5>
+                    <h5 class="card-title fw-semibold">表現最佳的保險產品</h5>
                   </div>
                 </div>
-                <div class="input-group">
-                  <select id="gender"class="form-select ">
-                      <option value="">Select Gender</option>
-                      <option value="男">Male</option>
-                      <option value="女">Female</option>
-                  </select>
-              
-                  <input type="text" class="form-control" id="postalCode" placeholder="Enter Postal Code">
-              
-                  <input type="number" class="form-control" id="age" placeholder="Enter Age">
-              
-                  <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                  <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-              </div>
-                  <table id="data_table" class="table table-hover">
-                      <thead>
-                      <td>
-
-                          <th>Product Name</th>
-                          <th>Product Code</th>
-                          <th>Purchase Count</th>
-                      </td>
-                      </thead>
-                      <tbody>
-                      <!-- Data rows will go here -->
-                      </tbody>
-                  </table>
-                  </body>
-              </html>
+                <div class="form-inline">
+                  <div class="input-group">
+                    <select id="yearDropdown" class="form-select ">
+                      <option value="">Select Year</option>
+                    </select>
+                    <select id="quarterDropdown" class="form-select ">
+                      <option value="">Select Quarter</option>
+                      <option value="1">Q1</option>
+                      <option value="2">Q2</option>
+                      <option value="3">Q3</option>
+                      <option value="4">Q4</option>
+                    </select>
+                    <select id="monthDropdown" class="form-select ">
+                      <option value="">Select Month</option>
+                      <option value="1">Jan</option>
+                      <option value="2">Feb</option>
+                      <option value="3">Mar</option>
+                      <option value="4">Apr</option>
+                      <option value="5">May</option>
+                      <option value="6">Jun</option>
+                      <option value="7">Jul</option>
+                      <option value="8">Aug</option>
+                      <option value="9">Sep</option>
+                      <option value="10">Oct</option>
+                      <option value="11">Nov</option>
+                      <option value="12">Dec</option>
+                    </select>
+                    <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
+                    <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                  </div>
+                </div>
+                <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>
           </div>
@@ -323,11 +406,12 @@
             </div>
           </div>
         </div>
-  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/js/sidebarmenu.js"></script>
-  <script src="../assets/js/app.min.js"></script>
-  <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="../assets/js/dashboard.js"></script>
+        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/sidebarmenu.js"></script>
+        <script src="../../assets/js/app.min.js"></script>
+        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="../../assets/js/dashboard.js"></script>
 </body>
+
 </html>

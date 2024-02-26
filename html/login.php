@@ -1,6 +1,55 @@
 <!doctype html>
 <html lang="en">
+  <?php
 
+  include 'dbconnect.php';
+  
+  session_start();
+  
+  
+  $data=mysqli_connect($servername,$username,$password,$dbname);
+  
+  if($data===false)
+  {
+    die("connection error");
+  }
+  
+  
+  if($_SERVER["REQUEST_METHOD"]=="POST")
+  {
+    $username=$_POST["username"];
+    $password=$_POST["password"];
+  
+  
+    $sql="select * from 業務員資料 where username='".$username."' AND password='".$password."' ";
+  
+    $result=mysqli_query($data,$sql);
+  
+    $row=mysqli_fetch_array($result);
+  
+    if($row["是否為主管"]=="0")
+    {	
+  
+      $_SESSION["username"]=$username;
+  
+      header("location:user/index21.php");
+    }
+  
+    elseif($row["是否為主管"]=="1")
+    {
+  
+      $_SESSION["username"]=$username;
+      
+      header("location:admin/index21.php");
+    }
+  
+    else
+    {
+      echo "username or password incorrect";
+    }
+
+  } 
+  ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,29 +73,16 @@
                   <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
                 </a>
                 <p class="text-center">Your Social Campaigns</p>
-                <form>
+                <form action="#" method="post">
                   <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label for="id" class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username"  id="username" required>
                   </div>
                   <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="pw" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
                   </div>
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="form-check">
-                      <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                      <label class="form-check-label text-dark" for="flexCheckChecked">
-                        Remeber this Device
-                      </label>
-                    </div>
-                    <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
-                  </div>
-                  <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a>
-                  <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
-                    <a class="text-primary fw-bold ms-2" href="./authentication-register.html">Create an account</a>
-                  </div>
+                  <input type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" value="Login">
                 </form>
               </div>
             </div>
