@@ -1,18 +1,27 @@
 <!doctype html>
 <html lang="en">
-
+  <?php
+  session_start();
+  
+  
+  if(!isset($_SESSION["username"]))
+  {
+    header("location:authentication-login.php");
+  }
+  
+  ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modernize Free</title>
-  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var salesChart; // Variable for the chart instance
 
-      fetch('getYears.php')
+      fetch('../getYears.php')
         .then(response => response.json())
         .then(years => {
           var select = document.getElementById('yearDropdown');
@@ -124,7 +133,7 @@
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="./index.html" class="text-nowrap logo-img">
-            <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" />
+            <img src="../../assets/images/logos/dark-logo.svg" width="180" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -158,7 +167,7 @@
               <span class="hide-menu"><b>銷售業績分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index21.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index21.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-arrows-vertical"></i>
                 </span>
@@ -166,7 +175,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index22.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index22.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-brand-cashapp"></i>
                 </span>
@@ -214,7 +223,7 @@
               <span class="hide-menu"><b>產品推薦介面</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./indexre.html" aria-expanded="false">
+              <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-compass"></i>
                 </span>
@@ -247,11 +256,11 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-
+              <h5>Welcome back! <?php echo $_SESSION["username"] ?></h5>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -267,7 +276,7 @@
                       <i class="ti ti-list-check fs-6"></i>
                       <p class="mb-0 fs-3">My Task</p>
                     </a>
-                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -276,6 +285,7 @@
         </nav>
       </header>
       <!--  Header End -->
+      
       <div class="container-fluid">
         <!--  Row 1 -->
         <div class="row">
@@ -393,12 +403,12 @@
             </div>
           </div>
         </div>
-        <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-        <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../assets/js/sidebarmenu.js"></script>
-        <script src="../assets/js/app.min.js"></script>
-        <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-        <script src="../assets/js/dashboard.js"></script>
+        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/sidebarmenu.js"></script>
+        <script src="../../assets/js/app.min.js"></script>
+        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>

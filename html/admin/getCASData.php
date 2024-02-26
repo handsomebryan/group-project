@@ -1,5 +1,6 @@
+
 <?php
-include 'dbconnect.php';
+include '../dbconnect.php';
 
 function getQueryParam($paramName)
 {
