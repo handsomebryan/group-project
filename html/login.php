@@ -32,7 +32,7 @@
   
       $_SESSION["username"]=$username;
   
-      header("location:login/userhome.php");
+      header("location:user/index21.php");
     }
   
     elseif($row["是否為主管"]=="1")

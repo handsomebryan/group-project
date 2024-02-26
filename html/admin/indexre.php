@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
-  <?php
-  session_start();
-  
-  
-  if(!isset($_SESSION["username"]))
-  {
-    header("location:authentication-login.php");
-  }
-  
-  ?>
+<?php
+session_start();
+
+
+if (!isset($_SESSION["username"])) {
+  header("location:authentication-login.php");
+}
+
+?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,9 +25,9 @@
         var age = document.getElementById('age').value;
 
         fetch(`getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
-        .then(response => response.json())
-        .then(data => updateTable(data))
-        .catch(error => console.error('Error:', error));
+          .then(response => response.json())
+          .then(data => updateTable(data))
+          .catch(error => console.error('Error:', error));
       });
 
       document.getElementById('resetButton').addEventListener('click', function () {
@@ -189,11 +189,14 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-            <h5>Welcome back! <?php echo $_SESSION["username"] ?></h5>
+              <h5>Welcome back!
+                <?php echo $_SESSION["username"] ?>
+              </h5>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
+                    class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -230,113 +233,115 @@
                   </div>
                 </div>
                 <div class="input-group">
-                  <select id="gender"class="form-select ">
-                      <option value="">Select Gender</option>
-                      <option value="男">Male</option>
-                      <option value="女">Female</option>
+                  <select id="gender" class="form-select ">
+                    <option value="">Select Gender</option>
+                    <option value="男">Male</option>
+                    <option value="女">Female</option>
                   </select>
-              
+
                   <input type="text" class="form-control" id="postalCode" placeholder="Enter Postal Code">
-              
+
                   <input type="number" class="form-control" id="age" placeholder="Enter Age">
-              
+
                   <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
                   <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-              </div>
-                  <table id="data_table" class="table table-hover">
-                      <thead>
-                      <td>
+                </div>
+                <table id="data_table" class="table table-hover">
+                  <thead>
+                    <td>
 
-                          <th>Product Name</th>
-                          <th>Product Code</th>
-                          <th>Purchase Count</th>
-                      </td>
-                      </thead>
-                      <tbody>
-                      <!-- Data rows will go here -->
-                      </tbody>
-                  </table>
-                  </body>
-              </html>
+                    <th>Product Name</th>
+                    <th>Product Code</th>
+                    <th>Purchase Count</th>
+                    </td>
+                  </thead>
+                  <tbody>
+                    <!-- Data rows will go here -->
+                  </tbody>
+                </table>
+</body>
+
+</html>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+  <div class="row">
+    <div class="col-lg-12">
+      <!-- Yearly Breakup -->
+      <div class="card overflow-hidden">
+        <div class="card-body p-4">
+          <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h4 class="fw-semibold mb-3">$36,358</h4>
+              <div class="d-flex align-items-center mb-3">
+                <span
+                  class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-arrow-up-left text-success"></i>
+                </span>
+                <p class="text-dark me-1 fs-3 mb-0">+9%</p>
+                <p class="fs-3 mb-0">last year</p>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="me-4">
+                  <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
+                  <span class="fs-2">2023</span>
+                </div>
+                <div>
+                  <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
+                  <span class="fs-2">2023</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="d-flex justify-content-center">
+                <div id="breakup"></div>
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="row">
-              <div class="col-lg-12">
-                <!-- Yearly Breakup -->
-                <div class="card overflow-hidden">
-                  <div class="card-body p-4">
-                    <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
-                    <div class="row align-items-center">
-                      <div class="col-8">
-                        <h4 class="fw-semibold mb-3">$36,358</h4>
-                        <div class="d-flex align-items-center mb-3">
-                          <span
-                            class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-arrow-up-left text-success"></i>
-                          </span>
-                          <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                          <p class="fs-3 mb-0">last year</p>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <div class="me-4">
-                            <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-                            <span class="fs-2">2023</span>
-                          </div>
-                          <div>
-                            <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
-                            <span class="fs-2">2023</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                          <div id="breakup"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <!-- Monthly Earnings -->
+      <div class="card">
+        <div class="card-body">
+          <div class="row alig n-items-start">
+            <div class="col-8">
+              <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
+              <h4 class="fw-semibold mb-3">$6,820</h4>
+              <div class="d-flex align-items-center pb-1">
+                <span
+                  class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-arrow-down-right text-danger"></i>
+                </span>
+                <p class="text-dark me-1 fs-3 mb-0">+9%</p>
+                <p class="fs-3 mb-0">last year</p>
               </div>
-              <div class="col-lg-12">
-                <!-- Monthly Earnings -->
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row alig n-items-start">
-                      <div class="col-8">
-                        <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                        <h4 class="fw-semibold mb-3">$6,820</h4>
-                        <div class="d-flex align-items-center pb-1">
-                          <span
-                            class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-arrow-down-right text-danger"></i>
-                          </span>
-                          <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                          <p class="fs-3 mb-0">last year</p>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="d-flex justify-content-end">
-                          <div
-                            class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-currency-dollar fs-6"></i>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="earning"></div>
+            </div>
+            <div class="col-4">
+              <div class="d-flex justify-content-end">
+                <div
+                  class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-currency-dollar fs-6"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-  <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../assets/js/sidebarmenu.js"></script>
-  <script src="../../assets/js/app.min.js"></script>
-  <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="../../assets/js/dashboard.js"></script>
+        <div id="earning"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/sidebarmenu.js"></script>
+<script src="../../assets/js/app.min.js"></script>
+<script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+<script src="../../assets/js/dashboard.js"></script>
 </body>
+
 </html>

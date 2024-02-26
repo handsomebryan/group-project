@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
-  <?php
-  session_start();
-  
-  
-  if(!isset($_SESSION["username"]))
-  {
-    header("location:authentication-login.php");
-  }
-  
-  ?>
+<?php
+session_start();
+
+
+if (!isset($_SESSION["username"])) {
+  header("location:authentication-login.php");
+}
+
+?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -126,13 +126,13 @@
               borderColor: 'rgba(255, 99, 132, 1)',
               borderWidth: 1
             }, {
-              label: 'Top 1 Sales',
+              label: 'ID: ' + (data.T1.length > 0 ? data.T1[0].業務員序號 : 'N/A') + '',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               borderColor: 'rgba(54, 162, 235, 1)',
               borderWidth: 1
             }, {
-              label: 'Top 2 Sales',
+              label: 'ID: ' + (data.T2.length > 0 ? data.T2[0].業務員序號 : 'N/A') + '',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
@@ -162,7 +162,7 @@
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="./index.html" class="text-nowrap logo-img">
-            <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" />
+            <img src="../../assets/images/logos/dark-logo.svg" width="180" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -285,11 +285,14 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-            <h5>Welcome back! <?php echo $_SESSION["username"] ?></h5>
+              <h5>Welcome back!
+                <?php echo $_SESSION["username"] ?>
+              </h5>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
+                    class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -328,38 +331,38 @@
                 <div class="form-inline">
                   <div class="form-group">
                     <div class="input-group">
-                    <select id="yearDropdown" class="form-select ">
-                    <option value="">Select Year</option>
-                  </select>
-                  <select id="quarterDropdown" class="form-select ">
-                    <option value="">Select Quarter</option>
-                    <option value="1">Q1</option>
-                    <option value="2">Q2</option>
-                    <option value="3">Q3</option>
-                    <option value="4">Q4</option>
-                  </select>
-                  <select id="monthDropdown" class="form-select ">
-                    <option value="">Select Month</option>
-                    <option value="1">Jan</option>
-                    <option value="2">Feb</option>
-                    <option value="3">Mar</option>
-                    <option value="4">Apr</option>
-                    <option value="5">May</option>
-                    <option value="6">Jun</option>
-                    <option value="7">Jul</option>
-                    <option value="8">Aug</option>
-                    <option value="9">Sep</option>
-                    <option value="10">Oct</option>
-                    <option value="11">Nov</option>
-                    <option value="12">Dec</option>
-                  </select>
-                </div>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
-                  <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                  <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-                </div>
-                </div>
+                      <select id="yearDropdown" class="form-select ">
+                        <option value="">Select Year</option>
+                      </select>
+                      <select id="quarterDropdown" class="form-select ">
+                        <option value="">Select Quarter</option>
+                        <option value="1">Q1</option>
+                        <option value="2">Q2</option>
+                        <option value="3">Q3</option>
+                        <option value="4">Q4</option>
+                      </select>
+                      <select id="monthDropdown" class="form-select ">
+                        <option value="">Select Month</option>
+                        <option value="1">Jan</option>
+                        <option value="2">Feb</option>
+                        <option value="3">Mar</option>
+                        <option value="4">Apr</option>
+                        <option value="5">May</option>
+                        <option value="6">Jun</option>
+                        <option value="7">Jul</option>
+                        <option value="8">Aug</option>
+                        <option value="9">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                      </select>
+                    </div>
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
+                      <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
+                      <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                    </div>
+                  </div>
                 </div>
                 <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
