@@ -119,7 +119,7 @@ if (!isset($_SESSION["username"])) {
           data: {
             labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
             datasets: [{
-              label: 'ID: ' + (data.user.length > 0 ? data.user[0].業務員序號 : 'N/A') + '',
+              label: 'ID: ' + (data.user.length > 0 ? data.user[0].username : 'N/A') +'(YOU)' +'',
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderColor: 'rgba(255, 99, 132, 1)',

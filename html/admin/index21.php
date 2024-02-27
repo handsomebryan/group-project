@@ -199,7 +199,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>關係分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-briefcase"></i>
                 </span>
