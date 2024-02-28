@@ -9,7 +9,6 @@ if (!isset($_SESSION["username"])) {
 }
 
 ?>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,6 +18,43 @@ if (!isset($_SESSION["username"])) {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: [],
+          datasets: [{
+            data: [],
+            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], // Add colors for each doughnut segment
+          }]
+        },
+      });
+
+      // Function to fetch postal codes
+      function fetchPostalCodes() {
+        fetch('../getPC.php')
+          .then(response => response.json())
+          .then(data => {
+            populatePostalCodes(data);
+          })
+          .catch(error => console.error('Error:', error));
+      }
+
+      // Function to populate postal code dropdown
+      function populatePostalCodes(postalCodes) {
+        var postalCodeSelect = document.getElementById('postalCode');
+        postalCodeSelect.innerHTML = '<option value="">Select Postal Code</option>';
+        postalCodes.forEach(function(code) {
+          var option = document.createElement('option');
+          option.value = code;
+          option.textContent = code;
+          postalCodeSelect.appendChild(option);
+        });
+      }
+
+      // Fetch postal codes when the page loads
+      fetchPostalCodes();
+
       document.getElementById('searchButton').addEventListener('click', function () {
         var gender = document.getElementById('gender').value;
         var postalCode = document.getElementById('postalCode').value;
@@ -26,7 +62,7 @@ if (!isset($_SESSION["username"])) {
 
         fetch(`getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
           .then(response => response.json())
-          .then(data => updateTable(data))
+          .then(data => updateChart(myChart, data))
           .catch(error => console.error('Error:', error));
       });
 
@@ -34,28 +70,19 @@ if (!isset($_SESSION["username"])) {
         document.getElementById('gender').value = '';
         document.getElementById('postalCode').value = '';
         document.getElementById('age').value = '';
-        updateTable([]); // Clear the table
+        updateChart(myChart, []); // Clear the chart
       });
     });
 
-    function updateTable(data) {
-      var table = document.getElementById('data_table').getElementsByTagName('tbody')[0];
-      table.innerHTML = '';
-      data.forEach(function (row, index) {
-        var newRow = table.insertRow();
-        var listingCell = newRow.insertCell();
-        listingCell.textContent = index + 1; // Add listing number
-
-        row.forEach(function (cell) {
-          var newCell = newRow.insertCell();
-          newCell.textContent = cell;
-        });
-      });
+    function updateChart(chart, data) {
+      chart.data.labels = data.map(row => row[0]); // Product names
+      chart.data.datasets[0].data = data.map(row => row[2]); // Purchase counts
+      chart.update();
     }
   </script>
-
 </head>
 
+<body>
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -80,7 +107,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-dots-3"></i>
                 </span>
@@ -132,7 +159,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>關係分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-briefcase"></i>
                 </span>
@@ -220,48 +247,36 @@ if (!isset($_SESSION["username"])) {
           </div>
         </nav>
       </header>
-      <!--  Header End -->
-      <div class="container-fluid">
-        <!--  Row 1 -->
-        <div class="row">
-          <div class="col-lg-8 d-flex align-items-strech">
-            <div class="card w-100">
-              <div class="card-body">
-                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                  <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">客戶產品推薦</h5>
-                  </div>
-                </div>
-                <div class="input-group">
-                  <select id="gender" class="form-select ">
-                    <option value="">Select Gender</option>
-                    <option value="男">Male</option>
-                    <option value="女">Female</option>
-                  </select>
+  <!--  Header End -->
+  <div class="container-fluid">
+    <!--  Row 1 -->
+    <div class="row">
+      <div class="col-lg-8 d-flex align-items-strech">
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+              <div class="mb-3 mb-sm-0">
+                <h5 class="card-title fw-semibold">客戶產品推薦</h5>
+              </div>
+            </div>
+            <div class="input-group">
+              <select id="gender" class="form-select ">
+                <option value="">Select Gender</option>
+                <option value="男">Male</option>
+                <option value="女">Female</option>
+              </select>
 
-                  <input type="text" class="form-control" id="postalCode" placeholder="Enter Postal Code">
+              <select id="postalCode" class="form-select ">
+                <option value="">Select Postal Code</option>
+              </select>
+              <input type="number" class="form-control" id="age" placeholder="Enter Age">
 
-                  <input type="number" class="form-control" id="age" placeholder="Enter Age">
-
-                  <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                  <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-                </div>
-                <table id="data_table" class="table table-hover">
-                  <thead>
-                    <td>
-
-                    <th>Product Name</th>
-                    <th>Product Code</th>
-                    <th>Purchase Count</th>
-                    </td>
-                  </thead>
-                  <tbody>
-                    <!-- Data rows will go here -->
-                  </tbody>
-                </table>
-</body>
-
-</html>
+              <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
+              <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+            </div>
+            <canvas id="myChart"></canvas>
+            </body>
+            </html>
 </div>
 </div>
 </div>

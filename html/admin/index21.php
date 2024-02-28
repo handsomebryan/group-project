@@ -147,7 +147,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-dots-3"></i>
                 </span>

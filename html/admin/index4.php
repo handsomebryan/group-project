@@ -120,19 +120,19 @@ if (!isset($_SESSION["username"])) {
           data: {
             labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
             datasets: [{
-              label: 'ID(後5碼): ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'ID: ' + (data.user.length > 0 ? data.user[0].業務員序號 : 'N/A') + '',
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderColor: 'rgba(255, 99, 132, 1)',
               borderWidth: 1
             }, {
-              label: 'ID(後5碼): ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'ID: ' + (data.T1.length > 0 ? data.T1[0].業務員序號 : 'N/A') + '',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               borderColor: 'rgba(54, 162, 235, 1)',
               borderWidth: 1
             }, {
-              label: 'ID(後5碼): ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'ID: ' + (data.T2.length > 0 ? data.T2[0].業務員序號 : 'N/A') + '',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
@@ -228,7 +228,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>關係分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
+              <a class="sidebar-link" href="./index.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-briefcase"></i>
                 </span>

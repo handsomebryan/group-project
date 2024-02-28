@@ -10,10 +10,7 @@ $year = getQueryParam('year');
 $quarter = getQueryParam('quarter');
 $month = getQueryParam('month');
 
-if (empty($year)) {
-    echo json_encode(["error" => "Year is required"]);
-    exit;
-}
+
 
 $sql = "";
 if ($quarter) {

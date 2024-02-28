@@ -12,7 +12,7 @@ $age = getQueryParam('age');
 // Determine the SQL query based on input
 if ($gender != '' && $postalCode != '' && $age != '') {
   // Search by gender, postal code, and age
-  $sql = "SELECT `商品資料`.`商品中文名稱`,`保單資料`.`商品英文代碼`, COUNT(*) as `購買次數`
+  $sql = "SELECT `商品資料`.`商品中文名稱` ,`保單資料`.`商品英文代碼`  , COUNT(*) as `購買次數`
     FROM `客戶資料`
     JOIN `保單要保人` ON `客戶資料`.`客戶序號` = `保單要保人`.`要保人序號`
     JOIN `保單資料` ON `保單要保人`.`保單序號` = `保單資料`.`保單序號`
@@ -26,7 +26,7 @@ if ($gender != '' && $postalCode != '' && $age != '') {
     ";
 } elseif ($gender != '' && $postalCode != '') {
   // Search by gender and postal code
-  $sql = "SELECT `商品資料`.`商品中文名稱`,`保單資料`.`商品英文代碼`, COUNT(*) as `購買次數`
+  $sql = "SELECT `商品資料`.`商品中文名稱` ,`保單資料`.`商品英文代碼`  , COUNT(*) as `購買次數`
     FROM `客戶資料`
     JOIN `保單要保人` ON `客戶資料`.`客戶序號` = `保單要保人`.`要保人序號`
     JOIN `保單資料` ON `保單要保人`.`保單序號` = `保單資料`.`保單序號`
@@ -38,7 +38,7 @@ if ($gender != '' && $postalCode != '' && $age != '') {
     LIMIT 5;"; // SQL for gender and postal code
 } elseif ($gender != '' && $age != '') {
   // Search by gender and age
-  $sql = "SELECT `商品資料`.`商品中文名稱`,`保單資料`.`商品英文代碼`, COUNT(*) as `購買次數`
+  $sql = "SELECT `商品資料`.`商品中文名稱` ,`保單資料`.`商品英文代碼`  , COUNT(*) as `購買次數`
     FROM `客戶資料`
     JOIN `保單要保人` ON `客戶資料`.`客戶序號` = `保單要保人`.`要保人序號`
     JOIN `保單資料` ON `保單要保人`.`保單序號` = `保單資料`.`保單序號`
@@ -50,7 +50,7 @@ if ($gender != '' && $postalCode != '' && $age != '') {
     LIMIT 5;"; // SQL for gender and age
 } elseif ($postalCode != '' && $age != '') {
   // Search by postal code and age
-  $sql = "SELECT `商品資料`.`商品中文名稱`,`保單資料`.`商品英文代碼`, COUNT(*) as `購買次數`
+  $sql = "SELECT `商品資料`.`商品中文名稱` ,`保單資料`.`商品英文代碼`  , COUNT(*) as `購買次數`
     FROM `客戶資料`
     JOIN `保單要保人` ON `客戶資料`.`客戶序號` = `保單要保人`.`要保人序號`
     JOIN `保單資料` ON `保單要保人`.`保單序號` = `保單資料`.`保單序號`
@@ -60,11 +60,6 @@ if ($gender != '' && $postalCode != '' && $age != '') {
     GROUP BY `商品資料`.`商品中文名稱`
     ORDER BY `購買次數` DESC
     LIMIT 5;"; // SQL for postal code and age
-} else {
-  // Default case or error handling
-  echo "Please provide the required inputs.";
-  $conn->close();
-  exit;
 }
 
 $result = $conn->query($sql);
