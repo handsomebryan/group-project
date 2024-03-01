@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Insurance Sales Data</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Wait for the DOM content to be fully loaded
         document.addEventListener('DOMContentLoaded', function () {
             var salesChart;
-
-            // Fetch years from server
             fetch('getYears.php')
                 .then(response => response.json())
                 .then(years => {
@@ -22,86 +18,59 @@
                     });
                 })
                 .catch(error => console.error('Error:', error));
-
             var quarterDropdown = document.getElementById('quarterDropdown');
             var monthDropdown = document.getElementById('monthDropdown');
-
-            // Disable month dropdown if quarter is selected
             quarterDropdown.addEventListener('change', function () {
                 monthDropdown.disabled = !!this.value;
             });
-
-            // Disable quarter dropdown if month is selected
             monthDropdown.addEventListener('change', function () {
                 quarterDropdown.disabled = !!this.value;
             });
-
-            // search button click
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetchData();
             });
-
-            // reset button click
             document.getElementById('resetButton').addEventListener('click', function () {
                 resetForm();
             });
-
-            //fetch data based on selected filters
             function fetchData() {
-                // Get values
                 var id = document.getElementById('idInput').value;
                 var year = document.getElementById('yearDropdown').value;
                 var quarter = document.getElementById('quarterDropdown').value;
                 var month = document.getElementById('monthDropdown').value;
-
-                // Construct the query URL with selected parameters
-                var url = `getCASData.php`;
+                var url = `admin/getCASData.php`;
                 var queryParams = [];
                 if (id) queryParams.push(`id=${id}`);
                 if (year) queryParams.push(`year=${year}`);
                 if (quarter) queryParams.push(`quarter=${quarter}`);
                 if (month) queryParams.push(`month=${month}`);
-
-                // Fetch data and update the chart
                 if (queryParams.length > 0) {
                     url += '?' + queryParams.join('&');
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
-                            updateChart(data); // Update chart 
+                            updateChart(data); 
                         })
                         .catch(error => console.error('Fetch error:', error));
                 } else {
                     alert("Please enter a User ID or select a Year.");
                 }
             }
-
-            // reset the form and chart
             function resetForm() {
-                // Reset dropdowns and input field
                 document.getElementById('yearDropdown').selectedIndex = 0;
                 quarterDropdown.selectedIndex = 0;
                 monthDropdown.selectedIndex = 0;
                 quarterDropdown.disabled = false;
                 monthDropdown.disabled = false;
                 document.getElementById('idInput').value = '';
-
-                // Destroy the current chart
                 if (salesChart) {
                     salesChart.destroy();
                 }
             }
-
-            //create or update sales chart
             function updateChart(data) {
                 var ctx = document.getElementById('salesChart').getContext('2d');
-
-                // Destroy old chart
                 if (salesChart) {
                     salesChart.destroy();
                 }
-
-                // Create a new bar chart with fetched data
                 salesChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -138,7 +107,6 @@
         });
     </script>
 </head>
-
 <body>
     <select id="yearDropdown">
         <option value="">Select Year</option>
