@@ -2,7 +2,7 @@
 // Database connection variables
 $servername = "localhost";
 $username = "root";
-$password = "00000000";
+$password = "";
 $dbname = "fyp";
 
 // Create connection
