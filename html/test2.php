@@ -4,20 +4,20 @@ $s_id = $_GET['s_id'];
 $c_id = $_GET['c_id'];
 
 // visit query
-$query1 = "SELECT a.業務員序號, ac.客戶序號,a.拜訪日期 AS 日期, COUNT(*) AS 拜訪次數
+$query1 = "SELECT DATE_FORMAT(DATE(a.拜訪日期), '%Y-%m-%d') AS 日期, COUNT(*) AS 拜訪次數
  FROM CRM約訪資料 a 
  JOIN CRM客戶資料 ac ON a.客戶系統編號 = ac.客戶系統編號 
  WHERE a.業務員序號 like '%$s_id' AND ac.客戶序號 like '%$c_id' 
- GROUP BY  DATE_FORMAT(DATE(a.拜訪日期), '%Y-%m-%d')";
+ GROUP BY 日期";
 $result1 = mysqli_query($conn, $query1);
 $data1 = mysqli_fetch_all($result1, MYSQLI_ASSOC);
 
 // contact query
-$query2 = "SELECT c.業務員序號, d.客戶序號, c.聯絡日期 as 日期, COUNT(*) as 聯絡次數
+$query2 = "SELECT  DATE_FORMAT(DATE(c.聯絡日期), '%Y-%m-%d') as 日期, COUNT(*) as 聯絡次數
 FROM CRM聯繫資料 as c
 JOIN CRM客戶資料 as d ON c.客戶系統編號 = d.客戶系統編號
 WHERE c.業務員序號 LIKE '%$s_id' AND d.客戶序號 LIKE '%$c_id'
-GROUP BY  DATE_FORMAT(DATE(c.聯絡日期), '%Y-%m-%d');
+GROUP BY 日期;
 ";         
 $result2 = mysqli_query($conn, $query2);
 $data2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
