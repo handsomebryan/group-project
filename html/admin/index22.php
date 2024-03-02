@@ -24,57 +24,57 @@ if (!isset($_SESSION["username"])) {
 
       // Fetch years from server
       fetch('../get/getYears.php')
-    .then(response => response.json())
-    .then(years => {
-        var select = document.getElementById('yearDropdown');
-        years.forEach(function (year) {
+        .then(response => response.json())
+        .then(years => {
+          var select = document.getElementById('yearDropdown');
+          years.forEach(function (year) {
             var option = document.createElement('option');
             option.text = year;
             option.value = year;
             select.add(option);
-        });
-    })
-    .catch(error => console.error('Error:', error));
+          });
+        })
+        .catch(error => console.error('Error:', error));
 
-    // Fetch quarters and months when a year is selected
-    document.getElementById('yearDropdown').addEventListener('change', function () {
+      // Fetch quarters and months when a year is selected
+      document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = this.value;
 
         if (!year) {
-            alert('Please select a year.');
-            return;
+          alert('Please select a year.');
+          return;
         }
 
         // Fetch quarters
         fetch(`../get/getQuarter.php?year=${year}`)
-        .then(response => response.json())
-        .then(quarters => {
+          .then(response => response.json())
+          .then(quarters => {
             var select = document.getElementById('quarterDropdown');
             select.innerHTML = '<option value="">Select Quarter</option>'; // Clear the dropdown
             quarters.forEach(function (quarter) {
-                var option = document.createElement('option');
-                option.text = quarter;
-                option.value = quarter;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = quarter;
+              option.value = quarter;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
+          })
+          .catch(error => console.error('Error:', error));
 
         // Fetch months
         fetch(`../get/getMonth.php?year=${year}`)
-        .then(response => response.json())
-        .then(months => {
+          .then(response => response.json())
+          .then(months => {
             var select = document.getElementById('monthDropdown');
             select.innerHTML = '<option value="">Select Month</option>'; // Clear the dropdown
             months.forEach(function (month) {
-                var option = document.createElement('option');
-                option.text = month;
-                option.value = month;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = month;
+              option.value = month;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
-    });
+          })
+          .catch(error => console.error('Error:', error));
+      });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
@@ -184,6 +184,7 @@ if (!isset($_SESSION["username"])) {
             }]
           },
           options: {
+            aspectRatio:3,
             scales: {
               y: {
                 beginAtZero: true
@@ -205,9 +206,7 @@ if (!isset($_SESSION["username"])) {
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="./index.html" class="text-nowrap logo-img">
-            <img src="../../assets/images/logos/logo.png" width="180" alt="" />
-          </a>
+          <img src="../../assets/images/logos/logo.png" width="180" alt="" />
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -334,19 +333,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a>
-                    <a href="../logout.php" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>

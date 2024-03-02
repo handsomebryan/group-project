@@ -27,7 +27,9 @@ if (!isset($_SESSION["username"])) {
             data: [],
             backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], // Add colors for each doughnut segment
           }]
-        },
+        },options:{
+          aspectRatio:3,
+        }
       });
 
       // Function to fetch postal codes
@@ -91,10 +93,8 @@ if (!isset($_SESSION["username"])) {
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="./index.html" class="text-nowrap logo-img">
+        <div class="brand-logo d-flex align-items-center justify-content-between">       
             <img src="../../assets/images/logos/logo.png" width="180" alt="" />
-          </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -221,19 +221,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a>
-                    <a href="../logout.php" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -245,7 +233,7 @@ if (!isset($_SESSION["username"])) {
   <div class="container-fluid">
     <!--  Row 1 -->
     <div class="row">
-      <div class="d-flex align-items-strech">
+      <div class="col-lg-10 d-flex align-items-strech">
         <div class="card w-100">
           <div class="card-body">
             <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">

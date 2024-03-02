@@ -64,14 +64,6 @@ if (!isset($_SESSION["username"])) {
                 }
             }
 
-            function resetForm() {
-                document.getElementById('s_id').value = '';
-                document.getElementById('c_id').value = '';
-                if (salesChart) {
-                    salesChart.destroy();
-                }
-            }
-
             function updateChart(data) {
                 var ctx = document.getElementById('salesChart').getContext('2d');
                 if (salesChart) {
@@ -105,6 +97,7 @@ if (!isset($_SESSION["username"])) {
                         }]
                     },
                     options: {
+                        aspectRatio: 3,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -125,10 +118,6 @@ if (!isset($_SESSION["username"])) {
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetchData();
             });
-
-            document.getElementById('resetButton').addEventListener('click', function () {
-                resetForm();
-            });
         });
     </script>
 </head>
@@ -142,9 +131,7 @@ if (!isset($_SESSION["username"])) {
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
                         <img src="../../assets/images/logos/logo.png" width="180" alt="" />
-                    </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
@@ -273,23 +260,7 @@ if (!isset($_SESSION["username"])) {
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)"
-                                            class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)"
-                                            class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)"
-                                            class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
-                                        <a href="../logout.php"
-                                            class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -301,7 +272,7 @@ if (!isset($_SESSION["username"])) {
             <div class="container-fluid">
                 <!--  Row 1 -->
                 <div class="row">
-                    <div class="d-flex align-items-strech">
+                    <div class="col-lg-8 d-flex align-items-strech">
                         <div class="card w-100">
                             <div class="card-body">
                                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -317,45 +288,36 @@ if (!isset($_SESSION["username"])) {
                                             </select>
                                             <button id="searchButton" type="button"
                                                 class="btn btn-outline-primary">Search</button>
-                                            <button id="resetButton" type="button"
-                                                class="btn btn-outline-danger">Reset</button>
                                         </div>
                                     </div>
                                 </div>
                                 <canvas id="salesChart" width="400" height="200"></canvas>
                             </div>
-                            <!-- Monthly Earnings -->
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <center>
-                                                <h5 class="card-title">Total Visits Frequency</h5><br>
-                                                <b>
-                                                    <h3 id="totalVisit"></h3>
-                                                </b>
-                                            </center>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <center>
-                                                <h5 class="card-title">Total Contacts Frequency</h5><br>
-                                                <b>
-                                                    <h3 id="totalContact"></h3>
-                                                </b>
-                                            </center>
-                                        </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Yearly Breakup -->
+                                <div class="card overflow-hidden">
+                                    <div class="card-body p-4 text-center">
+                                        <h5 class="card-title mb-9 fw-semibold">Total Visits Frequency</h5>
+                                        <h3 class="card-title mb-9 fw-semibold" id="totalVisit" style="font-size: 500%;"></h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        </p>
+                        <div class="col-lg-12">
+                            <!-- Yearly Breakup -->
+                            <div class="card overflow-hidden">
+                                <div class="card-body p-4 text-center">
+                                    <h5 class="card-title mb-9 fw-semibold">Total Contacts Frequency</h5>
+                                    <h3 class="card-title mb-9 fw-semibold" id="totalContact" style="font-size: 500%;"></h3>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
             <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
             <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
             <script src="../../assets/js/sidebarmenu.js"></script>
