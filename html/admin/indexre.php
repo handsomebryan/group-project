@@ -32,7 +32,7 @@ if (!isset($_SESSION["username"])) {
 
       // Function to fetch postal codes
       function fetchPostalCodes() {
-        fetch('../getPC.php')
+        fetch('../get/getPC.php')
           .then(response => response.json())
           .then(data => {
             populatePostalCodes(data);
@@ -60,7 +60,7 @@ if (!isset($_SESSION["username"])) {
         var postalCode = document.getElementById('postalCode').value;
         var age = document.getElementById('age').value;
 
-        fetch(`getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
+        fetch(`../get/getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
           .then(response => response.json())
           .then(data => updateChart(myChart, data))
           .catch(error => console.error('Error:', error));
@@ -171,7 +171,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶互動</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index5.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-calendar-time"></i>
                 </span>
@@ -245,7 +245,7 @@ if (!isset($_SESSION["username"])) {
   <div class="container-fluid">
     <!--  Row 1 -->
     <div class="row">
-      <div class="col-lg-8 d-flex align-items-strech">
+      <div class="d-flex align-items-strech">
         <div class="card w-100">
           <div class="card-body">
             <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">

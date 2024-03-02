@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<?php
+session_start();
+
+
+if (!isset($_SESSION["username"])) {
+    header("location:authentication-login.php");
+}
+
+?>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>業務一把罩</title>
+    <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
+    <link rel="stylesheet" href="../../assets/css/styles.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var salesChart;
+
+
+            var s_id = '<?php echo $_SESSION["username"]; ?>';
+            fetch('../get/getCID.php?s_id=' + s_id)
+                .then(response => response.json())
+                .then(data => {
+                    var select = document.getElementById('c_id');
+                    select.innerHTML = '';
+                    var totalOption = document.createElement('option');
+                    totalOption.value = '';
+                    totalOption.text = 'Total Statistic';
+                    select.add(totalOption);
+
+                    data.forEach(function (id) {
+                        var option = document.createElement('option');
+                        option.value = id;
+                        option.text = id;
+                        select.add(option);
+                    });
+                })
+                .catch(error => console.error('Fetch error:', error));
+
+            function fetchData() {
+                var username = '<?php echo $_SESSION["username"]; ?>';
+                var c_id = document.getElementById('c_id').value;
+                var totalStatistic = (c_id === '');
+                var url = `../get/getFrequency.php`;
+                var queryParams = [];
+                if (username) queryParams.push(`s_id=${username}`);
+                if (c_id) queryParams.push(`c_id=${c_id}`);
+                if (totalStatistic) queryParams.push(`total_statistic=true`);
+                if (queryParams.length > 0) {
+                    url += '?' + queryParams.join('&');
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            updateChart(data);
+                        })
+                        .catch(error => console.error('Fetch error:', error));
+                } else {
+                    alert("Please enter a Salesperson ID or Customer ID.");
+                }
+            }
+
+            function resetForm() {
+                document.getElementById('s_id').value = '';
+                document.getElementById('c_id').value = '';
+                if (salesChart) {
+                    salesChart.destroy();
+                }
+            }
+
+            function updateChart(data) {
+                var ctx = document.getElementById('salesChart').getContext('2d');
+                if (salesChart) {
+                    salesChart.destroy();
+                }
+                var combinedDates = ['', ...new Set([...data.visit.map(d => d.日期), ...data.contact.map(d => d.日期)])].sort();
+                salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: combinedDates,
+                        datasets: [{
+                            label: 'Visit Frequency',
+                            data: combinedDates.map(date => {
+                                var visit = data.visit.find(d => d.日期 === date);
+                                return visit ? visit.拜訪次數 : 0;
+                            }),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'Contact Frequency',
+                            data: combinedDates.map(date => {
+                                var contact = data.contact.find(d => d.日期 === date);
+                                return contact ? contact.聯絡次數 : 0;
+                            }),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+                var totalVisit = data.visit.reduce((total, visit) => total + parseInt(visit.拜訪次數), 0);
+                var totalContact = data.contact.reduce((total, contact) => total + parseInt(contact.聯絡次數), 0);
+
+                document.getElementById('totalVisit').textContent = totalVisit;
+                document.getElementById('totalContact').textContent = totalContact;
+            }
+
+            document.getElementById('searchButton').addEventListener('click', function () {
+                fetchData();
+            });
+
+            document.getElementById('resetButton').addEventListener('click', function () {
+                resetForm();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="./index.html" class="text-nowrap logo-img">
+                        <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
+                </div>
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index11.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chart-dots-3"></i>
+                                </span>
+                                <span class="hide-menu">業務員&關係客戶群組</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-affiliate"></i>
+                                </span>
+                                <span class="hide-menu">業務員&招攬業務員關係群組</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>銷售業績分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index21.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chart-arrows-vertical"></i>
+                                </span>
+                                <span class="hide-menu">表現最佳的保險產品</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index22.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-brand-cashapp"></i>
+                                </span>
+                                <span class="hide-menu">業務員的銷售業績</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>客戶性別年齡分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-gender-bigender"></i>
+                                </span>
+                                <span class="hide-menu">客戶性別年齡分佈</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>關係分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-briefcase"></i>
+                                </span>
+                                <span class="hide-menu">業務員與保險關係</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>客戶互動</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index5.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-calendar-time"></i>
+                                </span>
+                                <span class="hide-menu">業務員與客戶聯繫及拜訪頻率</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>產品推薦介面</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-compass"></i>
+                                </span>
+                                <span class="hide-menu">客戶產品推薦</span>
+                            </a>
+                        </li>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-block d-xl-none">
+                            <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse"
+                                href="javascript:void(0)">
+                                <i class="ti ti-menu-2"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <h5>Welcome back!
+                                <?php echo $_SESSION["username"] ?>
+                            </h5>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
+                                        class="rounded-circle">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+                                    aria-labelledby="drop2">
+                                    <div class="message-body">
+                                        <a href="javascript:void(0)"
+                                            class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-user fs-6"></i>
+                                            <p class="mb-0 fs-3">My Profile</p>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                            class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-mail fs-6"></i>
+                                            <p class="mb-0 fs-3">My Account</p>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                            class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-list-check fs-6"></i>
+                                            <p class="mb-0 fs-3">My Task</p>
+                                        </a>
+                                        <a href="../logout.php"
+                                            class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!--  Header End -->
+            <div class="container-fluid">
+                <!--  Row 1 -->
+                <div class="row">
+                    <div class="d-flex align-items-strech">
+                        <div class="card w-100">
+                            <div class="card-body">
+                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                                    <div class="mb-3 mb-sm-0">
+                                        <h5 class="card-title fw-semibold">業務員的銷售業績</h5>
+                                    </div>
+                                </div>
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <select id="c_id" class="form-select ">
+                                                <option value="">Total Statistic</option>
+                                            </select>
+                                            <button id="searchButton" type="button"
+                                                class="btn btn-outline-primary">Search</button>
+                                            <button id="resetButton" type="button"
+                                                class="btn btn-outline-danger">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <canvas id="salesChart" width="400" height="200"></canvas>
+                            </div>
+                            <!-- Monthly Earnings -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title">Total Visits Frequency</h5><br>
+                                                <b>
+                                                    <h3 id="totalVisit"></h3>
+                                                </b>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title">Total Contacts Frequency</h5><br>
+                                                <b>
+                                                    <h3 id="totalContact"></h3>
+                                                </b>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+            <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="../../assets/js/sidebarmenu.js"></script>
+            <script src="../../assets/js/app.min.js"></script>
+            <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+            <script src="../../assets/js/dashboard.js"></script>
+</body>
+
+</html>

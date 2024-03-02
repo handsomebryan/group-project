@@ -21,18 +21,58 @@ if (!isset($_SESSION["username"])) {
     document.addEventListener('DOMContentLoaded', function () {
       var salesChart; // Variable for the chart instance
 
-      fetch('../getYears.php')
-        .then(response => response.json())
-        .then(years => {
-          var select = document.getElementById('yearDropdown');
-          years.forEach(function (year) {
+      fetch('../get/getYears.php')
+    .then(response => response.json())
+    .then(years => {
+        var select = document.getElementById('yearDropdown');
+        years.forEach(function (year) {
             var option = document.createElement('option');
             option.text = year;
             option.value = year;
             select.add(option);
-          });
+        });
+    })
+    .catch(error => console.error('Error:', error));
+
+    // Fetch quarters and months when a year is selected
+    document.getElementById('yearDropdown').addEventListener('change', function () {
+        var year = this.value;
+
+        if (!year) {
+            alert('Please select a year.');
+            return;
+        }
+
+        // Fetch quarters
+        fetch(`../get/getQuarter.php?year=${year}`)
+        .then(response => response.json())
+        .then(quarters => {
+            var select = document.getElementById('quarterDropdown');
+            select.innerHTML = '<option value="">Select Quarter</option>'; // Clear the dropdown
+            quarters.forEach(function (quarter) {
+                var option = document.createElement('option');
+                option.text = quarter;
+                option.value = quarter;
+                select.add(option);
+            });
         })
         .catch(error => console.error('Error:', error));
+
+        // Fetch months
+        fetch(`../get/getMonth.php?year=${year}`)
+        .then(response => response.json())
+        .then(months => {
+            var select = document.getElementById('monthDropdown');
+            select.innerHTML = '<option value="">Select Month</option>'; // Clear the dropdown
+            months.forEach(function (month) {
+                var option = document.createElement('option');
+                option.text = month;
+                option.value = month;
+                select.add(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
@@ -52,7 +92,7 @@ if (!isset($_SESSION["username"])) {
         var month = document.getElementById('monthDropdown').value;
         var isSpecificMonth = !!month;
 
-        var url = `getBSData.php?year=${year}`;
+        var url = `../get/getBSData.php?year=${year}`;
         if (quarter) {
           url += `&quarter=${quarter}`;
         } else if (month) {
@@ -67,6 +107,10 @@ if (!isset($_SESSION["username"])) {
 
       document.getElementById('resetButton').addEventListener('click', function () {
         document.getElementById('yearDropdown').selectedIndex = 0;
+        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
+        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
+        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
+        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
@@ -85,7 +129,7 @@ if (!isset($_SESSION["username"])) {
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
         //  unique labels for the x-axis
-        var labels = [...new Set(data.map(item => item[1]))];
+        var labels = ['',...new Set(data.map(item => item[1]))];
 
         var datasets = [];
         var groupedData = data.reduce(function (acc, item) {
@@ -211,7 +255,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶互動</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index5.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-calendar-time"></i>
                 </span>
@@ -286,7 +330,7 @@ if (!isset($_SESSION["username"])) {
       <div class="container-fluid">
         <!--  Row 1 -->
         <div class="row">
-          <div class="col-lg-8 d-flex align-items-strech">
+          <div class=" d-flex align-items-strech">
             <div class="card w-100">
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
