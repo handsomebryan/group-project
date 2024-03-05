@@ -131,7 +131,7 @@ if (!isset($_SESSION["username"])) {
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
         //  unique labels for the x-axis
-        var labels = ['', ...new Set(data.map(item => item[1]))];
+        var labels = [...new Set(data.map(item => item[1]))];
 
         var datasets = [];
         var groupedData = data.reduce(function (acc, item) {
@@ -159,9 +159,25 @@ if (!isset($_SESSION["username"])) {
             datasets: datasets
           },
           options: {
-            aspectRatio:3,
+            aspectRatio: 3,
             scales: {
-              y: { beginAtZero: true },
+              x: {
+                title: {
+                  display: true,
+                  text: '日期',
+                  color: 'black',
+                  weight: 'bold'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '銷售額',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                beginAtZero: true
+              },
             }
           }
         });
@@ -200,7 +216,7 @@ if (!isset($_SESSION["username"])) {
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-affiliate"></i>
                 </span>
@@ -232,7 +248,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶性別年齡分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-gender-bigender"></i>
                 </span>
@@ -347,7 +363,6 @@ if (!isset($_SESSION["username"])) {
               </div>
             </div>
           </div>
-
         </div>
         <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
         <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

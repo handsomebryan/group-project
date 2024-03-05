@@ -17,6 +17,10 @@ if (!isset($_SESSION["username"])) {
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
+    integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     // Wait for the DOM content to be fully loaded
     document.addEventListener('DOMContentLoaded', function () {
@@ -164,30 +168,52 @@ if (!isset($_SESSION["username"])) {
           data: {
             labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
             datasets: [{
-              label: 'ID(後5碼): ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'You (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }, {
-              label: 'ID(後5碼): ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'Top 1 Sales (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
-              borderColor: 'rgba(54, 162, 235, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }, {
-              label: 'ID(後5碼): ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + '',
+              label: 'Top 2 Sales (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }]
           },
+          plugins: [ChartDataLabels],
           options: {
-            aspectRatio:3,
+            indexAxis: 'y',
+            aspectRatio: 1,
             scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: '銷售額',
+                  color: 'black',
+                  weight: 'bold'
+                }
+              },
               y: {
-                beginAtZero: true
+                title: {
+                  display: true,
+                  text: '日期',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                beginAtZero: true,
               }
             }
           }
@@ -227,7 +253,7 @@ if (!isset($_SESSION["username"])) {
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-affiliate"></i>
                 </span>
@@ -259,7 +285,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶性別年齡分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-gender-bigender"></i>
                 </span>
@@ -333,7 +359,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -381,15 +407,13 @@ if (!isset($_SESSION["username"])) {
                         <option value="11">Nov</option>
                         <option value="12">Dec</option>
                       </select>
-                    </div>
-                    <div class="input-group">
                       <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
                       <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
                       <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
                     </div>
                   </div>
                 </div>
-                <canvas id="salesChart" width="400" height="200"></canvas>
+                <canvas id="salesChart"></canvas>
               </div>
             </div>
           </div>

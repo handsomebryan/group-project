@@ -69,7 +69,7 @@ if (!isset($_SESSION["username"])) {
                 if (salesChart) {
                     salesChart.destroy();
                 }
-                var combinedDates = ['', ...new Set([...data.visit.map(d => d.日期), ...data.contact.map(d => d.日期)])].sort();
+                var combinedDates = [ ...new Set([...data.visit.map(d => d.日期), ...data.contact.map(d => d.日期)])].sort();
                 salesChart = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -99,7 +99,21 @@ if (!isset($_SESSION["username"])) {
                     options: {
                         aspectRatio: 3,
                         scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '日期',
+                                    color: 'black',
+                                    weight: 'bold'
+                                }
+                            },
                             y: {
+                                title: {
+                                    display: true,
+                                    text: '次數',
+                                    color: 'black',
+                                    weight: 'bold'
+                                },
                                 beginAtZero: true,
                                 ticks: {
                                     precision: 0
@@ -131,7 +145,7 @@ if (!isset($_SESSION["username"])) {
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                        <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+                    <img src="../../assets/images/logos/logo.png" width="180" alt="" />
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
@@ -152,7 +166,7 @@ if (!isset($_SESSION["username"])) {
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-affiliate"></i>
                                 </span>
@@ -184,7 +198,7 @@ if (!isset($_SESSION["username"])) {
                             <span class="hide-menu"><b>客戶性別年齡分析</b></span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-gender-bigender"></i>
                                 </span>
@@ -196,7 +210,7 @@ if (!isset($_SESSION["username"])) {
                             <span class="hide-menu"><b>關係分析</b></span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-briefcase"></i>
                                 </span>
@@ -260,7 +274,8 @@ if (!isset($_SESSION["username"])) {
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                                        <a href="../logout.php"
+                                            class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -291,7 +306,7 @@ if (!isset($_SESSION["username"])) {
                                         </div>
                                     </div>
                                 </div>
-                                <canvas id="salesChart" width="400" height="200"></canvas>
+                                <canvas id="salesChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -302,7 +317,8 @@ if (!isset($_SESSION["username"])) {
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
                                         <h5 class="card-title mb-9 fw-semibold">Total Visits Frequency</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="totalVisit" style="font-size: 500%;"></h3>
+                                        <h3 class="card-title mb-9 fw-semibold" id="totalVisit"
+                                            style="font-size: 500%;"></h3>
                                     </div>
                                 </div>
                             </div>
@@ -312,18 +328,19 @@ if (!isset($_SESSION["username"])) {
                             <div class="card overflow-hidden">
                                 <div class="card-body p-4 text-center">
                                     <h5 class="card-title mb-9 fw-semibold">Total Contacts Frequency</h5>
-                                    <h3 class="card-title mb-9 fw-semibold" id="totalContact" style="font-size: 500%;"></h3>
+                                    <h3 class="card-title mb-9 fw-semibold" id="totalContact" style="font-size: 500%;">
+                                    </h3>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-            <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="../../assets/js/sidebarmenu.js"></script>
-            <script src="../../assets/js/app.min.js"></script>
-            <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-            <script src="../../assets/js/dashboard.js"></script>
+                <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+                <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                <script src="../../assets/js/sidebarmenu.js"></script>
+                <script src="../../assets/js/app.min.js"></script>
+                <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+                <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>

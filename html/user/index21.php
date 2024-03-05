@@ -22,57 +22,57 @@ if (!isset($_SESSION["username"])) {
       var salesChart; // Variable for the chart instance
 
       fetch('../get/getYears.php')
-    .then(response => response.json())
-    .then(years => {
-        var select = document.getElementById('yearDropdown');
-        years.forEach(function (year) {
+        .then(response => response.json())
+        .then(years => {
+          var select = document.getElementById('yearDropdown');
+          years.forEach(function (year) {
             var option = document.createElement('option');
             option.text = year;
             option.value = year;
             select.add(option);
-        });
-    })
-    .catch(error => console.error('Error:', error));
+          });
+        })
+        .catch(error => console.error('Error:', error));
 
-    // Fetch quarters and months when a year is selected
-    document.getElementById('yearDropdown').addEventListener('change', function () {
+      // Fetch quarters and months when a year is selected
+      document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = this.value;
 
         if (!year) {
-            alert('Please select a year.');
-            return;
+          alert('Please select a year.');
+          return;
         }
 
         // Fetch quarters
         fetch(`../get/getQuarter.php?year=${year}`)
-        .then(response => response.json())
-        .then(quarters => {
+          .then(response => response.json())
+          .then(quarters => {
             var select = document.getElementById('quarterDropdown');
             select.innerHTML = '<option value="">Select Quarter</option>'; // Clear the dropdown
             quarters.forEach(function (quarter) {
-                var option = document.createElement('option');
-                option.text = quarter;
-                option.value = quarter;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = quarter;
+              option.value = quarter;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
+          })
+          .catch(error => console.error('Error:', error));
 
         // Fetch months
         fetch(`../get/getMonth.php?year=${year}`)
-        .then(response => response.json())
-        .then(months => {
+          .then(response => response.json())
+          .then(months => {
             var select = document.getElementById('monthDropdown');
             select.innerHTML = '<option value="">Select Month</option>'; // Clear the dropdown
             months.forEach(function (month) {
-                var option = document.createElement('option');
-                option.text = month;
-                option.value = month;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = month;
+              option.value = month;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
-    });
+          })
+          .catch(error => console.error('Error:', error));
+      });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
@@ -129,7 +129,7 @@ if (!isset($_SESSION["username"])) {
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
         //  unique labels for the x-axis
-        var labels = ['',...new Set(data.map(item => item[1]))];
+        var labels = ['', ...new Set(data.map(item => item[1]))];
 
         var datasets = [];
         var groupedData = data.reduce(function (acc, item) {
@@ -159,7 +159,23 @@ if (!isset($_SESSION["username"])) {
           options: {
             aspectRatio: 3,
             scales: {
-              y: { beginAtZero: true },
+              x: {
+                title: {
+                  display: true,
+                  text: '日期',
+                  color: 'black',
+                  weight: 'bold'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '銷售額',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                beginAtZero: true
+              },
             }
           }
         });
@@ -176,8 +192,8 @@ if (!isset($_SESSION["username"])) {
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">         
-            <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <img src="../../assets/images/logos/logo.png" width="180" alt="" />
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -190,7 +206,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-dots-3"></i>
                 </span>
@@ -198,7 +214,7 @@ if (!isset($_SESSION["username"])) {
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-affiliate"></i>
                 </span>
@@ -230,7 +246,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶性別年齡分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-gender-bigender"></i>
                 </span>
@@ -242,7 +258,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>關係分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-briefcase"></i>
                 </span>
@@ -304,7 +320,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -356,7 +372,7 @@ if (!isset($_SESSION["username"])) {
                     <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
                   </div>
                 </div>
-                <canvas id="salesChart" width="400" height="200"></canvas>
+                <canvas id="salesChart"></canvas>
               </div>
             </div>
           </div>

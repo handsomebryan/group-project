@@ -17,6 +17,10 @@ if (!isset($_SESSION["username"])) {
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
+    integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     // Wait for the DOM content to be fully loaded
     document.addEventListener('DOMContentLoaded', function () {
@@ -166,26 +170,48 @@ if (!isset($_SESSION["username"])) {
               label: 'ID: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + '(YOU)' + '',
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }, {
               label: 'TOP SALESPERSON 1' + '',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
-              borderColor: 'rgba(54, 162, 235, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }, {
               label: 'TOP SALESPERSON 2' + '',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
             }]
-          },
+          },plugins: [ChartDataLabels],
           options: {
-            aspectRatio: 3,
+            indexAxis: 'y',
+            aspectRatio: 1,
             scales: {
               y: {
+                x: {
+                title: {
+                  display: true,
+                  text: '銷售額',
+                  color: 'black',
+                  weight: 'bold'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '日期',
+                  color: 'black',
+                  weight: 'bold'
+                },
                 beginAtZero: true
               }
             }
@@ -218,7 +244,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-chart-dots-3"></i>
                 </span>
@@ -226,7 +252,7 @@ if (!isset($_SESSION["username"])) {
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-affiliate"></i>
                 </span>
@@ -258,7 +284,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>客戶性別年齡分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-gender-bigender"></i>
                 </span>
@@ -270,7 +296,7 @@ if (!isset($_SESSION["username"])) {
               <span class="hide-menu"><b>關係分析</b></span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                 <span>
                   <i class="ti ti-briefcase"></i>
                 </span>
@@ -385,7 +411,7 @@ if (!isset($_SESSION["username"])) {
                     </div>
                   </div>
                 </div>
-                <canvas id="salesChart" width="400" height="200"></canvas>
+                <canvas id="salesChart"></canvas>
               </div>
             </div>
           </div>

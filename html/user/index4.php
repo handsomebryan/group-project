@@ -3,7 +3,6 @@
 <?php
 session_start();
 
-
 if (!isset($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
@@ -17,41 +16,20 @@ if (!isset($_SESSION["username"])) {
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var salesChart;
-
-            document.getElementById('s_id').addEventListener('input', function () {
-                var s_id = this.value;
-                fetch('../get/getCID.php?s_id=' + s_id)
-                    .then(response => response.json())
-                    .then(data => {
-                        var select = document.getElementById('c_id');
-                        select.innerHTML = '';
-                        var totalOption = document.createElement('option');
-                        totalOption.value = '';
-                        totalOption.text = 'Total Statistic';
-                        select.add(totalOption);
-
-                        data.forEach(function (id) {
-                            var option = document.createElement('option');
-                            option.value = id;
-                            option.text = id;
-                            select.add(option);
-                        });
-                    })
-                    .catch(error => console.error('Fetch error:', error));
-            });
+            fetchData();
 
             function fetchData() {
-                var s_id = document.getElementById('s_id').value;
-                var c_id = document.getElementById('c_id').value;
-                var totalStatistic = (c_id === '');
-                var url = `../get/getFrequency.php`;
+                var id = '<?php echo $_SESSION["username"]; ?>';
+                var url = `../get/getPerform.php`;
                 var queryParams = [];
-                if (s_id) queryParams.push(`s_id=${s_id}`);
-                if (c_id) queryParams.push(`c_id=${c_id}`);
-                if (totalStatistic) queryParams.push(`total_statistic=true`);
+                if (id) queryParams.push(`id=${id}`);
                 if (queryParams.length > 0) {
                     url += '?' + queryParams.join('&');
                     fetch(url)
@@ -60,16 +38,6 @@ if (!isset($_SESSION["username"])) {
                             updateChart(data);
                         })
                         .catch(error => console.error('Fetch error:', error));
-                } else {
-                    alert("Please enter a Salesperson ID or Customer ID.");
-                }
-            }
-
-            function resetForm() {
-                document.getElementById('s_id').value = '';
-                document.getElementById('c_id').value = '';
-                if (salesChart) {
-                    salesChart.destroy();
                 }
             }
 
@@ -78,40 +46,48 @@ if (!isset($_SESSION["username"])) {
                 if (salesChart) {
                     salesChart.destroy();
                 }
-                var combinedDates = [...new Set([...data.visit.map(d => d.日期), ...data.contact.map(d => d.日期)])].sort();
                 salesChart = new Chart(ctx, {
-                    type: 'line',
+                    type: 'bar',
                     data: {
-                        labels: combinedDates,
+                        labels: data.user.map(d => d.商品大分類),
                         datasets: [{
-                            label: 'Visit Frequency',
-                            data: combinedDates.map(date => {
-                                var visit = data.visit.find(d => d.日期 === date);
-                                return visit ? visit.拜訪次數 : 0;
-                            }),
+                            label: 'You (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
+                            data: data.user.map(d => d.total_sales),
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1,
-                            fill: false
+                            datalabels: {
+                                color: 'black',
+                                align: 'right',
+                                offset: 10
+                            }
                         }, {
-                            label: 'Contact Frequency',
-                            data: combinedDates.map(date => {
-                                var contact = data.contact.find(d => d.日期 === date);
-                                return contact ? contact.聯絡次數 : 0;
-                            }),
+                            label: 'Top 1 Sales (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
+                            data: data.T1.map(d => d.total_sales),
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 2,
-                            fill: false
+                            datalabels: {
+                                color: 'black',
+                                align: 'right',
+                                offset: 10
+                            }
+                        }, {
+                            label: 'Top 2 Sales (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+                            data: data.T2.map(d => d.total_sales),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            datalabels: {
+                                color: 'black',
+                                align: 'right',
+                                offset: 10
+                            }
                         }]
                     },
+                    plugins: [ChartDataLabels],
                     options: {
-                        aspectRatio: 3,
+                        indexAxis: 'y',
+                        aspectRatio: 2,
                         scales: {
                             x: {
                                 title: {
                                     display: true,
-                                    text: '日期',
+                                    text: '銷售額',
                                     color: 'black',
                                     weight: 'bold'
                                 }
@@ -119,51 +95,32 @@ if (!isset($_SESSION["username"])) {
                             y: {
                                 title: {
                                     display: true,
-                                    text: '次數',
+                                    text: '商品大分類',
                                     color: 'black',
                                     weight: 'bold'
-                                },
-                                beginAtZero: true,
-                                ticks: {
-                                    precision: 0
                                 }
                             }
                         }
                     }
                 });
-                var totalVisit = data.visit.reduce((total, visit) => total + parseInt(visit.拜訪次數), 0);
-                var totalContact = data.contact.reduce((total, contact) => total + parseInt(contact.聯絡次數), 0);
-
-                document.getElementById('totalVisit').textContent = totalVisit;
-                document.getElementById('totalContact').textContent = totalContact;
             }
-
-            document.getElementById('searchButton').addEventListener('click', function () {
-                fetchData();
-            });
-
-            document.getElementById('resetButton').addEventListener('click', function () {
-                resetForm();
-            });
         });
     </script>
 </head>
 
 <body>
-    <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
         <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+                    <a href="./index.html" class="text-nowrap logo-img">
+                        <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+                    </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
@@ -255,14 +212,9 @@ if (!isset($_SESSION["username"])) {
                             </a>
                         </li>
                 </nav>
-                <!-- End Sidebar navigation -->
             </div>
-            <!-- End Sidebar scroll-->
         </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
         <div class="body-wrapper">
-            <!--  Header Start -->
             <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
@@ -296,11 +248,9 @@ if (!isset($_SESSION["username"])) {
                     </div>
                 </nav>
             </header>
-            <!--  Header End -->
             <div class="container-fluid">
-                <!--  Row 1 -->
                 <div class="row">
-                    <div class="col-lg-8 d-flex align-items-strech">
+                    <div class="col-lg-30 d-flex align-items-strech">
                         <div class="card w-100">
                             <div class="card-body">
                                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -308,50 +258,11 @@ if (!isset($_SESSION["username"])) {
                                         <h5 class="card-title fw-semibold">業務員的銷售業績</h5>
                                     </div>
                                 </div>
-                                <div class="form-inline">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="s_id" placeholder="業務員序號(後5碼)">
-                                            <select id="c_id" class="form-select ">
-                                                <option value="">Total Statistic</option>
-                                            </select>
-                                            <button id="searchButton" type="button"
-                                                class="btn btn-outline-primary">Search</button>
-                                            <button id="resetButton" type="button"
-                                                class="btn btn-outline-danger">Reset</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <canvas id="salesChart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <!-- Yearly Breakup -->
-                                <div class="card overflow-hidden">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">Total Visits Frequency</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="totalVisit"
-                                            style="font-size: 500%;"></h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- Yearly Breakup -->
-                            <div class="card overflow-hidden">
-                                <div class="card-body p-4 text-center">
-                                    <h5 class="card-title mb-9 fw-semibold">Total Contacts Frequency</h5>
-                                    <h3 class="card-title mb-9 fw-semibold" id="totalContact" style="font-size: 500%;">
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-
                 <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
                 <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
                 <script src="../../assets/js/sidebarmenu.js"></script>

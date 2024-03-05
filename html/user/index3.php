@@ -9,6 +9,7 @@ if (!isset($_SESSION["username"])) {
 }
 
 ?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,75 +17,104 @@ if (!isset($_SESSION["username"])) {
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: [],
-          datasets: [{
-            data: [],
-            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], // Add colors for each doughnut segment
-          }]
-        },options:{
-          aspectRatio:3,
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
+    integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    var salesChart;
+    fetchData();
+
+    function fetchData() {
+        var id = '<?php echo $_SESSION["username"]; ?>';
+        var url = `../get/getGAData.php`;
+        var queryParams = [];
+        if (id) queryParams.push(`id=${id}`);
+        if (queryParams.length > 0) {
+            url += '?' + queryParams.join('&');
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data);
+                })
+                .catch(error => console.error('Fetch error:', error));
         }
-      });
-
-      // Function to fetch postal codes
-      function fetchPostalCodes() {
-        fetch('../get/getPC.php')
-          .then(response => response.json())
-          .then(data => {
-            populatePostalCodes(data);
-          })
-          .catch(error => console.error('Error:', error));
-      }
-
-      // Function to populate postal code dropdown
-      function populatePostalCodes(postalCodes) {
-        var postalCodeSelect = document.getElementById('postalCode');
-        postalCodeSelect.innerHTML = '<option value="">Select Postal Code</option>';
-        postalCodes.forEach(function(code) {
-          var option = document.createElement('option');
-          option.value = code;
-          option.textContent = code;
-          postalCodeSelect.appendChild(option);
-        });
-      }
-
-      // Fetch postal codes when the page loads
-      fetchPostalCodes();
-
-      document.getElementById('searchButton').addEventListener('click', function () {
-        var gender = document.getElementById('gender').value;
-        var postalCode = document.getElementById('postalCode').value;
-        var age = document.getElementById('age').value;
-
-        fetch(`../get/getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
-          .then(response => response.json())
-          .then(data => updateChart(myChart, data))
-          .catch(error => console.error('Error:', error));
-      });
-
-      document.getElementById('resetButton').addEventListener('click', function () {
-        document.getElementById('gender').value = '';
-        document.getElementById('postalCode').value = '';
-        document.getElementById('age').value = '';
-        updateChart(myChart, []); // Clear the chart
-      });
-    });
-
-    function updateChart(chart, data) {
-      chart.data.labels = data.map(row => row[0]); // Product names
-      chart.data.datasets[0].data = data.map(row => row[2]); // Purchase counts
-      chart.update();
     }
-  </script>
+
+    function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+            salesChart.destroy();
+        }
+        let labelsSet = new Set(data.GA.map(d => d.age_cate));
+        let labelsArray = Array.from(labelsSet);
+        const tooltip = {
+          yAlign: 'bottom',
+          titleAlign: 'center',
+          callbacks: {
+            label: function (context) {
+              return `${context.dataset.label} ${Math.abs(context.raw)}`;// label and abs(data)
+            }
+          }
+        }
+
+        salesChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labelsArray,
+            datasets: [{
+              label: '男',
+              data: data.GA.filter(d => d.客戶性別 === '男').map(d => d.客戶數量),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }, {
+              label: '女',
+              data: data.GA.filter(d => d.客戶性別 === '女').map(d => -d.客戶數量),
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            aspectRatio: 3,
+            indexAxis: 'y',
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: '人數',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                stacked: true,
+                ticks: {
+                  callback: function (value, index, values) {
+                    return Math.abs(value);
+                  }
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '年齡',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                beginAtZero: true,
+                stacked: true
+              }
+            }, plugins: {
+              tooltip,
+            }
+          }
+        });
+    }
+});
+</script>
 </head>
 
-<body>
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -93,8 +123,8 @@ if (!isset($_SESSION["username"])) {
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">       
-            <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <img src="../../assets/images/logos/logo.png" width="180" alt="" />
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -221,7 +251,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -229,48 +259,29 @@ if (!isset($_SESSION["username"])) {
           </div>
         </nav>
       </header>
-  <!--  Header End -->
-  <div class="container-fluid">
-    <!--  Row 1 -->
-    <div class="row">
-      <div class="col-lg-10 d-flex align-items-strech">
-        <div class="card w-100">
-          <div class="card-body">
-            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-              <div class="mb-3 mb-sm-0">
-                <h5 class="card-title fw-semibold">客戶產品推薦</h5>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <!--  Row 1 -->
+        <div class="row">
+          <div class="d-flex align-items-strech">
+            <div class="card w-100">
+              <div class="card-body">
+                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                  <div class="mb-3 mb-sm-0">
+                    <h5 class="card-title fw-semibold">業務員的銷售業績</h5>
+                  </div>
+                </div>
+                <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>
-            <div class="input-group">
-              <select id="gender" class="form-select ">
-                <option value="">Select Gender</option>
-                <option value="男">Male</option>
-                <option value="女">Female</option>
-              </select>
-
-              <select id="postalCode" class="form-select ">
-                <option value="">Select Postal Code</option>
-              </select>
-              <input type="number" class="form-control" id="age" placeholder="Enter Age">
-
-              <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-              <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-            </div>
-            <canvas id="myChart"></canvas>
-            </body>
-            </html>
-</div>
-</div>
-</div>
-
-</div>
-</div>
-<script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../assets/js/sidebarmenu.js"></script>
-<script src="../../assets/js/app.min.js"></script>
-<script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="../../assets/js/dashboard.js"></script>
+          </div>
+        </div>
+        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/sidebarmenu.js"></script>
+        <script src="../../assets/js/app.min.js"></script>
+        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>

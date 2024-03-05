@@ -184,7 +184,7 @@ if (!isset($_SESSION["username"])) {
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-affiliate"></i>
                                 </span>
@@ -216,7 +216,7 @@ if (!isset($_SESSION["username"])) {
                             <span class="hide-menu"><b>客戶性別年齡分析</b></span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-gender-bigender"></i>
                                 </span>
@@ -228,7 +228,7 @@ if (!isset($_SESSION["username"])) {
                             <span class="hide-menu"><b>關係分析</b></span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index4.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-briefcase"></i>
                                 </span>
@@ -240,7 +240,7 @@ if (!isset($_SESSION["username"])) {
                             <span class="hide-menu"><b>客戶互動</b></span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                            <a class="sidebar-link" href="./index5.php" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-calendar-time"></i>
                                 </span>
@@ -325,10 +325,10 @@ if (!isset($_SESSION["username"])) {
                                     </div>
                                 </div>
                                 <?php
-                                $script = __DIR__ . DIRECTORY_SEPARATOR . "function1.1.py";
+                                $script = __DIR__ . DIRECTORY_SEPARATOR . "../../function1.1.py";
                                 $result = shell_exec("python $script");
                                 //echo "PHP got the result - $result";
-                                echo '<img src="/web/photo/image.png" alt="Generated Image">';
+                                echo '<img src="../../assets/images/1/image.png" alt="Generated Image">';
                                 ?>
 
                             </div>

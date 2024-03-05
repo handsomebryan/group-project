@@ -118,7 +118,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <a class="sidebar-link" href="./index12.php" aria-expanded="false">
                   <span>
                     <i class="ti ti-affiliate"></i>
                   </span>
@@ -150,7 +150,7 @@ if (!isset($_SESSION["username"])) {
                 <span class="hide-menu"><b>客戶性別年齡分析</b></span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <a class="sidebar-link" href="./index3.php" aria-expanded="false">
                   <span>
                     <i class="ti ti-gender-bigender"></i>
                   </span>
