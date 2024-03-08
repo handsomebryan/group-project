@@ -26,10 +26,10 @@ if (!isset($_SESSION["username"])) {
           labels: [],
           datasets: [{
             data: [],
-            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], 
+            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
             label: 'Purchased'
           }]
-        },options:{
+        }, options: {
           aspectRatio: 3,
         }
       });
@@ -47,7 +47,7 @@ if (!isset($_SESSION["username"])) {
       // Function to populate postal code dropdown
       function populatePostalCodes(postalCodes) {
         var postalCodeSelect = document.getElementById('postalCode');
-        postalCodeSelect.innerHTML = '<option value="">Select Postal Code</option>';
+        postalCodeSelect.innerHTML = '<option value="">郵遞區號</option>';
         postalCodes.forEach(function (code) {
           var option = document.createElement('option');
           option.value = code;
@@ -96,8 +96,8 @@ if (!isset($_SESSION["username"])) {
       <aside class="left-sidebar">
         <!-- Sidebar scroll-->
         <div>
-          <div class="brand-logo d-flex align-items-center justify-content-between">      
-              <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+          <div class="brand-logo d-flex align-items-center justify-content-between">
+            <img src="../../assets/images/logos/logo.png" width="180" alt="" />
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
               <i class="ti ti-x fs-8"></i>
             </div>
@@ -213,7 +213,7 @@ if (!isset($_SESSION["username"])) {
             </ul>
             <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
               <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                <h5>Welcome back!
+                <h5>歡迎回來！
                   <?php echo $_SESSION["username"] ?>
                 </h5>
                 <li class="nav-item dropdown">
@@ -224,7 +224,7 @@ if (!isset($_SESSION["username"])) {
                   </a>
                   <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                     <div class="message-body">
-                      <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                      <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                     </div>
                   </div>
                 </li>
@@ -246,18 +246,18 @@ if (!isset($_SESSION["username"])) {
                   </div>
                   <div class="input-group">
                     <select id="gender" class="form-select ">
-                      <option value="">Select Gender</option>
-                      <option value="男">Male</option>
-                      <option value="女">Female</option>
+                      <option value="">性別</option>
+                      <option value="男">男性</option>
+                      <option value="女">女性</option>
                     </select>
 
                     <select id="postalCode" class="form-select ">
-                      <option value="">Select Postal Code</option>
+                      <option value="">郵遞區號</option>
                     </select>
-                    <input type="number" class="form-control" id="age" placeholder="Enter Age">
+                    <input type="number" class="form-control" id="age" placeholder="年齡">
 
-                    <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                    <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                    <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                    <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                   </div>
                   <canvas id="myChart"></canvas>
   </body>

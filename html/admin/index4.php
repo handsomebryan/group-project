@@ -64,7 +64,7 @@ if (!isset($_SESSION["username"])) {
           data: {
             labels: data.user.map(d => d.商品大分類),
             datasets: [{
-              label: 'You (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.user.map(d => d.total_sales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
@@ -73,7 +73,7 @@ if (!isset($_SESSION["username"])) {
                 offset: 10
               }
             }, {
-              label: 'Top 1 Sales (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T1.map(d => d.total_sales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
@@ -82,7 +82,7 @@ if (!isset($_SESSION["username"])) {
                 offset: 10
               }
             }, {
-              label: 'Top 2 Sales (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T2.map(d => d.total_sales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
@@ -248,7 +248,7 @@ if (!isset($_SESSION["username"])) {
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
+              <h5>歡迎回來！
                 <?php echo $_SESSION["username"] ?>
               </h5>
               <li class="nav-item dropdown">
@@ -259,7 +259,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                   </div>
                 </div>
               </li>
@@ -283,8 +283,8 @@ if (!isset($_SESSION["username"])) {
                   <div class="form-group">
                     <div class="input-group">
                       <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
-                      <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                      <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                      <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                      <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>
                   </div>
                 </div>

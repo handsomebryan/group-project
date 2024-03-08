@@ -253,7 +253,7 @@ if (!isset($_SESSION["username"])) {
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
+              <h5>歡迎回來！
                 <?php echo $_SESSION["username"] ?>
               </h5>
               <li class="nav-item dropdown">
@@ -264,7 +264,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                   </div>
                 </div>
               </li>
@@ -288,8 +288,8 @@ if (!isset($_SESSION["username"])) {
                   <div class="form-group">
                     <div class="input-group">
                       <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
-                      <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                      <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                      <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                      <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>
                   </div>
                 </div>

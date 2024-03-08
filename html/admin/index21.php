@@ -48,7 +48,7 @@ if (!isset($_SESSION["username"])) {
           .then(response => response.json())
           .then(quarters => {
             var select = document.getElementById('quarterDropdown');
-            select.innerHTML = '<option value="">Select Quarter</option>'; // Clear the dropdown
+            select.innerHTML = '<option value="">季度</option>'; // Clear the dropdown
             quarters.forEach(function (quarter) {
               var option = document.createElement('option');
               option.text = quarter;
@@ -63,7 +63,7 @@ if (!isset($_SESSION["username"])) {
           .then(response => response.json())
           .then(months => {
             var select = document.getElementById('monthDropdown');
-            select.innerHTML = '<option value="">Select Month</option>'; // Clear the dropdown
+            select.innerHTML = '<option value="">月份</option>'; // Clear the dropdown
             months.forEach(function (month) {
               var option = document.createElement('option');
               option.text = month;
@@ -312,7 +312,7 @@ if (!isset($_SESSION["username"])) {
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
+              <h5>歡迎回來！
                 <?php echo $_SESSION["username"] ?>
               </h5>
               <li class="nav-item dropdown">
@@ -323,7 +323,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                   </div>
                 </div>
               </li>
@@ -347,16 +347,16 @@ if (!isset($_SESSION["username"])) {
                 <div class="form-inline">
                   <div class="input-group">
                     <select id="yearDropdown" class="form-select ">
-                      <option value="">Select Year</option>
+                      <option value="">年份</option>
                     </select>
                     <select id="quarterDropdown" class="form-select ">
-                      <option value="">Select Quarter</option>
+                      <option value="">季度</option>
                     </select>
                     <select id="monthDropdown" class="form-select ">
-                      <option value="">Select Month</option>
+                      <option value="">月份</option>
                     </select>
-                    <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                    <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                    <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                    <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                   </div>
                 </div>
                 <canvas id="salesChart"></canvas>

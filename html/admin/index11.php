@@ -280,7 +280,7 @@ if (!isset($_SESSION["username"])) {
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <h5>Welcome back!
+                            <h5>歡迎回來！
                                 <?php echo $_SESSION["username"] ?>
                             </h5>
                             <li class="nav-item dropdown">
@@ -292,7 +292,7 @@ if (!isset($_SESSION["username"])) {
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                                        <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                                     </div>
                                 </div>
                             </li>
@@ -328,7 +328,7 @@ if (!isset($_SESSION["username"])) {
                                 $script = __DIR__ . DIRECTORY_SEPARATOR . "../../function1.1.py";
                                 $result = shell_exec("python $script");
                                 //echo "PHP got the result - $result";
-                                echo '<img src="../../assets/images/1/image.png" alt="Generated Image">';
+                                echo '<img src="../../assets/images/1/image.png" width="1500" height="1500" alt="Generated Image">';
                                 ?>
 
                             </div>

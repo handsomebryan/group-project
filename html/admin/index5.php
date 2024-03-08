@@ -30,7 +30,7 @@ if (!isset($_SESSION["username"])) {
                         select.innerHTML = '';
                         var totalOption = document.createElement('option');
                         totalOption.value = '';
-                        totalOption.text = 'Total Statistic';
+                        totalOption.text = '最近12月總計';
                         select.add(totalOption);
 
                         data.forEach(function (id) {
@@ -84,7 +84,7 @@ if (!isset($_SESSION["username"])) {
                     data: {
                         labels: combinedDates,
                         datasets: [{
-                            label: 'Visit Frequency',
+                            label: '拜訪次數',
                             data: combinedDates.map(date => {
                                 var visit = data.visit.find(d => d.日期 === date);
                                 return visit ? visit.拜訪次數 : 0;
@@ -94,7 +94,7 @@ if (!isset($_SESSION["username"])) {
                             borderWidth: 1,
                             fill: false
                         }, {
-                            label: 'Contact Frequency',
+                            label: '聯絡次數',
                             data: combinedDates.map(date => {
                                 var contact = data.contact.find(d => d.日期 === date);
                                 return contact ? contact.聯絡次數 : 0;
@@ -275,7 +275,7 @@ if (!isset($_SESSION["username"])) {
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <h5>Welcome back!
+                            <h5>歡迎回來！
                                 <?php echo $_SESSION["username"] ?>
                             </h5>
                             <li class="nav-item dropdown">
@@ -287,8 +287,7 @@ if (!isset($_SESSION["username"])) {
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="../logout.php"
-                                            class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                                        <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                                     </div>
                                 </div>
                             </li>
@@ -313,12 +312,12 @@ if (!isset($_SESSION["username"])) {
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="s_id" placeholder="業務員序號(後5碼)">
                                             <select id="c_id" class="form-select ">
-                                                <option value="">Total Statistic</option>
+                                                <option value="">最近12月總計</option>
                                             </select>
                                             <button id="searchButton" type="button"
-                                                class="btn btn-outline-primary">Search</button>
+                                                class="btn btn-outline-primary">搜尋</button>
                                             <button id="resetButton" type="button"
-                                                class="btn btn-outline-danger">Reset</button>
+                                                class="btn btn-outline-danger">重設</button>
                                         </div>
                                     </div>
                                 </div>
@@ -332,7 +331,7 @@ if (!isset($_SESSION["username"])) {
                                 <!-- Yearly Breakup -->
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">Total Visits Frequency</h5>
+                                        <h5 class="card-title mb-9 fw-semibold">總拜訪次數</h5>
                                         <h3 class="card-title mb-9 fw-semibold" id="totalVisit"
                                             style="font-size: 500%;"></h3>
                                     </div>
@@ -343,7 +342,7 @@ if (!isset($_SESSION["username"])) {
                             <!-- Yearly Breakup -->
                             <div class="card overflow-hidden">
                                 <div class="card-body p-4 text-center">
-                                    <h5 class="card-title mb-9 fw-semibold">Total Contacts Frequency</h5>
+                                    <h5 class="card-title mb-9 fw-semibold">總聯絡次數</h5>
                                     <h3 class="card-title mb-9 fw-semibold" id="totalContact" style="font-size: 500%;">
                                     </h3>
                                 </div>

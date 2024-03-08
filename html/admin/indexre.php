@@ -9,6 +9,7 @@ if (!isset($_SESSION["username"])) {
 }
 
 ?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,8 +28,8 @@ if (!isset($_SESSION["username"])) {
             data: [],
             backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], // Add colors for each doughnut segment
           }]
-        },options:{
-          aspectRatio:3,
+        }, options: {
+          aspectRatio: 3,
         }
       });
 
@@ -45,8 +46,8 @@ if (!isset($_SESSION["username"])) {
       // Function to populate postal code dropdown
       function populatePostalCodes(postalCodes) {
         var postalCodeSelect = document.getElementById('postalCode');
-        postalCodeSelect.innerHTML = '<option value="">Select Postal Code</option>';
-        postalCodes.forEach(function(code) {
+        postalCodeSelect.innerHTML = '<option value="">郵遞區號</option>';
+        postalCodes.forEach(function (code) {
           var option = document.createElement('option');
           option.value = code;
           option.textContent = code;
@@ -85,180 +86,182 @@ if (!isset($_SESSION["username"])) {
 </head>
 
 <body>
-<body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
-    <aside class="left-sidebar">
-      <!-- Sidebar scroll-->
-      <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">       
+
+  <body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+      data-sidebar-position="fixed" data-header-position="fixed">
+      <!-- Sidebar Start -->
+      <aside class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div>
+          <div class="brand-logo d-flex align-items-center justify-content-between">
             <img src="../../assets/images/logos/logo.png" width="180" alt="" />
-          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-            <i class="ti ti-x fs-8"></i>
+            <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+              <i class="ti ti-x fs-8"></i>
+            </div>
           </div>
-        </div>
-        <!-- Sidebar navigation-->
-        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-dots-3"></i>
-                </span>
-                <span class="hide-menu">業務員&關係客戶群組</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-affiliate"></i>
-                </span>
-                <span class="hide-menu">業務員&招攬業務員關係群組</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>銷售業績分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index21.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-arrows-vertical"></i>
-                </span>
-                <span class="hide-menu">表現最佳的保險產品</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index22.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-brand-cashapp"></i>
-                </span>
-                <span class="hide-menu">業務員的銷售業績</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>客戶性別年齡分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index3.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-gender-bigender"></i>
-                </span>
-                <span class="hide-menu">客戶性別年齡分佈</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>關係分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index4.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-briefcase"></i>
-                </span>
-                <span class="hide-menu">業務員與保險關係</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>客戶互動</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index5.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-calendar-time"></i>
-                </span>
-                <span class="hide-menu">業務員與客戶聯繫及拜訪頻率</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>產品推薦介面</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-compass"></i>
-                </span>
-                <span class="hide-menu">客戶產品推薦</span>
-              </a>
-            </li>
-        </nav>
-        <!-- End Sidebar navigation -->
-      </div>
-      <!-- End Sidebar scroll-->
-    </aside>
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <!--  Header Start -->
-      <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-              </a>
-            </li>
-          </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
-                <?php echo $_SESSION["username"] ?>
-              </h5>
-              <li class="nav-item dropdown">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
-                    class="rounded-circle">
+          <!-- Sidebar navigation-->
+          <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+            <ul id="sidebarnav">
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index11.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-chart-dots-3"></i>
+                  </span>
+                  <span class="hide-menu">業務員&關係客戶群組</span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                  <div class="message-body">
-<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
-                  </div>
-                </div>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index12.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-affiliate"></i>
+                  </span>
+                  <span class="hide-menu">業務員&招攬業務員關係群組</span>
+                </a>
+              </li>
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>銷售業績分析</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index21.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-chart-arrows-vertical"></i>
+                  </span>
+                  <span class="hide-menu">表現最佳的保險產品</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index22.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-brand-cashapp"></i>
+                  </span>
+                  <span class="hide-menu">業務員的銷售業績</span>
+                </a>
+              </li>
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>客戶性別年齡分析</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index3.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-gender-bigender"></i>
+                  </span>
+                  <span class="hide-menu">客戶性別年齡分佈</span>
+                </a>
+              </li>
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>關係分析</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index4.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-briefcase"></i>
+                  </span>
+                  <span class="hide-menu">業務員與保險關係</span>
+                </a>
+              </li>
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>客戶互動</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./index5.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-calendar-time"></i>
+                  </span>
+                  <span class="hide-menu">業務員與客戶聯繫及拜訪頻率</span>
+                </a>
+              </li>
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu"><b>產品推薦介面</b></span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-compass"></i>
+                  </span>
+                  <span class="hide-menu">客戶產品推薦</span>
+                </a>
+              </li>
+          </nav>
+          <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+      </aside>
+      <!--  Sidebar End -->
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <!--  Header Start -->
+        <header class="app-header">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <ul class="navbar-nav">
+              <li class="nav-item d-block d-xl-none">
+                <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                  <i class="ti ti-menu-2"></i>
+                </a>
               </li>
             </ul>
-          </div>
-        </nav>
-      </header>
-  <!--  Header End -->
-  <div class="container-fluid">
-    <!--  Row 1 -->
-    <div class="row">
-      <div class="col-lg-10 d-flex align-items-strech">
-        <div class="card w-100">
-          <div class="card-body">
-            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-              <div class="mb-3 mb-sm-0">
-                <h5 class="card-title fw-semibold">客戶產品推薦</h5>
-              </div>
+            <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+              <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                <h5>歡迎回來！
+                  <?php echo $_SESSION["username"] ?>
+                </h5>
+                <li class="nav-item dropdown">
+                  <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img src="../../assets/images/profile/user-1.jpg" alt="" width="35" height="35"
+                      class="rounded-circle">
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                    <div class="message-body">
+                      <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <div class="input-group">
-              <select id="gender" class="form-select ">
-                <option value="">Select Gender</option>
-                <option value="男">Male</option>
-                <option value="女">Female</option>
-              </select>
+          </nav>
+        </header>
+        <!--  Header End -->
+        <div class="container-fluid">
+          <!--  Row 1 -->
+          <div class="row">
+            <div class="col-lg-10 d-flex align-items-strech">
+              <div class="card w-100">
+                <div class="card-body">
+                  <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                    <div class="mb-3 mb-sm-0">
+                      <h5 class="card-title fw-semibold">客戶產品推薦</h5>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <select id="gender" class="form-select ">
+                      <option value="">性別</option>
+                      <option value="男">男性</option>
+                      <option value="女">女性</option>
+                    </select>
 
-              <select id="postalCode" class="form-select ">
-                <option value="">Select Postal Code</option>
-              </select>
-              <input type="number" class="form-control" id="age" placeholder="Enter Age">
+                    <select id="postalCode" class="form-select ">
+                      <option value="">郵遞區號</option>
+                    </select>
+                    <input type="number" class="form-control" id="age" placeholder="年齡">
 
-              <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-              <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
-            </div>
-            <canvas id="myChart"></canvas>
-            </body>
-            </html>
+                    <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                    <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
+                  </div>
+                  <canvas id="myChart"></canvas>
+  </body>
+
+</html>
 </div>
 </div>
 </div>

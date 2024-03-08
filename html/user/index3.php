@@ -21,31 +21,31 @@ if (!isset($_SESSION["username"])) {
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var salesChart;
-    fetchData();
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var salesChart;
+      fetchData();
 
-    function fetchData() {
+      function fetchData() {
         var id = '<?php echo $_SESSION["username"]; ?>';
         var url = `../get/getGAData.php`;
         var queryParams = [];
         if (id) queryParams.push(`id=${id}`);
         if (queryParams.length > 0) {
-            url += '?' + queryParams.join('&');
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    updateChart(data);
-                })
-                .catch(error => console.error('Fetch error:', error));
+          url += '?' + queryParams.join('&');
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              updateChart(data);
+            })
+            .catch(error => console.error('Fetch error:', error));
         }
-    }
+      }
 
-    function updateChart(data) {
+      function updateChart(data) {
         var ctx = document.getElementById('salesChart').getContext('2d');
         if (salesChart) {
-            salesChart.destroy();
+          salesChart.destroy();
         }
         let labelsSet = new Set(data.GA.map(d => d.age_cate));
         let labelsArray = Array.from(labelsSet);
@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           }
         });
-    }
-});
-</script>
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
+              <h5>歡迎回來！
                 <?php echo $_SESSION["username"] ?>
               </h5>
               <li class="nav-item dropdown">
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                   </div>
                 </div>
               </li>

@@ -28,57 +28,57 @@ if (!isset($_SESSION["username"])) {
 
       // Fetch years from server
       fetch('../get/getYears.php')
-    .then(response => response.json())
-    .then(years => {
-        var select = document.getElementById('yearDropdown');
-        years.forEach(function (year) {
+        .then(response => response.json())
+        .then(years => {
+          var select = document.getElementById('yearDropdown');
+          years.forEach(function (year) {
             var option = document.createElement('option');
             option.text = year;
             option.value = year;
             select.add(option);
-        });
-    })
-    .catch(error => console.error('Error:', error));
+          });
+        })
+        .catch(error => console.error('Error:', error));
 
-    // Fetch quarters and months when a year is selected
-    document.getElementById('yearDropdown').addEventListener('change', function () {
+      // Fetch quarters and months when a year is selected
+      document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = this.value;
 
         if (!year) {
-            alert('Please select a year.');
-            return;
+          alert('Please select a year.');
+          return;
         }
 
         // Fetch quarters
         fetch(`../get/getQuarter.php?year=${year}`)
-        .then(response => response.json())
-        .then(quarters => {
+          .then(response => response.json())
+          .then(quarters => {
             var select = document.getElementById('quarterDropdown');
-            select.innerHTML = '<option value="">Select Quarter</option>'; // Clear the dropdown
+            select.innerHTML = '<option value="">季度</option>'; // Clear the dropdown
             quarters.forEach(function (quarter) {
-                var option = document.createElement('option');
-                option.text = quarter;
-                option.value = quarter;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = quarter;
+              option.value = quarter;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
+          })
+          .catch(error => console.error('Error:', error));
 
         // Fetch months
         fetch(`../get/getMonth.php?year=${year}`)
-        .then(response => response.json())
-        .then(months => {
+          .then(response => response.json())
+          .then(months => {
             var select = document.getElementById('monthDropdown');
-            select.innerHTML = '<option value="">Select Month</option>'; // Clear the dropdown
+            select.innerHTML = '<option value="">月份</option>'; // Clear the dropdown
             months.forEach(function (month) {
-                var option = document.createElement('option');
-                option.text = month;
-                option.value = month;
-                select.add(option);
+              var option = document.createElement('option');
+              option.text = month;
+              option.value = month;
+              select.add(option);
             });
-        })
-        .catch(error => console.error('Error:', error));
-    });
+          })
+          .catch(error => console.error('Error:', error));
+      });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
@@ -106,7 +106,7 @@ if (!isset($_SESSION["username"])) {
       //fetch data based on selected filters
       function fetchData() {
         // Get values
-        var username = '<?php echo $_SESSION["username"]; ?>';
+        var id = '<?php echo $_SESSION["username"] ?>';
         var year = document.getElementById('yearDropdown').value;
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
@@ -114,7 +114,7 @@ if (!isset($_SESSION["username"])) {
         // Construct the query URL with selected parameters
         var url = `../get/getCASData.php`;
         var queryParams = [];
-        if (username) queryParams.push(`id=${username}`);
+        if (id) queryParams.push(`id=${id}`);
         if (year) queryParams.push(`year=${year}`);
         if (quarter) queryParams.push(`quarter=${quarter}`);
         if (month) queryParams.push(`month=${month}`);
@@ -137,15 +137,14 @@ if (!isset($_SESSION["username"])) {
       function resetForm() {
         // Reset dropdowns and input field
         document.getElementById('yearDropdown').selectedIndex = 0;
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
+        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
+        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
+        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
+        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
         monthDropdown.disabled = false;
-
         // Destroy the current chart
         if (salesChart) {
           salesChart.destroy();
@@ -167,7 +166,7 @@ if (!isset($_SESSION["username"])) {
           data: {
             labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
             datasets: [{
-              label: 'ID: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + '(YOU)' + '',
+              label: '您 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
@@ -175,7 +174,7 @@ if (!isset($_SESSION["username"])) {
                 align: 'right'
               }
             }, {
-              label: 'TOP SALESPERSON 1' + '',
+              label: '銷量第一名',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
@@ -183,7 +182,7 @@ if (!isset($_SESSION["username"])) {
                 align: 'right'
               }
             }, {
-              label: 'TOP SALESPERSON 2' + '',
+              label: '銷量第二名',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
@@ -191,13 +190,13 @@ if (!isset($_SESSION["username"])) {
                 align: 'right'
               }
             }]
-          },plugins: [ChartDataLabels],
+          },
+          plugins: [ChartDataLabels],
           options: {
             indexAxis: 'y',
             aspectRatio: 1,
             scales: {
-              y: {
-                x: {
+              x: {
                 title: {
                   display: true,
                   text: '銷售額',
@@ -212,7 +211,7 @@ if (!isset($_SESSION["username"])) {
                   color: 'black',
                   weight: 'bold'
                 },
-                beginAtZero: true
+                beginAtZero: true,
               }
             }
           }
@@ -231,7 +230,7 @@ if (!isset($_SESSION["username"])) {
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-            <img src="../../assets/images/logos/logo.png" width="180" alt="" />
+          <img src="../../assets/images/logos/logo.png" width="180" alt="" />
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -347,7 +346,7 @@ if (!isset($_SESSION["username"])) {
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <h5>Welcome back!
+              <h5>歡迎回來！
                 <?php echo $_SESSION["username"] ?>
               </h5>
               <li class="nav-item dropdown">
@@ -358,7 +357,7 @@ if (!isset($_SESSION["username"])) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-<a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
+                    <a href="../logout.php" class="btn btn-outline-danger mx-3 mt-2 d-block">登出</a>
                   </div>
                 </div>
               </li>
@@ -370,7 +369,7 @@ if (!isset($_SESSION["username"])) {
       <div class="container-fluid">
         <!--  Row 1 -->
         <div class="row">
-          <div class=" d-flex align-items-strech">
+          <div class="d-flex align-items-strech">
             <div class="card w-100">
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -382,32 +381,16 @@ if (!isset($_SESSION["username"])) {
                   <div class="form-group">
                     <div class="input-group">
                       <select id="yearDropdown" class="form-select ">
-                        <option value="">Select Year</option>
+                        <option value="">年份</option>
                       </select>
                       <select id="quarterDropdown" class="form-select ">
-                        <option value="">Select Quarter</option>
-                        <option value="1">Q1</option>
-                        <option value="2">Q2</option>
-                        <option value="3">Q3</option>
-                        <option value="4">Q4</option>
+                        <option value="">季度</option>
                       </select>
                       <select id="monthDropdown" class="form-select ">
-                        <option value="">Select Month</option>
-                        <option value="1">Jan</option>
-                        <option value="2">Feb</option>
-                        <option value="3">Mar</option>
-                        <option value="4">Apr</option>
-                        <option value="5">May</option>
-                        <option value="6">Jun</option>
-                        <option value="7">Jul</option>
-                        <option value="8">Aug</option>
-                        <option value="9">Sep</option>
-                        <option value="10">Oct</option>
-                        <option value="11">Nov</option>
-                        <option value="12">Dec</option>
+                        <option value="">月份</option>
                       </select>
-                      <button id="searchButton" type="button" class="btn btn-outline-primary">Search</button>
-                      <button id="resetButton" type="button" class="btn btn-outline-danger">Reset</button>
+                      <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
+                      <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>
                   </div>
                 </div>
@@ -416,13 +399,12 @@ if (!isset($_SESSION["username"])) {
             </div>
           </div>
         </div>
-      </div>
-      <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-      <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="../../assets/js/sidebarmenu.js"></script>
-      <script src="../../assets/js/app.min.js"></script>
-      <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-      <script src="../../assets/js/dashboard.js"></script>
+        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/sidebarmenu.js"></script>
+        <script src="../../assets/js/app.min.js"></script>
+        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>
