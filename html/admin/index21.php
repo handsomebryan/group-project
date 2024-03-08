@@ -42,36 +42,6 @@ if (!isset($_SESSION["username"])) {
           alert('Please select a year.');
           return;
         }
-
-        // Fetch quarters
-        fetch(`../get/getQuarter.php?year=${year}`)
-          .then(response => response.json())
-          .then(quarters => {
-            var select = document.getElementById('quarterDropdown');
-            select.innerHTML = '<option value="">季度</option>'; // Clear the dropdown
-            quarters.forEach(function (quarter) {
-              var option = document.createElement('option');
-              option.text = quarter;
-              option.value = quarter;
-              select.add(option);
-            });
-          })
-          .catch(error => console.error('Error:', error));
-
-        // Fetch months
-        fetch(`../get/getMonth.php?year=${year}`)
-          .then(response => response.json())
-          .then(months => {
-            var select = document.getElementById('monthDropdown');
-            select.innerHTML = '<option value="">月份</option>'; // Clear the dropdown
-            months.forEach(function (month) {
-              var option = document.createElement('option');
-              option.text = month;
-              option.value = month;
-              select.add(option);
-            });
-          })
-          .catch(error => console.error('Error:', error));
       });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
@@ -109,10 +79,8 @@ if (!isset($_SESSION["username"])) {
 
       document.getElementById('resetButton').addEventListener('click', function () {
         document.getElementById('yearDropdown').selectedIndex = 0;
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">Select Quarter</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">Select Month</option>';
+        document.getElementById('quarterDropdown').selectedIndex = 0;
+        document.getElementById('monthDropdown').selectedIndex = 0;
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
@@ -187,12 +155,9 @@ if (!isset($_SESSION["username"])) {
 </head>
 
 <body>
-  <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
     <aside class="left-sidebar">
-      <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <img src="../../assets/images/logos/logo.png" width="180" alt="" />
@@ -200,29 +165,8 @@ if (!isset($_SESSION["username"])) {
             <i class="ti ti-x fs-8"></i>
           </div>
         </div>
-        <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
           <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-dots-3"></i>
-                </span>
-                <span class="hide-menu">業務員&關係客戶群組</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-affiliate"></i>
-                </span>
-                <span class="hide-menu">業務員&招攬業務員關係群組</span>
-              </a>
-            </li>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu"><b>銷售業績分析</b></span>
@@ -241,6 +185,26 @@ if (!isset($_SESSION["username"])) {
                   <i class="ti ti-brand-cashapp"></i>
                 </span>
                 <span class="hide-menu">業務員的銷售業績</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
+                <span>
+                  <i class="ti ti-chart-dots-3"></i>
+                </span>
+                <span class="hide-menu">業務員&關係客戶群組</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
+                <span>
+                  <i class="ti ti-affiliate"></i>
+                </span>
+                <span class="hide-menu">業務員&招攬業務員關係群組</span>
               </a>
             </li>
             <li class="nav-small-cap">
@@ -292,14 +256,9 @@ if (!isset($_SESSION["username"])) {
               </a>
             </li>
         </nav>
-        <!-- End Sidebar navigation -->
       </div>
-      <!-- End Sidebar scroll-->
     </aside>
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
     <div class="body-wrapper">
-      <!--  Header Start -->
       <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
           <ul class="navbar-nav">
@@ -331,10 +290,7 @@ if (!isset($_SESSION["username"])) {
           </div>
         </nav>
       </header>
-      <!--  Header End -->
-
       <div class="container-fluid">
-        <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-10 d-flex align-items-strech">
             <div class="card w-100">
@@ -351,9 +307,25 @@ if (!isset($_SESSION["username"])) {
                     </select>
                     <select id="quarterDropdown" class="form-select ">
                       <option value="">季度</option>
+                      <option value="1">第一季度</option>
+                      <option value="2">第二季度</option>
+                      <option value="3">第三季度</option>
+                      <option value="4">第四季度</option>
                     </select>
                     <select id="monthDropdown" class="form-select ">
                       <option value="">月份</option>
+                      <option value="1">1月</option>
+                      <option value="2">2月</option>
+                      <option value="3">3月</option>
+                      <option value="4">4月</option>
+                      <option value="5">5月</option>
+                      <option value="6">6月</option>
+                      <option value="7">7月</option>
+                      <option value="8">8月</option>
+                      <option value="9">9月</option>
+                      <option value="10">10月</option>
+                      <option value="11">11月</option>
+                      <option value="12">12月</option>
                     </select>
                     <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
                     <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
