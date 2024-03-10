@@ -265,7 +265,7 @@ if (!isset($_SESSION["username"])) {
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">業務員的銷售業績</h5>
+                    <h5 class="card-title fw-semibold">業務員與保險關係</h5>
                   </div>
                 </div>
                 <div class="form-inline">
