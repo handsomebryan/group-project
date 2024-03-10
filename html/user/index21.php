@@ -42,36 +42,6 @@ if (!isset($_SESSION["username"])) {
           alert('Please select a year.');
           return;
         }
-
-        // Fetch quarters
-        fetch(`../get/getQuarter.php?year=${year}`)
-          .then(response => response.json())
-          .then(quarters => {
-            var select = document.getElementById('quarterDropdown');
-            select.innerHTML = '<option value="">季度</option>'; // Clear the dropdown
-            quarters.forEach(function (quarter) {
-              var option = document.createElement('option');
-              option.text = quarter;
-              option.value = quarter;
-              select.add(option);
-            });
-          })
-          .catch(error => console.error('Error:', error));
-
-        // Fetch months
-        fetch(`../get/getMonth.php?year=${year}`)
-          .then(response => response.json())
-          .then(months => {
-            var select = document.getElementById('monthDropdown');
-            select.innerHTML = '<option value="">月份</option>'; // Clear the dropdown
-            months.forEach(function (month) {
-              var option = document.createElement('option');
-              option.text = month;
-              option.value = month;
-              select.add(option);
-            });
-          })
-          .catch(error => console.error('Error:', error));
       });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
@@ -107,10 +77,8 @@ if (!isset($_SESSION["username"])) {
 
       document.getElementById('resetButton').addEventListener('click', function () {
         document.getElementById('yearDropdown').selectedIndex = 0;
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
+        document.getElementById('quarterDropdown').selectedIndex = 0;
+        document.getElementById('monthDropdown').selectedIndex = 0;
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
@@ -337,9 +305,25 @@ if (!isset($_SESSION["username"])) {
                     </select>
                     <select id="quarterDropdown" class="form-select ">
                       <option value="">季度</option>
+                      <option value="1">第一季度</option>
+                      <option value="2">第二季度</option>
+                      <option value="3">第三季度</option>
+                      <option value="4">第四季度</option>
                     </select>
                     <select id="monthDropdown" class="form-select ">
                       <option value="">月份</option>
+                      <option value="1">1月</option>
+                      <option value="2">2月</option>
+                      <option value="3">3月</option>
+                      <option value="4">4月</option>
+                      <option value="5">5月</option>
+                      <option value="6">6月</option>
+                      <option value="7">7月</option>
+                      <option value="8">8月</option>
+                      <option value="9">9月</option>
+                      <option value="10">10月</option>
+                      <option value="11">11月</option>
+                      <option value="12">12月</option>
                     </select>
                     <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
                     <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
