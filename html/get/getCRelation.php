@@ -1,5 +1,6 @@
 <?php
 include '../dbconnect.php';
+
 $id = $_GET['id'];
 
 // Query to select data from your database
