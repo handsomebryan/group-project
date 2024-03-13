@@ -47,7 +47,6 @@ function createDotFile($graphData)
     return $dotFileContent;
 }
 
-
 // Generate the dot file content
 $dotContent = createDotFile($graphData);
 
