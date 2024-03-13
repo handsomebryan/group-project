@@ -12,10 +12,9 @@ import pymysql
 # 資料庫設定
 db_settings = {
     "host": "localhost",
-    "port": 8080,
     "user": "root",
-    "password": "12345678",
-    "db": "data",
+    "password": "00000000",
+    "db": "fyp",
     "charset": "utf8"
 }
 try:

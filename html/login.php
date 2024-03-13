@@ -53,8 +53,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
-  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+  <title>業務一把罩</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
 </head>
 
@@ -69,20 +69,17 @@
           <div class="col-md-8 col-lg-6 col-xxl-3">
             <div class="card mb-0">
               <div class="card-body">
-                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                  <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
-                </a>
-                <p class="text-center">Your Social Campaigns</p>
+                <p><center><img src="../assets/images/logos/logo.png" width="180" alt=""></center></p>
                 <form action="#" method="post">
                   <div class="mb-3">
-                    <label for="id" class="form-label">Username</label>
+                    <label for="id" class="form-label">帳號</label>
                     <input type="text" class="form-control" name="username"  id="username" required>
                   </div>
                   <div class="mb-4">
-                    <label for="pw" class="form-label">Password</label>
+                    <label for="pw" class="form-label">密碼</label>
                     <input type="password" class="form-control" name="password" id="password" required>
                   </div>
-                  <input type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" value="Login">
+                  <input type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" value="登入">
                 </form>
               </div>
             </div>

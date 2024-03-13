@@ -17,135 +17,96 @@ if (!isset($_SESSION["username"])) {
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
+    integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      var salesChart; // Variable for the chart instance
+      var salesChart;
+      fetchData();
 
-      fetch('../get/getYears.php')
-        .then(response => response.json())
-        .then(years => {
-          var select = document.getElementById('yearDropdown');
-          years.forEach(function (year) {
-            var option = document.createElement('option');
-            option.text = year;
-            option.value = year;
-            select.add(option);
-          });
-        })
-        .catch(error => console.error('Error:', error));
-
-      // Fetch quarters and months when a year is selected
-      document.getElementById('yearDropdown').addEventListener('change', function () {
-        var year = this.value;
-
-        if (!year) {
-          alert('Please select a year.');
-          return;
+      function fetchData() {
+        var id = '<?php echo $_SESSION["username"]; ?>';
+        var url = `../get/getGAData.php`;
+        var queryParams = [];
+        if (id) queryParams.push(`id=${id}`);
+        if (queryParams.length > 0) {
+          url += '?' + queryParams.join('&');
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              updateChart(data);
+            })
+            .catch(error => console.error('Fetch error:', error));
         }
-      });
-
-      var quarterDropdown = document.getElementById('quarterDropdown');
-      var monthDropdown = document.getElementById('monthDropdown');
-
-      quarterDropdown.addEventListener('change', function () {
-        monthDropdown.disabled = !!this.value;
-        monthDropdown.value = '';
-      });
-
-      monthDropdown.addEventListener('change', function () {
-        quarterDropdown.disabled = !!this.value;
-        quarterDropdown.value = '';
-      });
-
-
-      document.getElementById('searchButton').addEventListener('click', function () {
-        var year = document.getElementById('yearDropdown').value;
-        var quarter = document.getElementById('quarterDropdown').value;
-        var month = document.getElementById('monthDropdown').value;
-        var isSpecificMonth = !!month;
-
-        var url = `../get/getBSData.php?year=${year}`;
-        if (quarter) {
-          url += `&quarter=${quarter}`;
-        } else if (month) {
-          url += `&month=${month}`;
-        }
-
-        fetch(url)
-          .then(response => response.json())
-          .then(data => updateChart(data, isSpecificMonth))
-          .catch(error => console.error('Error:', error));
-      });
-
-      document.getElementById('resetButton').addEventListener('click', function () {
-        document.getElementById('yearDropdown').selectedIndex = 0;
-        document.getElementById('quarterDropdown').selectedIndex = 0;
-        document.getElementById('monthDropdown').selectedIndex = 0;
-        quarterDropdown.selectedIndex = 0;
-        monthDropdown.selectedIndex = 0;
-        quarterDropdown.disabled = false;
-        monthDropdown.disabled = false;
-        if (salesChart) {
-          salesChart.destroy();
-        }
-      });
+      }
 
       function updateChart(data) {
         var ctx = document.getElementById('salesChart').getContext('2d');
         if (salesChart) {
           salesChart.destroy();
         }
-
-        var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
-
-        //  unique labels for the x-axis
-        var labels = [...new Set(data.map(item => item[1]))];
-
-        var datasets = [];
-        var groupedData = data.reduce(function (acc, item) {
-          if (!acc[item[0]]) {
-            acc[item[0]] = Array(labels.length).fill(0);
+        let labelsSet = new Set(data.GA.map(d => d.age_cate));
+        let labelsArray = Array.from(labelsSet);
+        const tooltip = {
+          yAlign: 'bottom',
+          titleAlign: 'center',
+          callbacks: {
+            label: function (context) {
+              return `${context.dataset.label} ${Math.abs(context.raw)}`;// label and abs(data)
+            }
           }
-          var index = labels.indexOf(item[1]);
-          acc[item[0]][index] = item[2];
-          return acc;
-        }, {});
-
-        Object.keys(groupedData).forEach(function (key, index) {
-          datasets.push({
-            label: key, // 商品中文名稱(商品英文代碼)
-            data: groupedData[key],
-            borderColor: specificColors[index % specificColors.length],
-            fill: false
-          });
-        });
+        }
 
         salesChart = new Chart(ctx, {
-          type: 'line',
+          type: 'bar',
           data: {
-            labels: labels,
-            datasets: datasets
+            labels: labelsArray,
+            datasets: [{
+              label: '男',
+              data: data.GA.filter(d => d.客戶性別 === '男').map(d => d.客戶數量),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }, {
+              label: '女',
+              data: data.GA.filter(d => d.客戶性別 === '女').map(d => -d.客戶數量),
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
           },
           options: {
             aspectRatio: 3,
+            indexAxis: 'y',
             scales: {
               x: {
                 title: {
                   display: true,
-                  text: '日期',
+                  text: '人數',
                   color: 'black',
                   weight: 'bold'
+                },
+                stacked: true,
+                ticks: {
+                  callback: function (value, index, values) {
+                    return Math.abs(value);
+                  }
                 }
               },
               y: {
                 title: {
                   display: true,
-                  text: '銷售額',
+                  text: '年齡',
                   color: 'black',
                   weight: 'bold'
                 },
-                beginAtZero: true
-              },
+                beginAtZero: true,
+                stacked: true
+              }
+            }, plugins: {
+              tooltip,
             }
           }
         });
@@ -267,7 +228,6 @@ if (!isset($_SESSION["username"])) {
                 <i class="ti ti-menu-2"></i>
               </a>
             </li>
-
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -292,46 +252,15 @@ if (!isset($_SESSION["username"])) {
       </header>
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-10 d-flex align-items-strech">
+          <div class="d-flex align-items-strech">
             <div class="card w-100">
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">表現最佳的保險產品</h5>
+                    <h5 class="card-title fw-semibold">客戶性別年齡分佈</h5>
                   </div>
                 </div>
-                <div class="form-inline">
-                  <div class="input-group">
-                    <select id="yearDropdown" class="form-select ">
-                      <option value="">年份</option>
-                    </select>
-                    <select id="quarterDropdown" class="form-select ">
-                      <option value="">季度</option>
-                      <option value="1">第一季度</option>
-                      <option value="2">第二季度</option>
-                      <option value="3">第三季度</option>
-                      <option value="4">第四季度</option>
-                    </select>
-                    <select id="monthDropdown" class="form-select ">
-                      <option value="">月份</option>
-                      <option value="1">1月</option>
-                      <option value="2">2月</option>
-                      <option value="3">3月</option>
-                      <option value="4">4月</option>
-                      <option value="5">5月</option>
-                      <option value="6">6月</option>
-                      <option value="7">7月</option>
-                      <option value="8">8月</option>
-                      <option value="9">9月</option>
-                      <option value="10">10月</option>
-                      <option value="11">11月</option>
-                      <option value="12">12月</option>
-                    </select>
-                    <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
-                    <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
-                  </div>
-                </div>
-                <canvas id="salesChart"></canvas>
+                <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>
           </div>
