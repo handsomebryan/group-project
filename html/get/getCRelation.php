@@ -60,7 +60,6 @@ shell_exec('neato -Tpng -Gnodesep=2 -Granksep=2 ../../assets/images/graph.dot -o
 // Output the image to the browser from the 'assets/images' directory
 echo '<div class="graphContainer"><img src="../../assets/images/graph.png" alt="Graph Image"></div>';
 
-
 // Close the database connection
 $conn->close();
 ?>
