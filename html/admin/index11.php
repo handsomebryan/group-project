@@ -3,11 +3,9 @@
 <?php
 session_start();
 
-
 if (!isset($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
-
 ?>
 
 <head>
@@ -17,9 +15,47 @@ if (!isset($_SESSION["username"])) {
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-
+        $(document).ready(function () {
+            $("#searchButton").click(function () {
+                var id = $("#idInput").val();
+                $.ajax({
+                    url: '../get/getCRelation.php',
+                    type: 'get',
+                    data: { id: id },
+                    success: function (response) {
+                        $("#graphContainer").html(response);
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $('.zoomable').click(function () {
+                $(this).toggleClass('zoom');
+            });
+        });
     </script>
+    <style>
+        .graphContainer {
+            overflow: auto;
+            max-height: 500px;
+        }
+
+        .graphContainer img.zoomable {
+            width: 100%;
+            height: auto;
+            transition: transform 0.25s ease;
+            cursor: zoom-in;
+        }
+
+        img.zoom {
+            transform: scale(2);
+            cursor: zoom-out;
+        }
+    </style>
+
+
 </head>
 
 <body>
@@ -37,46 +73,47 @@ if (!isset($_SESSION["username"])) {
                 </div>
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
-                    <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>銷售業績分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index21.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-arrows-vertical"></i>
-                </span>
-                <span class="hide-menu">表現最佳的保險產品</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index22.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-brand-cashapp"></i>
-                </span>
-                <span class="hide-menu">業務員的銷售業績</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-dots-3"></i>
-                </span>
-                <span class="hide-menu">業務員&關係客戶群組</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-affiliate"></i>
-                </span>
-                <span class="hide-menu">業務員&招攬業務員關係群組</span>
-              </a>
-            </li><li class="nav-small-cap">
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>銷售業績分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index21.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chart-arrows-vertical"></i>
+                                </span>
+                                <span class="hide-menu">表現最佳的保險產品</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index22.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-brand-cashapp"></i>
+                                </span>
+                                <span class="hide-menu">業務員的銷售業績</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index11.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chart-dots-3"></i>
+                                </span>
+                                <span class="hide-menu">業務員&關係客戶群組</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./index12.php" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-affiliate"></i>
+                                </span>
+                                <span class="hide-menu">業務員&招攬業務員關係群組</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu"><b>客戶性別年齡分析</b></span>
                         </li>
@@ -180,14 +217,11 @@ if (!isset($_SESSION["username"])) {
                                             <button id="resetButton" type="button"
                                                 class="btn btn-outline-danger">Reset</button>
                                         </div>
+                                        <div id="graphContainer">
+                                            <img id="graphImage" src="" alt="">
+                                        </div>
                                     </div>
                                 </div>
-                                <?php
-                                $script = __DIR__ . DIRECTORY_SEPARATOR . "../../function1.1.py";
-                                $result = shell_exec("python $script");
-                                //echo "PHP got the result - $result";
-                                echo '<img src="../../assets/images/1/image.png" width="1500" height="1500" alt="Generated Image">';
-                                ?>
 
                             </div>
                         </div>
