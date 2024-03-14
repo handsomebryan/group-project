@@ -21,11 +21,11 @@ if (!isset($_SESSION["username"])) {
             // Clear the graph container when the search button is clicked
             document.getElementById('searchButton').addEventListener('click', function () {
                 // Display loading message
-                document.getElementById('graphContainer').innerHTML = 'Loading... It may need a while...';
-                
+                document.getElementById('graphContainer').innerHTML = 'Loading... It may need a while... 如要搜尋另一位業務員的資料，請按重設按鈕再搜尋。';
+
                 var id = document.getElementById('idInput').value;
 
-                // Use Promise.all to wait for both fetch requests to complete
+                // After deleting the graph, use Promise.all to wait for both fetch requests to complete
                 Promise.all([
                     fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
                     fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
@@ -41,7 +41,6 @@ if (!isset($_SESSION["username"])) {
                         document.getElementById('nselfCount').textContent = nselfCount;
                     });
             });
-
 
             // Add zoom functionality to elements with the class 'zoomable'
             document.querySelectorAll('.zoomable').forEach(function (element) {
@@ -62,6 +61,8 @@ if (!isset($_SESSION["username"])) {
                 document.getElementById('idInput').value = '';
             });
         });
+
+
 
     </script>
     <style>
