@@ -25,7 +25,7 @@ if (!isset($_SESSION["username"])) {
 
                 var id = document.getElementById('idInput').value;
 
-                // After deleting the graph, use Promise.all to wait for both fetch requests to complete
+                // After deleting the graph, use Promise.all to wait for all fetch requests to complete
                 Promise.all([
                     fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
                     fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
@@ -37,9 +37,16 @@ if (!isset($_SESSION["username"])) {
                         var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
                         var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
-                        document.getElementById('selfCount').textContent = selfCount;
-                        document.getElementById('nselfCount').textContent = nselfCount;
+                        // Display selfPerform and nselfPerform
+                        var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
+                        var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
+
+                        document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
+                        document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
+
+
                     });
+
             });
 
             // Add zoom functionality to elements with the class 'zoomable'
@@ -61,10 +68,8 @@ if (!isset($_SESSION["username"])) {
                 document.getElementById('idInput').value = '';
             });
         });
-
-
-
     </script>
+
     <style>
         .graphContainer {
             overflow: auto;
@@ -233,7 +238,7 @@ if (!isset($_SESSION["username"])) {
                             <div class="card-body">
                                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                                     <div class="mb-3 mb-sm-0">
-                                        <h5 class="card-title fw-semibold">業務員&關係客戶群組</h5>
+                                        <h5 class="card-title fw-semibold">業務員&關係客戶群組（最近10年）</h5>
                                     </div>
                                 </div>
                                 <div class="form-inline">
@@ -261,7 +266,7 @@ if (!isset($_SESSION["username"])) {
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
                                         <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="selfCount" style="font-size: 500%;">
+                                        <h3 class="card-title mb-9 fw-semibold" id="selfCount" style="font-size: 300%;">
                                         </h3>
                                     </div>
                                 </div>
@@ -271,7 +276,7 @@ if (!isset($_SESSION["username"])) {
                             <div class="card overflow-hidden">
                                 <div class="card-body p-4 text-center">
                                     <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
-                                    <h3 class="card-title mb-9 fw-semibold" id="nselfCount" style="font-size: 500%;">
+                                    <h3 class="card-title mb-9 fw-semibold" id="nselfCount" style="font-size: 300%;">
                                     </h3>
                                 </div>
                             </div>
