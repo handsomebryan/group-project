@@ -1,3 +1,4 @@
+
 <?php
 include '../dbconnect.php';
 
@@ -25,8 +26,8 @@ $graphData = [];
 if ($result->num_rows > 0) {
     // Output data of each row
     while ($row = $result->fetch_assoc()) {
-        $source = $row["被保人序號_last5"];
-        $target = $row["要保人序號_last5"];
+        $source = $row["要保人序號_last5"];
+        $target = $row["被保人序號_last5"];
 
         // Add edges to the graph data array
         if (!isset($graphData[$source])) {
@@ -39,9 +40,11 @@ if ($result->num_rows > 0) {
 }
 
 // Function to create the dot representation of the graph
-function createDotFile($graphData)
+function createDotFile($graphData, $title)
 {
     $dotFileContent = "digraph G {\n";
+    $dotFileContent .= "labelloc=\"t\";\n"; // Position label at the top
+    $dotFileContent .= "label=\"$title\";\n"; // Set the label as the title
     $dotFileContent .= "splines=ortho\n"; // Add this line
     $dotFileContent .= "node [height=0.1];\n"; // Set a minimum height for nodes
     foreach ($graphData as $node => $edges) {
@@ -54,7 +57,7 @@ function createDotFile($graphData)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData);
+$dotContent = createDotFile($graphData, $id."的關係圖");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents('../../assets/images/graph.dot', $dotContent);
