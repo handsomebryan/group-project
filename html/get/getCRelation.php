@@ -57,7 +57,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, $id."的關係圖");
+$dotContent = createDotFile($graphData, $id."");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents('../../assets/images/graph.dot', $dotContent);
