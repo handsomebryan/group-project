@@ -1,4 +1,3 @@
-
 <?php
 include '../dbconnect.php';
 
@@ -17,7 +16,7 @@ FROM 保單要保人
 JOIN 保單被保人 ON 保單被保人.保單序號 = 保單要保人.保單序號
 JOIN 業務員保單序號 ON 業務員保單序號.保單序號 = 保單被保人.保單序號
 JOIN 保單資料 ON 保單資料.保單序號 = 保單被保人.保單序號
-WHERE 業務員保單序號.業務員序號 LIKE '%$id' AND 保單生效日 >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)";
+WHERE 業務員保單序號.業務員序號 LIKE '%$id' AND 保單生效日 >= DATE_SUB(CURDATE(), INTERVAL 10 YEAR)";
 
 $result = $conn->query($sql);
 
@@ -43,6 +42,7 @@ if ($result->num_rows > 0) {
 function createDotFile($graphData, $title)
 {
     $dotFileContent = "digraph G {\n";
+        $dotFileContent .= "graph [fontname=\"Tahoma\"];\n";
     $dotFileContent .= "labelloc=\"t\";\n"; // Position label at the top
     $dotFileContent .= "label=\"$title\";\n"; // Set the label as the title
     $dotFileContent .= "splines=ortho\n"; // Add this line
@@ -57,7 +57,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, $id."的關係圖");
+$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents('../../assets/images/graph.dot', $dotContent);

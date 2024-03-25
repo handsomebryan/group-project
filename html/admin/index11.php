@@ -3,7 +3,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["username"])) {
+if (!isset ($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
 ?>
@@ -20,7 +20,6 @@ if (!isset($_SESSION["username"])) {
         document.addEventListener('DOMContentLoaded', function () {
             // Clear the graph container when the search button is clicked
             document.getElementById('searchButton').addEventListener('click', function () {
-                // Display loading message
                 document.getElementById('graphContainer').innerHTML = 'Loading... It may need a while... 如要搜尋另一位業務員的資料，請按重設按鈕再搜尋。';
 
                 var id = document.getElementById('idInput').value;
@@ -43,10 +42,7 @@ if (!isset($_SESSION["username"])) {
 
                         document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
                         document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
-
-
                     });
-
             });
 
             // Add zoom functionality to elements with the class 'zoomable'
@@ -88,7 +84,6 @@ if (!isset($_SESSION["username"])) {
             cursor: zoom-out;
         }
     </style>
-
 
 </head>
 
