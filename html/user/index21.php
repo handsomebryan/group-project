@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset ($_SESSION["username"])) {
+if (!isset($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -186,26 +186,6 @@ if (!isset ($_SESSION["username"])) {
                   <i class="ti ti-brand-cashapp"></i>
                 </span>
                 <span class="hide-menu">業務員的銷售業績</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu"><b>業務員&關係客戶分析</b></span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index11.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-chart-dots-3"></i>
-                </span>
-                <span class="hide-menu">業務員&關係客戶群組</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./index12.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-affiliate"></i>
-                </span>
-                <span class="hide-menu">業務員&招攬業務員關係群組</span>
               </a>
             </li>
             <li class="nav-small-cap">
