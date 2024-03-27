@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset($_SESSION["username"])) {
+if (!isset ($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -16,6 +16,8 @@ if (!isset($_SESSION["username"])) {
   <title>業務一把罩</title>
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
+  <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
@@ -282,12 +284,6 @@ if (!isset($_SESSION["username"])) {
             </div>
           </div>
         </div>
-        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../../assets/js/sidebarmenu.js"></script>
-        <script src="../../assets/js/app.min.js"></script>
-        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>

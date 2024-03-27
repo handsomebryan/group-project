@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset($_SESSION["username"])) {
+if (!isset ($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -16,6 +16,8 @@ if (!isset($_SESSION["username"])) {
   <title>業務一把罩</title>
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
+  <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
@@ -343,27 +345,27 @@ if (!isset($_SESSION["username"])) {
                         <option value="">年份</option>
                       </select>
                       <select id="quarterDropdown" class="form-select ">
-                      <option value="">季度</option>
-                      <option value="1">第一季度</option>
-                      <option value="2">第二季度</option>
-                      <option value="3">第三季度</option>
-                      <option value="4">第四季度</option>
-                    </select>
-                    <select id="monthDropdown" class="form-select ">
-                      <option value="">月份</option>
-                      <option value="1">1月</option>
-                      <option value="2">2月</option>
-                      <option value="3">3月</option>
-                      <option value="4">4月</option>
-                      <option value="5">5月</option>
-                      <option value="6">6月</option>
-                      <option value="7">7月</option>
-                      <option value="8">8月</option>
-                      <option value="9">9月</option>
-                      <option value="10">10月</option>
-                      <option value="11">11月</option>
-                      <option value="12">12月</option>
-                    </select>
+                        <option value="">季度</option>
+                        <option value="1">第一季度</option>
+                        <option value="2">第二季度</option>
+                        <option value="3">第三季度</option>
+                        <option value="4">第四季度</option>
+                      </select>
+                      <select id="monthDropdown" class="form-select ">
+                        <option value="">月份</option>
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                      </select>
                       <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
                       <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>
@@ -374,12 +376,5 @@ if (!isset($_SESSION["username"])) {
             </div>
           </div>
         </div>
-        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../../assets/js/sidebarmenu.js"></script>
-        <script src="../../assets/js/app.min.js"></script>
-        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-        <script src="../../assets/js/dashboard.js"></script>
 </body>
-
 </html>

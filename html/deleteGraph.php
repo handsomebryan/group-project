@@ -1,11 +1,13 @@
 <?php
-$file1 = '../assets/images/graph.png';
-$file2 = '../assets/images/graph.dot';
+$folder_path = '../assets/images/1.1/';
 
-if (file_exists($file1)) {
-    unlink($file1);
-}
-if (file_exists($file2)) {
-    unlink($file2);
+// Get a list of all files in the folder
+$files = glob($folder_path . '*');
+
+// Iterate over the files and delete each one
+foreach($files as $file){
+    if(is_file($file)){
+        unlink($file);
+    }
 }
 ?>

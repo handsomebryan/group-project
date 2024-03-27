@@ -2,11 +2,14 @@
 <html lang="en">
 <?php
 session_start();
-
 if (!isset($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
+$id = $_SESSION["id"];
+$nselfCount = $_SESSION["nselfCount"];
+$nselfPerform = $_SESSION["nselfPerform"];
 ?>
+
 
 <head>
     <meta charset="utf-8">
@@ -16,74 +19,8 @@ if (!isset($_SESSION["username"])) {
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Clear the graph container when the search button is clicked
-            document.getElementById('searchButton').addEventListener('click', function () {
-                // Display loading message
-                document.getElementById('graphContainer').innerHTML = 'Loading... It may need a while...';
-                
-                var id = document.getElementById('idInput').value;
-
-                // Use Promise.all to wait for both fetch requests to complete
-                Promise.all([
-                    fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
-                    fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
-                ])
-                    .then(function ([cRelationResponse, crCountResponse]) {
-                        // Now that the data is fetched, remove the loading message and display the responses
-                        document.getElementById('graphContainer').innerHTML = cRelationResponse;
-
-                        var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
-                        var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
-
-                        document.getElementById('selfCount').textContent = selfCount;
-                        document.getElementById('nselfCount').textContent = nselfCount;
-                    });
-            });
-
-
-            // Add zoom functionality to elements with the class 'zoomable'
-            document.querySelectorAll('.zoomable').forEach(function (element) {
-                element.addEventListener('click', function () {
-                    this.classList.toggle('zoom');
-                });
-            });
-
-            // Clear the graph container and search bar when the reset button is clicked
-            document.getElementById('resetButton').addEventListener('click', function () {
-                fetch('../deleteGraph.php')
-                    .then(function () {
-                        document.getElementById('graphContainer').innerHTML = '';
-                        document.getElementById('selfCount').textContent = '';
-                        document.getElementById('nselfCount').textContent = '';
-                    });
-
-                document.getElementById('idInput').value = '';
-            });
-        });
-
-    </script>
-    <style>
-        .graphContainer {
-            overflow: auto;
-            max-height: 500px;
-        }
-
-        .graphContainer img.zoomable {
-            width: 100%;
-            height: auto;
-            transition: transform 0.25s ease;
-            cursor: zoom-in;
-        }
-
-        img.zoom {
-            transform: scale(2);
-            cursor: zoom-out;
-        }
-    </style>
-
-
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -225,67 +162,42 @@ if (!isset($_SESSION["username"])) {
                     </div>
                 </nav>
             </header>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-8 d-flex align-items-strech">
-                        <div class="card w-100">
-                            <div class="card-body">
-                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                                    <div class="mb-3 mb-sm-0">
-                                        <h5 class="card-title fw-semibold">業務員&關係客戶群組</h5>
-                                    </div>
-                                </div>
-                                <div class="form-inline">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="idInput"
-                                                placeholder="業務員序號(後5碼)">
-                                            <button id="searchButton" type="button"
-                                                class="btn btn-outline-primary">搜尋</button>
-                                            <button id="resetButton" type="button"
-                                                class="btn btn-outline-danger">重設</button>
-                                        </div>
-                                        <div id="graphContainer">
-                                            <img id="graphImage" src="" alt="">
-                                        </div>
-                                    </div>
-                                </div>
 
+            <div class="container-fluid">
+                <button onclick="window.location.href='index11.php'" type="button" class="btn btn-warning btn-lg"><i
+                        class="ti ti-chevron-left"></i>Go Back</button>
+                <button onclick="window.location.href='graph2.php'" type="button" class="btn btn-info btn-lg"
+                    style="float: right;">客戶關係圖（被保人為自己）<i class="ti ti-chevron-right"></i></button>
+                <div class="col-lg-12 d-flex align-items-stretch">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                                <div class="mb-3 mb-sm-0">
+                                    <h5 class="card-title fw-semibold"><b>業務員: <u>
+                                                <?php echo $id ?>
+                                            </u></b>
+                                    </h5>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="selfCount" style="font-size: 500%;">
+                                        <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
+                                        <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
+                                            style="font-size: 300%;">
+                                            <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
                                         </h3>
+
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card overflow-hidden">
-                                <div class="card-body p-4 text-center">
-                                    <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
-                                    <h3 class="card-title mb-9 fw-semibold" id="nselfCount" style="font-size: 500%;">
-                                    </h3>
-                                </div>
-                            </div>
+                            <img id="graphImage" src="../../assets/images/1.1/graph1_<?php echo $id; ?>.png"
+                                alt="Graph Image1">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/sidebarmenu.js"></script>
-    <script src="../../assets/js/app.min.js"></script>
-    <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>
