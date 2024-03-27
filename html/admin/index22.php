@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset($_SESSION["username"])) {
+if (!isset ($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -16,136 +16,138 @@ if (!isset($_SESSION["username"])) {
   <title>業務一把罩</title>
   <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
+  <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var salesChart;
-            fetch('../get/getYears.php')
-                .then(response => response.json())
-                .then(years => {
-                    var select = document.getElementById('yearDropdown');
-                    years.forEach(function (year) {
-                        var option = document.createElement('option');
-                        option.text = year;
-                        option.value = year;
-                        select.add(option);
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-            var quarterDropdown = document.getElementById('quarterDropdown');
-            var monthDropdown = document.getElementById('monthDropdown');
-            quarterDropdown.addEventListener('change', function () {
-                monthDropdown.disabled = !!this.value;
-            });
-            monthDropdown.addEventListener('change', function () {
-                quarterDropdown.disabled = !!this.value;
-            });
-            document.getElementById('searchButton').addEventListener('click', function () {
-                fetchData();
-            });
-            document.getElementById('resetButton').addEventListener('click', function () {
-                resetForm();
-            });
-            function fetchData() {
-                var id = document.getElementById('idInput').value;
-                var year = document.getElementById('yearDropdown').value;
-                var quarter = document.getElementById('quarterDropdown').value;
-                var month = document.getElementById('monthDropdown').value;
-                var url = `../get/getCASData.php`;
-                var queryParams = [];
-                if (id) queryParams.push(`id=${id}`);
-                if (year) queryParams.push(`year=${year}`);
-                if (quarter) queryParams.push(`quarter=${quarter}`);
-                if (month) queryParams.push(`month=${month}`);
-                if (queryParams.length > 0) {
-                    url += '?' + queryParams.join('&');
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            updateChart(data);
-                        })
-                        .catch(error => console.error('Fetch error:', error));
-                } else {
-                    alert("Please enter a User ID or select a Year.");
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var salesChart;
+      fetch('../get/getYears.php')
+        .then(response => response.json())
+        .then(years => {
+          var select = document.getElementById('yearDropdown');
+          years.forEach(function (year) {
+            var option = document.createElement('option');
+            option.text = year;
+            option.value = year;
+            select.add(option);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+      var quarterDropdown = document.getElementById('quarterDropdown');
+      var monthDropdown = document.getElementById('monthDropdown');
+      quarterDropdown.addEventListener('change', function () {
+        monthDropdown.disabled = !!this.value;
+      });
+      monthDropdown.addEventListener('change', function () {
+        quarterDropdown.disabled = !!this.value;
+      });
+      document.getElementById('searchButton').addEventListener('click', function () {
+        fetchData();
+      });
+      document.getElementById('resetButton').addEventListener('click', function () {
+        resetForm();
+      });
+      function fetchData() {
+        var id = document.getElementById('idInput').value;
+        var year = document.getElementById('yearDropdown').value;
+        var quarter = document.getElementById('quarterDropdown').value;
+        var month = document.getElementById('monthDropdown').value;
+        var url = `../get/getCASData.php`;
+        var queryParams = [];
+        if (id) queryParams.push(`id=${id}`);
+        if (year) queryParams.push(`year=${year}`);
+        if (quarter) queryParams.push(`quarter=${quarter}`);
+        if (month) queryParams.push(`month=${month}`);
+        if (queryParams.length > 0) {
+          url += '?' + queryParams.join('&');
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              updateChart(data);
+            })
+            .catch(error => console.error('Fetch error:', error));
+        } else {
+          alert("Please enter a User ID or select a Year.");
+        }
+      }
+      function resetForm() {
+        document.getElementById('yearDropdown').selectedIndex = 0;
+        quarterDropdown.selectedIndex = 0;
+        monthDropdown.selectedIndex = 0;
+        quarterDropdown.disabled = false;
+        monthDropdown.disabled = false;
+        document.getElementById('idInput').value = '';
+        if (salesChart) {
+          salesChart.destroy();
+        }
+      }
+      function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
+        salesChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
+            datasets: [{
+              label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
+              data: data.user.map(d => d.TotalSales),
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
+            }, {
+              label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
+              data: data.T1.map(d => d.TotalSales),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
+            }, {
+              label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+              data: data.T2.map(d => d.TotalSales),
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              datalabels: {
+                color: 'black',
+                align: 'right'
+              }
+            }]
+          }, plugins: [ChartDataLabels],
+          options: {
+            indexAxis: 'y',
+            aspectRatio: 1,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: '銷售額',
+                  color: 'black',
+                  weight: 'bold'
                 }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '日期',
+                  color: 'black',
+                  weight: 'bold'
+                },
+                beginAtZero: true
+              }
             }
-            function resetForm() {
-                document.getElementById('yearDropdown').selectedIndex = 0;
-                quarterDropdown.selectedIndex = 0;
-                monthDropdown.selectedIndex = 0;
-                quarterDropdown.disabled = false;
-                monthDropdown.disabled = false;
-                document.getElementById('idInput').value = '';
-                if (salesChart) {
-                    salesChart.destroy();
-                }
-            }
-            function updateChart(data) {
-                var ctx = document.getElementById('salesChart').getContext('2d');
-                if (salesChart) {
-                    salesChart.destroy();
-                }
-                salesChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.user.map(d => d.Date || `${d.Year}-${d.Month}`),
-                        datasets: [{
-                            label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
-                            data: data.user.map(d => d.TotalSales),
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            datalabels: {
-                                color: 'black',
-                                align: 'right'
-                            }
-                        }, {
-                            label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
-                            data: data.T1.map(d => d.TotalSales),
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            datalabels: {
-                                color: 'black',
-                                align: 'right'
-                            }
-                        }, {
-                            label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
-                            data: data.T2.map(d => d.TotalSales),
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            datalabels: {
-                                color: 'black',
-                                align: 'right'
-                            }
-                        }]
-                    }, plugins: [ChartDataLabels],
-                    options: {
-                        indexAxis: 'y',
-                        aspectRatio: 1,
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: '銷售額',
-                                    color: 'black',
-                                    weight: 'bold'
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: '日期',
-                                    color: 'black',
-                                    weight: 'bold'
-                                },
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
+          }
         });
-    </script>
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -332,12 +334,6 @@ if (!isset($_SESSION["username"])) {
             </div>
           </div>
         </div>
-        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../../assets/js/sidebarmenu.js"></script>
-        <script src="../../assets/js/app.min.js"></script>
-        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>

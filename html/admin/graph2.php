@@ -2,11 +2,14 @@
 <html lang="en">
 <?php
 session_start();
-
 if (!isset($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
+$id = $_SESSION["id"];
+$selfCount = $_SESSION["selfCount"];
+$selfPerform = $_SESSION["selfPerform"];
 ?>
+
 
 <head>
     <meta charset="utf-8">
@@ -18,50 +21,6 @@ if (!isset($_SESSION["username"])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Clear the graph container when the search button is clicked
-            document.getElementById('searchButton').addEventListener('click', function () {
-                fetch('../deleteGraph.php')
-                    .then(function () {
-                        document.getElementById('selfCount').textContent = 'Please wait';
-                        document.getElementById('nselfCount').textContent = 'Please wait';
-                        var id = document.getElementById('idInput').value;
-
-                        // After deleting the graph, use Promise.all to wait for all fetch requests to complete
-                        Promise.all([
-                            fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
-                        ])
-                            .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
-
-                                var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
-                                var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
-
-                                // Display selfPerform and nselfPerform
-                                var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
-                                var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
-
-                                document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
-                                document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
-                                fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
-                            });
-                    });
-            });
-
-            // Clear the graph container and search bar when the reset button is clicked
-            document.getElementById('resetButton').addEventListener('click', function () {
-                fetch('../deleteGraph.php')
-                    .then(function () {
-                        document.getElementById('selfCount').textContent = '';
-                        document.getElementById('nselfCount').textContent = '';
-                    });
-
-                document.getElementById('idInput').value = '';
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -205,58 +164,40 @@ if (!isset($_SESSION["username"])) {
             </header>
 
             <div class="container-fluid">
+                <button onclick="window.location.href='index11.php'" type="button" class="btn btn-warning btn-lg"><i
+                        class="ti ti-chevron-left"></i>Go Back</button>
+                <button onclick="window.location.href='graph1.php'" type="button" class="btn btn-info btn-lg"
+                    style="float: right;">客戶關係圖（被保人為自己）<i class="ti ti-chevron-right"></i></button>
                 <div class="col-lg-12 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body">
                             <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                                 <div class="mb-3 mb-sm-0">
-                                    <h5 class="card-title fw-semibold">業務員&關係客戶群組（最近10年）</h5>
+                                    <h5 class="card-title fw-semibold"><b>業務員: <u>
+                                                <?php echo $id ?>
+                                            </u></b>
+                                    </h5>
                                 </div>
                             </div>
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
-                                        <button id="searchButton" type="button"
-                                            class="btn btn-outline-primary">搜尋</button>
-                                        <button id="resetButton" type="button"
-                                            class="btn btn-outline-danger">重設</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="card overflow-hidden">
-                                        <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="selfCount"
-                                                style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButton" type="button"
-                                                class="btn btn-outline-primary"
-                                                onclick="window.location.href='graph2.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為自己）</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="card overflow-hidden">
-                                        <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
-                                                style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButton" type="button"
-                                                class="btn btn-outline-primary"
-                                                onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為別人）</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="col-lg-12">
+                                <div class="card overflow-hidden">
+                                    <div class="card-body p-4 text-center">
+                                        <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
+                                        <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
+                                            style="font-size: 300%;">
+                                            <?php echo $selfCount . "<br>" . '($' . $selfPerform . ')'; ?>
+                                        </h3>
 
+
+                                    </div>
+                                </div>
+                            </div>
+                            <img id="graphImage" src="../../assets/images/1.1/graph2_<?php echo $id; ?>.png"
+                                alt="Graph Image2">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </body>
 
 </html>
