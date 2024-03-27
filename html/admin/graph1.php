@@ -175,20 +175,18 @@ $nselfPerform = $_SESSION["nselfPerform"];
                                 <div class="mb-3 mb-sm-0">
                                     <h5 class="card-title fw-semibold"><b>業務員: <u>
                                                 <?php echo $id ?>
-                                            </u></b>
-                                    </h5>
+                                            </u></b></h5>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
+                                        <h5 class="card-title mb-9 fw-semibold">為<b><u><span
+                                                        style="color:red;">別人</span></u></b>買的保單數</h5>
                                         <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
                                             style="font-size: 300%;">
                                             <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
                                         </h3>
-
-
                                     </div>
                                 </div>
                             </div>

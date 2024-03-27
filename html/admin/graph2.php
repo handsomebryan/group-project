@@ -167,7 +167,7 @@ $selfPerform = $_SESSION["selfPerform"];
                 <button onclick="window.location.href='index11.php'" type="button" class="btn btn-warning btn-lg"><i
                         class="ti ti-chevron-left"></i>Go Back</button>
                 <button onclick="window.location.href='graph1.php'" type="button" class="btn btn-info btn-lg"
-                    style="float: right;">客戶關係圖（被保人為自己）<i class="ti ti-chevron-right"></i></button>
+                    style="float: right;">客戶關係圖（被保人為別人）<i class="ti ti-chevron-right"></i></button>
                 <div class="col-lg-12 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body">
@@ -182,7 +182,8 @@ $selfPerform = $_SESSION["selfPerform"];
                             <div class="col-lg-12">
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
+                                    <h5 class="card-title mb-9 fw-semibold">為<b><u><span style="color:red;">自己</span></u></b>買的保單數</h5>
+
                                         <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
                                             style="font-size: 300%;">
                                             <?php echo $selfCount . "<br>" . '($' . $selfPerform . ')'; ?>
