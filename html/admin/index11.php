@@ -24,8 +24,8 @@ if (!isset($_SESSION["username"])) {
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetch('../deleteGraph.php')
                     .then(function () {
-                        document.getElementById('selfCount').textContent = 'Please wait';
-                        document.getElementById('nselfCount').textContent = 'Please wait';
+                        document.getElementById('message').textContent = 'Please wait...';
+                        document.getElementById('message').style.fontSize = '2em';
                         var id = document.getElementById('idInput').value;
 
                         // After deleting the graph, use Promise.all to wait for all fetch requests to complete
@@ -35,7 +35,7 @@ if (!isset($_SESSION["username"])) {
                             fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
                         ])
                             .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
-
+                                document.getElementById('message').textContent = '';
                                 var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
                                 var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
@@ -46,6 +46,10 @@ if (!isset($_SESSION["username"])) {
                                 document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
                                 document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
                                 fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
+
+                                // Enable the buttons
+                                document.getElementById('relationGraphButtonSelf').disabled = false;
+                                document.getElementById('relationGraphButtonNself').disabled = false;3
                             });
                     });
             });
@@ -56,11 +60,15 @@ if (!isset($_SESSION["username"])) {
                     .then(function () {
                         document.getElementById('selfCount').textContent = '';
                         document.getElementById('nselfCount').textContent = '';
+                        document.getElementById('message').textContent = '';
+                        document.getElementById('relationGraphButtonSelf').disabled = true;
+                        document.getElementById('relationGraphButtonNself').disabled = true;
                     });
 
                 document.getElementById('idInput').value = '';
             });
         });
+
     </script>
 </head>
 
@@ -220,10 +228,13 @@ if (!isset($_SESSION["username"])) {
                                         <button id="searchButton" type="button"
                                             class="btn btn-outline-primary">搜尋</button>
                                         <button id="resetButton" type="button"
-                                            class="btn btn-outline-danger">重設</button>
+                                            class="btn btn-outline-danger">重設</button>                                            
                                     </div>
                                 </div>
                             </div>
+                            <div id="message">
+                                            
+                                        </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
@@ -231,8 +242,8 @@ if (!isset($_SESSION["username"])) {
                                             <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
                                             <h3 class="card-title mb-9 fw-semibold" id="selfCount"
                                                 style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButton" type="button"
-                                                class="btn btn-outline-primary"
+                                            <button id="relationGraphButtonSelf" type="button"
+                                                class="btn btn-outline-primary btn-lg" disabled
                                                 onclick="window.location.href='graph2.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為自己）</button>
                                         </div>
                                     </div>
@@ -243,13 +254,14 @@ if (!isset($_SESSION["username"])) {
                                             <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
                                             <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
                                                 style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButton" type="button"
-                                                class="btn btn-outline-primary"
+                                            <button id="relationGraphButtonNself" type="button"
+                                                class="btn btn-outline-primary btn-lg" disabled
                                                 onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為別人）</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>
