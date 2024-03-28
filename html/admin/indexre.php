@@ -31,7 +31,7 @@ if (!isset($_SESSION["username"])) {
           labels: [],
           datasets: [{
             data: [],
-            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
+            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f']
           }]
         }, options: {
           aspectRatio: 3,
@@ -237,7 +237,7 @@ if (!isset($_SESSION["username"])) {
         </header>
         <div class="container-fluid">
           <div class="row">
-            <div class="col-lg-10 d-flex align-items-strech">
+            <div class="col-lg-12 d-flex align-items-strech">
               <div class="card w-100">
                 <div class="card-body">
                   <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
