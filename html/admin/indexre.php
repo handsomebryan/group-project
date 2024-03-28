@@ -92,7 +92,7 @@ if (!isset ($_SESSION["username"])) {
   <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
       data-sidebar-position="fixed" data-header-position="fixed">
-      <aside class="left-sidebar">
+      <aside class="left-sidebar" style="width: 18%;">
         <div>
           <div class="brand-logo d-flex align-items-center justify-content-between">
             <img src="../../assets/images/logos/logo.png" width="180" alt="" />

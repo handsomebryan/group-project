@@ -26,6 +26,8 @@ if (!isset($_SESSION["username"])) {
                     .then(function () {
                         document.getElementById('message').textContent = 'Please wait...';
                         document.getElementById('message').style.fontSize = '2em';
+                        document.getElementById('selfCount').textContent = '';
+                        document.getElementById('nselfCount').textContent = '';
                         var id = document.getElementById('idInput').value;
 
                         // After deleting the graph, use Promise.all to wait for all fetch requests to complete
@@ -49,7 +51,7 @@ if (!isset($_SESSION["username"])) {
 
                                 // Enable the buttons
                                 document.getElementById('relationGraphButtonSelf').disabled = false;
-                                document.getElementById('relationGraphButtonNself').disabled = false;3
+                                document.getElementById('relationGraphButtonNself').disabled = false; 3
                             });
                     });
             });
@@ -60,7 +62,6 @@ if (!isset($_SESSION["username"])) {
                     .then(function () {
                         document.getElementById('selfCount').textContent = '';
                         document.getElementById('nselfCount').textContent = '';
-                        document.getElementById('message').textContent = '';
                         document.getElementById('relationGraphButtonSelf').disabled = true;
                         document.getElementById('relationGraphButtonNself').disabled = true;
                     });
@@ -75,7 +76,7 @@ if (!isset($_SESSION["username"])) {
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
-        <aside class="left-sidebar">
+        <aside class="left-sidebar" style="width: 18%;">
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="./index.html" class="text-nowrap logo-img">
@@ -228,13 +229,13 @@ if (!isset($_SESSION["username"])) {
                                         <button id="searchButton" type="button"
                                             class="btn btn-outline-primary">搜尋</button>
                                         <button id="resetButton" type="button"
-                                            class="btn btn-outline-danger">重設</button>                                            
+                                            class="btn btn-outline-danger">重設</button>
                                     </div>
                                 </div>
                             </div>
                             <div id="message">
-                                            
-                                        </div>
+
+                            </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
