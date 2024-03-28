@@ -21,12 +21,15 @@ $selfPerform = $_SESSION["selfPerform"];
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/sidebarmenu.js"></script>
+    <script src="../../assets/js/app.min.js"></script>
+    </body>
 </head>
 
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
-        <aside class="left-sidebar" style="width: 18%;">
+        <aside class="left-sidebar">
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="./index.html" class="text-nowrap logo-img">
@@ -182,7 +185,8 @@ $selfPerform = $_SESSION["selfPerform"];
                             <div class="col-lg-12">
                                 <div class="card overflow-hidden">
                                     <div class="card-body p-4 text-center">
-                                    <h5 class="card-title mb-9 fw-semibold">為<b><u><span style="color:red;">自己</span></u></b>買的保單數</h5>
+                                        <h5 class="card-title mb-9 fw-semibold">為<b><u><span
+                                                        style="color:red;">自己</span></u></b>買的保單數</h5>
 
                                         <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
                                             style="font-size: 300%;">

@@ -15,6 +15,9 @@ if (!isset($_SESSION["username"])) {
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/sidebarmenu.js"></script>
+  <script src="../../assets/js/app.min.js"></script>
+  </body>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
@@ -198,7 +201,7 @@ if (!isset($_SESSION["username"])) {
         </nav>
       </div>
     </aside>
-    
+
     <div class="body-wrapper">
       <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -230,7 +233,7 @@ if (!isset($_SESSION["username"])) {
           </div>
         </nav>
       </header>
-      
+
       <div class="container-fluid">
         <div class="row">
           <div class="d-flex align-items-strech">
@@ -247,4 +250,5 @@ if (!isset($_SESSION["username"])) {
           </div>
         </div>
 </body>
+
 </html>

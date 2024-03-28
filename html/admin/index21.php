@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset ($_SESSION["username"])) {
+if (!isset($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -18,6 +18,9 @@ if (!isset ($_SESSION["username"])) {
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/sidebarmenu.js"></script>
+  <script src="../../assets/js/app.min.js"></script>
+  </body>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -159,7 +162,7 @@ if (!isset ($_SESSION["username"])) {
 <body>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <aside class="left-sidebar" style="width: 18%;">
+    <aside class="left-sidebar">
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <img src="../../assets/images/logos/logo.png" width="180" alt="" />

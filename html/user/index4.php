@@ -3,7 +3,7 @@
 <?php
 session_start();
 
-if (!isset ($_SESSION["username"])) {
+if (!isset($_SESSION["username"])) {
     header("location:authentication-login.php");
 }
 
@@ -17,6 +17,9 @@ if (!isset ($_SESSION["username"])) {
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/sidebarmenu.js"></script>
+    <script src="../../assets/js/app.min.js"></script>
+    </body>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
@@ -144,7 +147,7 @@ if (!isset ($_SESSION["username"])) {
                                 </span>
                                 <span class="hide-menu">業務員的銷售業績</span>
                             </a>
-                        </li>         
+                        </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu"><b>客戶性別年齡分析</b></span>

@@ -4,7 +4,7 @@
 session_start();
 
 
-if (!isset ($_SESSION["username"])) {
+if (!isset($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
 
@@ -18,6 +18,9 @@ if (!isset ($_SESSION["username"])) {
   <link rel="stylesheet" href="../../assets/css/styles.min.css" />
   <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/sidebarmenu.js"></script>
+  <script src="../../assets/js/app.min.js"></script>
+  </body>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
@@ -126,7 +129,7 @@ if (!isset ($_SESSION["username"])) {
 <body>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <aside class="left-sidebar" style="width: 18%;">
+    <aside class="left-sidebar">
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="./index.html" class="text-nowrap logo-img">
