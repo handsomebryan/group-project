@@ -21,115 +21,103 @@ if (!isset($_SESSION["username"])) {
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-  var actions = [
-  {
-    name: 'Randomize',
-    handler(chart) {
-      chart.data.datasets.forEach(dataset => {
-        dataset.data = Utils.numbers({count: chart.data.labels.length, min: -100, max: 100});
+  <script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var salesChart;
+      document.getElementById('searchButton').addEventListener('click', function () {
+        fetchData();
       });
-      chart.update();
-    }
-  },
-];
-
-document.addEventListener('DOMContentLoaded', function () {
-  var salesChart;
-  document.getElementById('searchButton').addEventListener('click', function () {
-    fetchData();
-  });
-  document.getElementById('resetButton').addEventListener('click', function () {
-    resetForm();
-  });
-  function fetchData() {
-    var id = document.getElementById('idInput').value;
-    var url = `../get/getSRelation.php`; // Change this line
-    var queryParams = [];
-    if (id) queryParams.push(`id=${id}`);
-    if (queryParams.length > 0) {
-      url += '?' + queryParams.join('&');
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          updateChart(data);
-        })
-        .catch(error => console.error('Fetch error:', error));
-    } else {
-      alert("Please enter a User ID.");
-    }
-  }
-
-  function resetForm() {
-    document.getElementById('idInput').value = '';
-    if (salesChart) {
-      salesChart.destroy();
-    }
-  }
-  function updateChart(data) {
-    var ctx = document.getElementById('salesChart').getContext('2d');
-    if (salesChart) {
-      salesChart.destroy();
-    }
-    //d.商品大分類改成業務員代碼
-    var config = {
-      type: 'bar',
-      data: {
-        labels: data.map(d => d.業務員序號), // 修改此行
-        datasets: [{
-          label: '銷售額前五大招攬業務員',
-          data: data.map(d => d.總保費), // 修改此行
-          backgroundColor: 'rgba(255, 99, 132, 0.2)'
-        }]
-      },
-      options: {
-        indexAxis: 'x', // 修改此行
-        aspectRatio: 2,
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: '銷售額', // 修改此行
-              color: 'black',
-              weight: 'bold'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: '業務員序號', // 修改此行
-              color: 'black',
-              weight: 'bold'
-            }
-          }
-        },
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: '業務員&業務員關係'
-          }
+      document.getElementById('resetButton').addEventListener('click', function () {
+        resetForm();
+      });
+      function fetchData() {
+        var id = document.getElementById('idInput').value;
+        var url = `../get/getSRelation.php`; 
+        var queryParams = [];
+        if (id) queryParams.push(`id=${id}`);
+        if (queryParams.length > 0) {
+          url += '?' + queryParams.join('&');
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              updateChart(data);
+            })
+            .catch(error => console.error('Fetch error:', error));
+        } else {
+          alert("Please enter a User ID.");
         }
       }
-    };
-    salesChart = new Chart(ctx, config);
-  }
-});
 
-
-
-
+      function resetForm() {
+        document.getElementById('idInput').value = '';
+        if (salesChart) {
+          salesChart.destroy();
+        }
+      }
+      function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
+        var config = {
+          type: 'bar',
+          data: {
+            labels: data.map(d => d.業務員序號), 
+            datasets: [{
+              label: '銷售額前五大招攬業務員',
+              data: data.map(d => d.總保費), 
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              datalabels: {
+                color: 'black',
+                align: 'top'
+              }
+            }]
+          }, plugins: [ChartDataLabels],
+          options: {
+            indexAxis: 'x', 
+            aspectRatio: 2,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: '銷售額', 
+                  color: 'black',
+                  weight: 'bold'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '業務員序號', 
+                  color: 'black',
+                  weight: 'bold'
+                }
+              }
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: '業務員&業務員關係'
+              }
+            }
+          }
+        };
+        salesChart = new Chart(ctx, config);
+      }
+    });
   </script>
-
 </head>
 
 <body>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <aside class="left-sidebar" style="width: 18%;">
+    <aside class="left-sidebar">
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="./index.html" class="text-nowrap logo-img">
@@ -289,10 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
         <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
         <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../../assets/js/sidebarmenu.js"></script>
-        <script src="../../assets/js/app.min.js"></script>
-        <script src="../../assets/libs/simplebar/dist/simplebar.js"></script>
-        <script src="../../assets/js/dashboard.js"></script>
 </body>
 
 </html>
