@@ -39,7 +39,7 @@ if (!isset($_SESSION["username"])) {
             });
             function fetchData() {
                 var id = document.getElementById('idInput').value;
-                var url = `../get/getSRelation.php`; // Change this line
+                var url = `../get/getSRelation.php`;
                 var queryParams = [];
                 if (id) queryParams.push(`id=${id}`);
                 if (queryParams.length > 0) {
@@ -51,7 +51,7 @@ if (!isset($_SESSION["username"])) {
                         })
                         .catch(error => console.error('Fetch error:', error));
                 } else {
-                    alert("Please enter a User ID.");
+                    alert("請輸入業務員序號");
                 }
             }
 
@@ -66,35 +66,37 @@ if (!isset($_SESSION["username"])) {
                 if (salesChart) {
                     salesChart.destroy();
                 }
-                //d.商品大分類改成業務員代碼
                 var config = {
                     type: 'bar',
                     data: {
-                        labels: data.map(d => d.業務員序號), // 修改此行
+                        labels: data.map(d => d.業務員序號),
                         datasets: [{
                             label: '銷售額前五大招攬業務員',
-                            data: data.map(d => d.總保費), // 修改此行
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+                            data: data.map(d => d.總保費),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            datalabels: {
+                                color: 'black',
+                                align: 'top',
+                                weight: 'bold'
+                            }
                         }]
-                    },
+                    }, plugins: [ChartDataLabels],
                     options: {
-                        indexAxis: 'x', // 修改此行
+                        indexAxis: 'x',
                         aspectRatio: 2,
                         scales: {
                             x: {
                                 title: {
                                     display: true,
-                                    text: '銷售額', // 修改此行
-                                    color: 'black',
-                                    weight: 'bold'
+                                    text: '銷售額',
+                                    color: 'black'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: '業務員序號', // 修改此行
-                                    color: 'black',
-                                    weight: 'bold'
+                                    text: '業務員序號',
+                                    color: 'black'
                                 }
                             }
                         },
@@ -102,10 +104,6 @@ if (!isset($_SESSION["username"])) {
                         plugins: {
                             legend: {
                                 position: 'top',
-                            },
-                            title: {
-                                display: true,
-                                text: '業務員&業務員關係'
                             }
                         }
                     }

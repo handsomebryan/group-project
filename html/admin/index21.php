@@ -41,12 +41,7 @@ if (!isset($_SESSION["username"])) {
 
       // Fetch quarters and months when a year is selected
       document.getElementById('yearDropdown').addEventListener('change', function () {
-        var year = this.value;
-
-        if (!year) {
-          alert('Please select a year.');
-          return;
-        }
+        var year = document.getElementById('yearDropdown').value;
       });
 
       var quarterDropdown = document.getElementById('quarterDropdown');
@@ -68,7 +63,10 @@ if (!isset($_SESSION["username"])) {
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
         var isSpecificMonth = !!month;
-
+        if (!year) {
+          alert('請選擇年份');
+          return;
+        }
         var url = `../get/getBSData.php?year=${year}`;
         if (quarter) {
           url += `&quarter=${quarter}`;

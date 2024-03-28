@@ -68,12 +68,23 @@ if (!isset($_SESSION["username"])) {
         var gender = document.getElementById('gender').value;
         var postalCode = document.getElementById('postalCode').value;
         var age = document.getElementById('age').value;
-
+        if (!gender && !postalCode && !age) {
+          alert('請選擇或輸入最少一個欄位（性別、郵遞區號或年齡）');
+          return; // Prevent further execution
+        }
         fetch(`../get/getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
           .then(response => response.json())
-          .then(data => updateChart(myChart, data))
+          .then(data => {
+            if (data.length === 0) {
+              alert('無相關數據');
+              return;
+            } else {
+              updateChart(myChart, data);
+            }
+          })
           .catch(error => console.error('Error:', error));
       });
+
 
       document.getElementById('resetButton').addEventListener('click', function () {
         document.getElementById('gender').value = '';

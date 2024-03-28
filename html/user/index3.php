@@ -29,6 +29,8 @@ if (!isset($_SESSION["username"])) {
       fetchData();
 
       function fetchData() {
+        document.getElementById('message').textContent = '載入中...';
+        document.getElementById('message').style.fontSize = '2em';
         var id = '<?php echo $_SESSION["username"]; ?>';
         var url = `../get/getGAData.php`;
         var queryParams = [];
@@ -40,7 +42,10 @@ if (!isset($_SESSION["username"])) {
             .then(data => {
               updateChart(data);
             })
-            .catch(error => console.error('Fetch error:', error));
+            .catch(error => console.error('Fetch error:', error))
+            .finally(() => {
+              document.getElementById('message').textContent = '';
+            });
         }
       }
 
@@ -87,8 +92,7 @@ if (!isset($_SESSION["username"])) {
                 title: {
                   display: true,
                   text: '人數',
-                  color: 'black',
-                  weight: 'bold'
+                  color: 'black'
                 },
                 stacked: true,
                 ticks: {
@@ -244,6 +248,7 @@ if (!isset($_SESSION["username"])) {
                     <h5 class="card-title fw-semibold">客戶性別年齡分佈</h5>
                   </div>
                 </div>
+                <div id="message"></div>
                 <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>

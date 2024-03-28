@@ -62,7 +62,8 @@ if (!isset($_SESSION["username"])) {
                             datalabels: {
                                 color: 'black',
                                 align: 'right',
-                                offset: 10
+                                offset: 10,
+                                weight: 'bold'
                             }
                         }, {
                             label: '銷量第一名',
@@ -71,7 +72,8 @@ if (!isset($_SESSION["username"])) {
                             datalabels: {
                                 color: 'black',
                                 align: 'right',
-                                offset: 10
+                                offset: 10,
+                                weight: 'bold'
                             }
                         }, {
                             label: '銷量第二名',
@@ -80,7 +82,8 @@ if (!isset($_SESSION["username"])) {
                             datalabels: {
                                 color: 'black',
                                 align: 'right',
-                                offset: 10
+                                offset: 10,
+                                weight: 'bold'
                             }
                         }]
                     },
@@ -93,16 +96,14 @@ if (!isset($_SESSION["username"])) {
                                 title: {
                                     display: true,
                                     text: '銷售額',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
                                     text: '商品大分類',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 }
                             }
                         }

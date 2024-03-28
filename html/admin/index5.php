@@ -25,7 +25,7 @@ if (!isset($_SESSION["username"])) {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var salesChart;
-
+            document.getElementById('message').textContent = '按搜尋按鈕尋找所有銷售人員總和的結果或輸入業務員序號';
             document.getElementById('s_id').addEventListener('input', function () {
                 var s_id = this.value;
                 fetch('../get/getCID.php?s_id=' + s_id)
@@ -65,8 +65,6 @@ if (!isset($_SESSION["username"])) {
                             updateChart(data);
                         })
                         .catch(error => console.error('Fetch error:', error));
-                } else {
-                    alert("Please enter a Salesperson ID or Customer ID.");
                 }
             }
 
@@ -117,16 +115,14 @@ if (!isset($_SESSION["username"])) {
                                 title: {
                                     display: true,
                                     text: '日期',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
                                     text: '次數',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 },
                                 beginAtZero: true,
                                 ticks: {
@@ -306,7 +302,7 @@ if (!isset($_SESSION["username"])) {
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="s_id" placeholder="業務員序號(後5碼)">
                                             <select id="c_id" class="form-select ">
-                                                <option value="">最近12月總計</option>
+                                                <option value="">最近24月總計</option>
                                             </select>
                                             <button id="searchButton" type="button"
                                                 class="btn btn-outline-primary">搜尋</button>
@@ -315,6 +311,7 @@ if (!isset($_SESSION["username"])) {
                                         </div>
                                     </div>
                                 </div>
+                                <div id="message"></div>
                                 <canvas id="salesChart"></canvas>
                             </div>
                         </div>

@@ -60,6 +60,10 @@ if (!isset($_SESSION["username"])) {
         var year = document.getElementById('yearDropdown').value;
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
+        if (!id || !year) {
+          alert('請選擇年份及輸入業務員序號');
+          return; // Prevent further execution
+        }
         var url = `../get/getCASData.php`;
         var queryParams = [];
         if (id) queryParams.push(`id=${id}`);
@@ -74,8 +78,6 @@ if (!isset($_SESSION["username"])) {
               updateChart(data);
             })
             .catch(error => console.error('Fetch error:', error));
-        } else {
-          alert("Please enter a User ID or select a Year.");
         }
       }
       function resetForm() {

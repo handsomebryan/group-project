@@ -93,7 +93,10 @@ if (!isset($_SESSION["username"])) {
         if (year) queryParams.push(`year=${year}`);
         if (quarter) queryParams.push(`quarter=${quarter}`);
         if (month) queryParams.push(`month=${month}`);
-
+        if (!year) {
+          alert('請選擇年份');
+          return;
+        }
         // Fetch data and update the chart
         if (queryParams.length > 0) {
           url += '?' + queryParams.join('&');
@@ -103,8 +106,6 @@ if (!isset($_SESSION["username"])) {
               updateChart(data); // Update chart 
             })
             .catch(error => console.error('Fetch error:', error));
-        } else {
-          alert("Please enter a User ID or select a Year.");
         }
       }
 
@@ -146,7 +147,8 @@ if (!isset($_SESSION["username"])) {
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
                 color: 'black',
-                align: 'right'
+                align: 'right',
+                weight: 'bold'
               }
             }, {
               label: '銷量第一名',
@@ -154,7 +156,8 @@ if (!isset($_SESSION["username"])) {
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
                 color: 'black',
-                align: 'right'
+                align: 'right',
+                weight: 'bold'
               }
             }, {
               label: '銷量第二名',
@@ -162,7 +165,8 @@ if (!isset($_SESSION["username"])) {
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
                 color: 'black',
-                align: 'right'
+                align: 'right',
+                weight: 'bold'
               }
             }]
           },
@@ -175,16 +179,14 @@ if (!isset($_SESSION["username"])) {
                 title: {
                   display: true,
                   text: '銷售額',
-                  color: 'black',
-                  weight: 'bold'
+                  color: 'black'
                 }
               },
               y: {
                 title: {
                   display: true,
                   text: '日期',
-                  color: 'black',
-                  weight: 'bold'
+                  color: 'black'
                 },
                 beginAtZero: true,
               }

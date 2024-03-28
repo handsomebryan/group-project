@@ -23,41 +23,45 @@ if (!isset($_SESSION["username"])) {
     </body>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Clear the graph container when the search button is clicked
             document.getElementById('searchButton').addEventListener('click', function () {
-                fetch('../deleteGraph.php')
-                    .then(function () {
-                        document.getElementById('message').textContent = 'Please wait...';
-                        document.getElementById('message').style.fontSize = '2em';
-                        document.getElementById('selfCount').textContent = '';
-                        document.getElementById('nselfCount').textContent = '';
-                        var id = document.getElementById('idInput').value;
+                var id = document.getElementById('idInput').value;
+                if (!id) {
+                    alert('請輸入業務員序號');
+                    return;
+                }
+                    fetch('../deleteGraph.php')
+                        .then(function () {
+                            document.getElementById('message').textContent = '載入中...';
+                            document.getElementById('message').style.fontSize = '2em';
+                            document.getElementById('selfCount').textContent = '';
+                            document.getElementById('nselfCount').textContent = '';
+                            var id = document.getElementById('idInput').value;
 
-                        // After deleting the graph, use Promise.all to wait for all fetch requests to complete
-                        Promise.all([
-                            fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
-                        ])
-                            .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
-                                document.getElementById('message').textContent = '';
-                                var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
-                                var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
+                            // After deleting the graph, use Promise.all to wait for all fetch requests to complete
+                            Promise.all([
+                                fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
+                                fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
+                                fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
+                            ])
+                                .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
+                                    document.getElementById('message').textContent = '';
+                                    var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
+                                    var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
-                                // Display selfPerform and nselfPerform
-                                var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
-                                var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
+                                    // Display selfPerform and nselfPerform
+                                    var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
+                                    var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
 
-                                document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
-                                document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
-                                fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
+                                    document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
+                                    document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
+                                    fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
 
-                                // Enable the buttons
-                                document.getElementById('relationGraphButtonSelf').disabled = false;
-                                document.getElementById('relationGraphButtonNself').disabled = false; 3
-                            });
-                    });
-            });
+                                    // Enable the buttons
+                                    document.getElementById('relationGraphButtonSelf').disabled = false;
+                                    document.getElementById('relationGraphButtonNself').disabled = false; 3
+                                });
+                        });
+                });
 
             // Clear the graph container and search bar when the reset button is clicked
             document.getElementById('resetButton').addEventListener('click', function () {
@@ -237,7 +241,6 @@ if (!isset($_SESSION["username"])) {
                                 </div>
                             </div>
                             <div id="message">
-
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">

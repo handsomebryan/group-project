@@ -37,92 +37,95 @@ if (!isset($_SESSION["username"])) {
       });
       function fetchData() {
         var id = document.getElementById('idInput').value;
-        var url = `../get/getPerform.php`; // Change this line
-        var queryParams = [];
-        if (id) queryParams.push(`id=${id}`);
-        if (queryParams.length > 0) {
-          url += '?' + queryParams.join('&');
-          fetch(url)
-            .then(response => response.json())
-            .then(data => {
-              updateChart(data);
-            })
-            .catch(error => console.error('Fetch error:', error));
-        } else {
-          alert("Please enter a User ID.");
+        if (!id) {
+          alert('請輸入業務員序號');
+          return;
         }
-      }
+          var url = `../get/getPerform.php`; // Change this line
+          var queryParams = [];
+          if (id) queryParams.push(`id=${id}`);
+          if (queryParams.length > 0) {
+            url += '?' + queryParams.join('&');
+            fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                updateChart(data);
+              })
+              .catch(error => console.error('Fetch error:', error));
+          }
+        }
 
-      function resetForm() {
-        document.getElementById('idInput').value = '';
-        if (salesChart) {
-          salesChart.destroy();
+        function resetForm() {
+          document.getElementById('idInput').value = '';
+          if (salesChart) {
+            salesChart.destroy();
+          }
         }
-      }
-      function updateChart(data) {
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        if (salesChart) {
-          salesChart.destroy();
-        }
-        salesChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: data.user.map(d => d.商品大分類),
-            datasets: [{
-              label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
-              data: data.user.map(d => d.total_sales),
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10
-              }
-            }, {
-              label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
-              data: data.T1.map(d => d.total_sales),
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
-              datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10
-              }
-            }, {
-              label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
-              data: data.T2.map(d => d.total_sales),
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10
-              }
-            }]
-          },
-          plugins: [ChartDataLabels],
-          options: {
-            indexAxis: 'y',
-            aspectRatio: 2,
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: '銷售額',
+        function updateChart(data) {
+          var ctx = document.getElementById('salesChart').getContext('2d');
+          if (salesChart) {
+            salesChart.destroy();
+          }
+          salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.user.map(d => d.商品大分類),
+              datasets: [{
+                label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
+                data: data.user.map(d => d.total_sales),
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                datalabels: {
                   color: 'black',
+                  align: 'right',
+                  offset: 10,
                   weight: 'bold'
                 }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: '商品大分類',
+              }, {
+                label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
+                data: data.T1.map(d => d.total_sales),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                datalabels: {
                   color: 'black',
+                  align: 'right',
+                  offset: 10,
                   weight: 'bold'
+                }
+              }, {
+                label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+                data: data.T2.map(d => d.total_sales),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                datalabels: {
+                  color: 'black',
+                  align: 'right',
+                  offset: 10,
+                  weight: 'bold'
+                }
+              }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+              indexAxis: 'y',
+              aspectRatio: 2,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: '銷售額',
+                    color: 'black'
+                  }
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: '商品大分類',
+                    color: 'black'
+                  }
                 }
               }
             }
-          }
-        });
-      }
-    });
+          });
+        }
+      });
   </script>
 </head>
 

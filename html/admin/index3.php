@@ -35,8 +35,18 @@ if (!isset($_SESSION["username"])) {
       document.getElementById('resetButton').addEventListener('click', function () {
         resetForm();
       });
+
       function fetchData() {
+        document.getElementById('message').textContent = '載入中...';
+        document.getElementById('message').style.fontSize = '2em';
+
         var id = document.getElementById('idInput').value;
+        if (!id) {
+          alert('請輸入業務員序號');
+          document.getElementById('message').textContent = '';
+          return;
+        }
+
         var url = `../get/getGAData.php`;
         var queryParams = [];
         if (id) queryParams.push(`id=${id}`);
@@ -47,11 +57,14 @@ if (!isset($_SESSION["username"])) {
             .then(data => {
               updateChart(data);
             })
-            .catch(error => console.error('Fetch error:', error));
-        } else {
-          alert("Please enter a User ID.");
+            .catch(error => console.error('Fetch error:', error))
+            .finally(() => {
+              document.getElementById('message').textContent = '';
+            });
         }
       }
+
+
       function resetForm() {
         document.getElementById('idInput').value = '';
         if (salesChart) {
@@ -103,8 +116,7 @@ if (!isset($_SESSION["username"])) {
                 title: {
                   display: true,
                   text: '人數',
-                  color: 'black',
-                  weight: 'bold'
+                  color: 'black'
                 },
                 stacked: true,
                 ticks: {
@@ -117,8 +129,7 @@ if (!isset($_SESSION["username"])) {
                 title: {
                   display: true,
                   text: '年齡',
-                  color: 'black',
-                  weight: 'bold'
+                  color: 'black'
                 },
                 beginAtZero: true,
                 stacked: true
@@ -287,6 +298,7 @@ if (!isset($_SESSION["username"])) {
                     </div>
                   </div>
                 </div>
+                <div id="message"></div>
                 <canvas id="salesChart" width="400" height="200"></canvas>
               </div>
             </div>

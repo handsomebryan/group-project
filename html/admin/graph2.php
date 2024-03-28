@@ -168,7 +168,7 @@ $selfPerform = $_SESSION["selfPerform"];
 
             <div class="container-fluid">
                 <button onclick="window.location.href='index11.php'" type="button" class="btn btn-warning btn-lg"><i
-                        class="ti ti-chevron-left"></i>Go Back</button>
+                        class="ti ti-chevron-left"></i>返回搜尋介面</button>
                 <button onclick="window.location.href='graph1.php'" type="button" class="btn btn-info btn-lg"
                     style="float: right;">客戶關係圖（被保人為別人）<i class="ti ti-chevron-right"></i></button>
                 <div class="col-lg-12 d-flex align-items-stretch">

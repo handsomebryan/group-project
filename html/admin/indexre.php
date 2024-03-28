@@ -31,14 +31,13 @@ if (!isset($_SESSION["username"])) {
           labels: [],
           datasets: [{
             data: [],
-            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'], // Add colors for each doughnut segment
+            backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
           }]
         }, options: {
           aspectRatio: 3,
         }
       });
 
-      // Function to fetch postal codes
       function fetchPostalCodes() {
         fetch('../get/getPC.php')
           .then(response => response.json())
@@ -48,7 +47,6 @@ if (!isset($_SESSION["username"])) {
           .catch(error => console.error('Error:', error));
       }
 
-      // Function to populate postal code dropdown
       function populatePostalCodes(postalCodes) {
         var postalCodeSelect = document.getElementById('postalCode');
         postalCodeSelect.innerHTML = '<option value="">郵遞區號</option>';
@@ -67,10 +65,20 @@ if (!isset($_SESSION["username"])) {
         var gender = document.getElementById('gender').value;
         var postalCode = document.getElementById('postalCode').value;
         var age = document.getElementById('age').value;
-
+        if (!gender && !postalCode && !age) {
+          alert('請選擇或輸入最少一個欄位（性別、郵遞區號或年齡）');
+          return; // Prevent further execution
+        }
         fetch(`../get/getREData.php?gender=${gender}&postalCode=${postalCode}&age=${age}`)
           .then(response => response.json())
-          .then(data => updateChart(myChart, data))
+          .then(data => {
+            if (data.length === 0) {
+              alert('無相關數據');
+              return;
+            } else {
+              updateChart(myChart, data);
+            }
+          })
           .catch(error => console.error('Error:', error));
       });
 

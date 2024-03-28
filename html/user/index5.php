@@ -108,16 +108,14 @@ if (!isset($_SESSION["username"])) {
                                 title: {
                                     display: true,
                                     text: '日期',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
                                     text: '次數',
-                                    color: 'black',
-                                    weight: 'bold'
+                                    color: 'black'
                                 },
                                 beginAtZero: true,
                                 ticks: {
