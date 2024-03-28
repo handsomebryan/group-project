@@ -1,55 +1,48 @@
 <!doctype html>
 <html lang="en">
-  <?php
+<?php
 
-  include 'dbconnect.php';
-  
-  session_start();
-  
-  
-  $data=mysqli_connect($servername,$username,$password,$dbname);
-  
-  if($data===false)
-  {
-    die("connection error");
-  }
-  
-  
-  if($_SERVER["REQUEST_METHOD"]=="POST")
-  {
-    $username=$_POST["username"];
-    $password=$_POST["password"];
-  
-  
-    $sql="select * from 業務員資料 where username='".$username."' AND password='".$password."' ";
-  
-    $result=mysqli_query($data,$sql);
-  
-    $row=mysqli_fetch_array($result);
-  
-    if($row["是否為主管"]=="0")
-    {	
-  
-      $_SESSION["username"]=$username;
-  
+include 'dbconnect.php';
+
+session_start();
+
+
+$data = mysqli_connect($servername, $username, $password, $dbname);
+
+if ($data === false) {
+  die("connection error");
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $username = $_POST["username"];
+  $password = $_POST["password"];
+
+
+  $sql = "select * from 業務員資料 where username='" . $username . "' AND password='" . $password . "' ";
+
+  $result = mysqli_query($data, $sql);
+
+  if ($result) {
+    $row = mysqli_fetch_array($result);
+
+    if ($row && $row["是否為主管"] == "0") {
+      $_SESSION["username"] = $username;
       header("location:user/index21.php");
-    }
-  
-    elseif($row["是否為主管"]=="1")
-    {
-  
-      $_SESSION["username"]=$username;
-      
+    } elseif ($row && $row["是否為主管"] == "1") {
+      $_SESSION["username"] = $username;
       header("location:admin/index21.php");
+    } else {
+      echo "<script>alert('使用者名稱或密碼不正確');</script>";
     }
-  
-    else
-    {
-      echo "username or password incorrect";
-    }
+  } else {
+    echo "<script>alert('使用者名稱或密碼不正確');</script>";
+  }
 
-  } 
-  ?>
+
+}
+?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -69,11 +62,13 @@
           <div class="col-md-8 col-lg-6 col-xxl-3">
             <div class="card mb-0">
               <div class="card-body">
-                <p><center><img src="../assets/images/logos/logo.png" width="180" alt=""></center></p>
+                <p>
+                  <center><img src="../assets/images/logos/logo.png" width="180" alt=""></center>
+                </p>
                 <form action="#" method="post">
                   <div class="mb-3">
                     <label for="id" class="form-label">帳號</label>
-                    <input type="text" class="form-control" name="username"  id="username" required>
+                    <input type="text" class="form-control" name="username" id="username" required>
                   </div>
                   <div class="mb-4">
                     <label for="pw" class="form-label">密碼</label>
