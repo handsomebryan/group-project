@@ -30,10 +30,16 @@ if (!isset($_SESSION["username"])) {
     document.addEventListener('DOMContentLoaded', function () {
       var salesChart;
       document.getElementById('searchButton').addEventListener('click', function () {
+        if (salesChart) {
+          salesChart.destroy();
+        }
         fetchData();
       });
       document.getElementById('resetButton').addEventListener('click', function () {
-        resetForm();
+        document.getElementById('idInput').value = '';
+        if (salesChart) {
+          salesChart.destroy();
+        }
       });
 
       function fetchData() {
@@ -65,12 +71,6 @@ if (!isset($_SESSION["username"])) {
       }
 
 
-      function resetForm() {
-        document.getElementById('idInput').value = '';
-        if (salesChart) {
-          salesChart.destroy();
-        }
-      }
 
 
       function updateChart(data) {

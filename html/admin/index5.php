@@ -26,9 +26,9 @@ if (!isset($_SESSION["username"])) {
         document.addEventListener('DOMContentLoaded', function () {
             var salesChart;
             document.getElementById('message').textContent = '按搜尋按鈕尋找所有銷售人員總和的結果或輸入業務員序號';
-            document.getElementById('s_id').addEventListener('input', function () {
-                var s_id = this.value;
-                fetch('../get/getCID.php?s_id=' + s_id)
+            document.getElementById('idInput').addEventListener('input', function () {
+                var idInput = this.value;
+                fetch('../get/getCID.php?idInput=' + idInput)
                     .then(response => response.json())
                     .then(data => {
                         var select = document.getElementById('c_id');
@@ -49,12 +49,12 @@ if (!isset($_SESSION["username"])) {
             });
 
             function fetchData() {
-                var s_id = document.getElementById('s_id').value;
+                var idInput = document.getElementById('idInput').value;
                 var c_id = document.getElementById('c_id').value;
                 var totalStatistic = (c_id === '');
                 var url = `../get/getFrequency.php`;
                 var queryParams = [];
-                if (s_id) queryParams.push(`s_id=${s_id}`);
+                if (idInput) queryParams.push(`idInput=${idInput}`);
                 if (c_id) queryParams.push(`c_id=${c_id}`);
                 if (totalStatistic) queryParams.push(`total_statistic=true`);
                 if (queryParams.length > 0) {
@@ -69,8 +69,10 @@ if (!isset($_SESSION["username"])) {
             }
 
             function resetForm() {
-                document.getElementById('s_id').value = '';
+                document.getElementById('idInput').value = '';
                 document.getElementById('c_id').value = '';
+                document.getElementById('totalVisit').textContent = '';
+                document.getElementById('totalContact').textContent = '';
                 if (salesChart) {
                     salesChart.destroy();
                 }
@@ -300,7 +302,7 @@ if (!isset($_SESSION["username"])) {
                                 <div class="form-inline">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="s_id" placeholder="業務員序號(後5碼)">
+                                            <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
                                             <select id="c_id" class="form-select ">
                                                 <option value="">最近24月總計</option>
                                             </select>
