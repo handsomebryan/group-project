@@ -35,7 +35,7 @@ if (!isset($_SESSION["username"])) {
                     select.innerHTML = '';
                     var totalOption = document.createElement('option');
                     totalOption.value = '';
-                    totalOption.text = '最近12月總計';
+                    totalOption.text = '最近24月總計';
                     select.add(totalOption);
 
                     data.forEach(function (id) {
