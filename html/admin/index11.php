@@ -33,6 +33,7 @@ if (!isset($_SESSION["username"])) {
                         .then(function () {
                             document.getElementById('message').textContent = '載入中...';
                             document.getElementById('message').style.fontSize = '2em';
+                            document.getElementById('count').textContent = '';
                             document.getElementById('selfCount').textContent = '';
                             document.getElementById('nselfCount').textContent = '';
                             var id = document.getElementById('idInput').value;
@@ -45,13 +46,16 @@ if (!isset($_SESSION["username"])) {
                             ])
                                 .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
                                     document.getElementById('message').textContent = '';
+                                    var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
                                     var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
                                     var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
                                     // Display selfPerform and nselfPerform
+                                    var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
                                     var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
                                     var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
 
+                                    document.getElementById('count').innerHTML = count + "<br>" + '($' + countPerform + ')';
                                     document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
                                     document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
                                     fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
@@ -67,6 +71,7 @@ if (!isset($_SESSION["username"])) {
             document.getElementById('resetButton').addEventListener('click', function () {
                 fetch('../deleteGraph.php')
                     .then(function () {
+                        document.getElementById('count').textContent = '';
                         document.getElementById('selfCount').textContent = '';
                         document.getElementById('nselfCount').textContent = '';
                         document.getElementById('relationGraphButtonSelf').disabled = true;
@@ -242,6 +247,15 @@ if (!isset($_SESSION["username"])) {
                             </div>
                             <div id="message">
                             </div>
+                            <div class="col-lg-12">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">總保單數</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="count"
+                                                style="font-size: 300%;"></h3>
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
