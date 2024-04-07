@@ -23,7 +23,7 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND MONTH(保單生效日) = '$month' AND 年化保費 != 0
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND MONTH(保單生效日) = '$month' 
                     GROUP BY 
                         DATE(保單生效日)";
     }
@@ -36,7 +36,7 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND 年化保費 != 0
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' 
                     GROUP BY 
                         YEAR(保單生效日), MONTH(保單生效日)
                     ";
@@ -50,14 +50,13 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter' AND 年化保費 != 0
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter' 
                     GROUP BY 
                         MONTH(保單生效日)";
     }
 }
 
 // Fetch top 1 salesperson's data excluding user-specific ID
-//Daily condition (specific month and year)
 if ($month && $year) {
     // Daily condition
     $top1SalesSql = "WITH SalespersonTotalSales AS (
@@ -68,7 +67,7 @@ if ($month && $year) {
                         JOIN 
                             保單資料 pol ON sp.保單序號 = pol.保單序號
                         WHERE 
-                            YEAR(pol.保單生效日) = '$year' AND sp.業務員序號 NOT LIKE '%$id'
+                            YEAR(pol.保單生效日) = '$year' AND MONTH(pol.保單生效日) = '$month' AND sp.業務員序號 NOT LIKE '%$id'
                         GROUP BY 
                             sp.業務員序號
                     ),

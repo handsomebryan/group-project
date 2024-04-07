@@ -1,7 +1,10 @@
 <?php
 include '../dbconnect.php';
 
-$sql = "SELECT DISTINCT 客戶郵遞區號 as postalCode FROM 客戶資料 where 客戶郵遞區號 not like 'null'  ORDER BY postalCode asc";
+$sql = "SELECT DISTINCT 客戶郵遞區號 as postalCode 
+FROM 客戶資料 
+where 客戶郵遞區號 != '0'  
+ORDER BY postalCode asc";
 $result = $conn->query($sql);
 
 $postalCodes = [];

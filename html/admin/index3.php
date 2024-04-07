@@ -109,7 +109,7 @@ if (!isset($_SESSION["username"])) {
             }]
           },
           options: {
-            aspectRatio: 3,
+            aspectRatio: 2,
             indexAxis: 'y',
             scales: {
               x: {

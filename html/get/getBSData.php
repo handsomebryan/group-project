@@ -25,7 +25,7 @@ if ($quarter) {
         JOIN 
             商品資料 P ON B.商品英文代碼 = P.商品英文代碼
         WHERE 
-            YEAR(B.保單生效日) = '$year' AND QUARTER(B.保單生效日) = '$quarter' AND 年化保費 != 0
+            YEAR(B.保單生效日) = '$year' AND QUARTER(B.保單生效日) = '$quarter' 
         GROUP BY 
             P.商品英文代碼, P.商品中文名稱 
         ORDER BY 
@@ -42,7 +42,7 @@ if ($quarter) {
     JOIN 
         TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
     WHERE 
-        YEAR(PD.保單生效日) = '$year' AND QUARTER(PD.保單生效日) = '$quarter' AND PD.年化保費 != 0
+        YEAR(PD.保單生效日) = '$year' AND QUARTER(PD.保單生效日) = '$quarter' 
     GROUP BY 
         TP.商品英文代碼, TP.商品中文名稱, MONTH(PD.保單生效日)
     ORDER BY 
@@ -60,7 +60,7 @@ if ($quarter) {
         JOIN 
             商品資料 GD ON PD.商品英文代碼 = GD.商品英文代碼
         WHERE 
-            YEAR(PD.保單生效日) = '$year' AND MONTH(PD.保單生效日)= '$month' AND PD.年化保費 != 0
+            YEAR(PD.保單生效日) = '$year' AND MONTH(PD.保單生效日)= '$month' 
         GROUP BY 
             PD.商品英文代碼, GD.商品中文名稱
         ORDER BY 
@@ -77,7 +77,7 @@ if ($quarter) {
     JOIN 
         TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
     WHERE 
-        YEAR(PD.保單生效日) = '$year' AND MONTH(PD.保單生效日)= '$month' AND PD.年化保費 != 0
+        YEAR(PD.保單生效日) = '$year' AND MONTH(PD.保單生效日)= '$month' 
     GROUP BY 
         TP.商品英文代碼, TP.商品中文名稱, DATE(PD.保單生效日)
     ORDER BY 
@@ -94,7 +94,7 @@ if ($quarter) {
         JOIN 
             商品資料 G ON PD.商品英文代碼 = G.商品英文代碼
         WHERE 
-            YEAR(PD.保單生效日) = '$year' AND PD.年化保費 != 0
+            YEAR(PD.保單生效日) = '$year' 
         GROUP BY 
             PD.商品英文代碼, G.商品中文名稱
         ORDER BY 
@@ -111,7 +111,7 @@ if ($quarter) {
     JOIN 
         TopProducts TP ON PD.商品英文代碼 = TP.商品英文代碼
     WHERE 
-        YEAR(PD.保單生效日) = '$year' AND PD.年化保費 != 0
+        YEAR(PD.保單生效日) = '$year' 
     GROUP BY 
         TP.商品英文代碼, TP.商品中文名稱, MONTH(PD.保單生效日)
     ORDER BY 

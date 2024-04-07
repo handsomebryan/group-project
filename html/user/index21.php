@@ -128,7 +128,7 @@ if (!isset($_SESSION["username"])) {
             datasets: datasets
           },
           options: {
-            aspectRatio: 3,
+            aspectRatio: 2,
             scales: {
               x: {
                 title: {
