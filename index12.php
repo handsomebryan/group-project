@@ -22,19 +22,18 @@ if (!isset($_SESSION["username"])) {
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-
-
-document.addEventListener('DOMContentLoaded', function () {
-  var salesChart;
-  document.getElementById('searchButton').addEventListener('click', function () {
-    fetchData();
-  });
-  document.getElementById('resetButton').addEventListener('click', function () {
-    resetForm();
-  });
-  function fetchData() {
+  document.addEventListener('DOMContentLoaded', function () {
+    var salesChart;
+    document.getElementById('searchButton').addEventListener('click', function () {
+      fetchData();
+    });
+    document.getElementById('resetButton').addEventListener('click', function () {
+      resetForm();
+    });
+    
+    function fetchData() {
     var id = document.getElementById('idInput').value;
-    var url = `../get/getSRelation.php`; // Change this line
+    var url = `../get/getSRelation.php`;
     var queryParams = [];
     if (id) queryParams.push(`id=${id}`);
     if (queryParams.length > 0) {
@@ -42,77 +41,80 @@ document.addEventListener('DOMContentLoaded', function () {
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          updateChart(data);
+          // 在這裡呼叫第一筆資料（data）
+          updateChart(data.data, data.data1);
         })
         .catch(error => console.error('Fetch error:', error));
     } else {
-      alert("Please enter a User ID.");
+      alert("請輸入業務員序號");
     }
   }
 
-  function resetForm() {
-    document.getElementById('idInput').value = '';
-    if (salesChart) {
-      salesChart.destroy();
+
+    function resetForm() {
+      document.getElementById('idInput').value = '';
+      if (salesChart) {
+        salesChart.destroy();
+      }
     }
-  }
-  function updateChart(data) {
-    var ctx = document.getElementById('salesChart').getContext('2d');
-    if (salesChart) {
-      salesChart.destroy();
-    }
-    //d.商品大分類改成業務員代碼
-    var config = {
+    function updateChart(dataTop, dataBottom) { // 修正此處，接收兩個資料陣列作為參數
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
+      
+      var config = {
       type: 'bar',
       data: {
-        labels: data.map(d => d.業務員序號), // 修改此行
+        labels: dataTop.map(d => d.業務員序號),
         datasets: [{
           label: '銷售額前五大招攬業務員',
-          data: data.map(d => d.總保費), // 修改此行
+          data: dataTop.map(d => d.總保費), 
           backgroundColor: 'rgba(255, 99, 132, 0.2)'
+        }, {
+          label: '銷售量倒數前五大招攬業務員', // 第二筆資料的標籤
+          data: dataBottom.map(d => d.總保費), // 第二筆資料的銷售額
+          backgroundColor: 'rgba(54, 162, 235, 0.2)' // 第二筆資料的背景顏色
         }]
       },
-      options: {
-        indexAxis: 'x', // 修改此行
-        aspectRatio: 2,
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: '銷售額', // 修改此行
-              color: 'black',
-              weight: 'bold'
+        options: {
+          indexAxis: 'x',
+          aspectRatio: 2,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: '銷售額', // 修改此行
+                color: 'black',
+                weight: 'bold'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: '業務員序號', // 修改此行
+                color: 'black',
+                weight: 'bold'
+              }
             }
           },
-          y: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
             title: {
               display: true,
-              text: '業務員序號', // 修改此行
-              color: 'black',
-              weight: 'bold'
+              text: '業務員&業務員關係'
             }
-          }
-        },
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: '業務員&業務員關係'
           }
         }
-      }
-    };
-    salesChart = new Chart(ctx, config);
-  }
-});
+      };
+      salesChart = new Chart(ctx, config);
+    }
+  });
 
-
-
-
-  </script>
+</script>
 
 </head>
 
