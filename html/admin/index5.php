@@ -52,7 +52,7 @@ if (!isset($_SESSION["username"])) {
                 var idInput = document.getElementById('idInput').value;
                 var c_id = document.getElementById('c_id').value;
                 var totalStatistic = (c_id === '');
-                var url = `../get/getFrequency.php`;
+                var url = `../get/getFrequency.php`; 
                 var queryParams = [];
                 if (idInput) queryParams.push(`idInput=${idInput}`);
                 if (c_id) queryParams.push(`c_id=${c_id}`);

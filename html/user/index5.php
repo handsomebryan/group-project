@@ -27,8 +27,8 @@ if (!isset($_SESSION["username"])) {
             var salesChart;
 
 
-            var s_id = '<?php echo $_SESSION["username"]; ?>';
-            fetch('../get/getCID.php?s_id=' + s_id)
+            var idInput = '<?php echo $_SESSION["username"]; ?>';
+            fetch('../get/getCID.php?idInput=' + idInput)
                 .then(response => response.json())
                 .then(data => {
                     var select = document.getElementById('c_id');
@@ -48,12 +48,12 @@ if (!isset($_SESSION["username"])) {
                 .catch(error => console.error('Fetch error:', error));
 
             function fetchData() {
-                var username = '<?php echo $_SESSION["username"]; ?>';
+                var idInput = '<?php echo $_SESSION["username"]; ?>';
                 var c_id = document.getElementById('c_id').value;
                 var totalStatistic = (c_id === '');
                 var url = `../get/getFrequency.php`;
                 var queryParams = [];
-                if (username) queryParams.push(`s_id=${username}`);
+                if (idInput) queryParams.push(`idInput=${idInput}`);
                 if (c_id) queryParams.push(`c_id=${c_id}`);
                 if (totalStatistic) queryParams.push(`total_statistic=true`);
                 if (queryParams.length > 0) {
