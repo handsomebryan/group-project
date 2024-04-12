@@ -22,33 +22,47 @@ if (!isset($_SESSION["username"])) {
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var salesChart;
-    document.getElementById('searchButton').addEventListener('click', function () {
-      fetchData();
-    });
-    document.getElementById('resetButton').addEventListener('click', function () {
-      resetForm();
-    });
-    
-    function fetchData() {
-    var id = document.getElementById('idInput').value;
-    var url = `../get/getSRelation.php`;
-    var queryParams = [];
-    if (id) queryParams.push(`id=${id}`);
-    if (queryParams.length > 0) {
-      url += '?' + queryParams.join('&');
-      fetch(url)
+   document.addEventListener('DOMContentLoaded', function () {
+            loadSalespersonOptions();
+            var salesChart;
+            document.getElementById('searchButton').addEventListener('click', function () {
+                fetchData();
+            });
+            document.getElementById('resetButton').addEventListener('click', function () {
+                resetForm();
+            });
+            function loadSalespersonOptions() {
+        fetch('../get/getSID.php') // 假設有一個 PHP 檔案用於獲取業務員序號
         .then(response => response.json())
         .then(data => {
-          // 在這裡呼叫第一筆資料（data）
-          updateChart(data.data, data.data1);
+            const selectElement = document.getElementById('idInput');
+            selectElement.innerHTML = ''; // 清空下拉式選單的內容
+            data.forEach(salesperson => {
+                const option = document.createElement('option');
+                option.value = salesperson.id; // 假設數據中包含業務員的 id 屬性
+                option.text = salesperson.id; // 假設數據中包含業務員的 name 屬性
+                selectElement.appendChild(option);
+            });
         })
         .catch(error => console.error('Fetch error:', error));
-    } else {
-      alert("請輸入業務員序號");
-    }
-  }
+        }
+        function fetchData() {
+            var id = document.getElementById('idInput').value;
+            var url = `../get/getSRelation.php`;
+            var queryParams = [];
+            if (id) queryParams.push(`id=${id}`);
+            if (queryParams.length > 0) {
+                url += '?' + queryParams.join('&');
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateChart(data);
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            } else {
+                alert("請選擇業務員序號");
+            }
+        }
 
 
     function resetForm() {
@@ -268,7 +282,9 @@ if (!isset($_SESSION["username"])) {
                 <div class="form-inline">
                   <div class="form-group">
                     <div class="input-group">
-                      <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
+                      <select id="idInput" class="form-select ">
+                                                <option value="s_id">業務員序號</option>
+                                            </select>
                       <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
                       <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>
