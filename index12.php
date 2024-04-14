@@ -22,7 +22,9 @@ if (!isset($_SESSION["username"])) {
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-   document.addEventListener('DOMContentLoaded', function () {
+
+
+        document.addEventListener('DOMContentLoaded', function () {
             loadSalespersonOptions();
             var salesChart;
             document.getElementById('searchButton').addEventListener('click', function () {
@@ -65,70 +67,67 @@ if (!isset($_SESSION["username"])) {
         }
 
 
-    function resetForm() {
-      document.getElementById('idInput').value = '';
-      if (salesChart) {
-        salesChart.destroy();
-      }
-    }
-    function updateChart(dataTop, dataBottom) { // 修正此處，接收兩個資料陣列作為參數
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        if (salesChart) {
-          salesChart.destroy();
-        }
-      
-      var config = {
-      type: 'bar',
-      data: {
-        labels: dataTop.map(d => d.業務員序號),
-        datasets: [{
-          label: '銷售額前五大招攬業務員',
-          data: dataTop.map(d => d.總保費), 
-          backgroundColor: 'rgba(255, 99, 132, 0.2)'
-        }, {
-          label: '銷售量倒數前五大招攬業務員', // 第二筆資料的標籤
-          data: dataBottom.map(d => d.總保費), // 第二筆資料的銷售額
-          backgroundColor: 'rgba(54, 162, 235, 0.2)' // 第二筆資料的背景顏色
-        }]
-      },
-        options: {
-          indexAxis: 'x',
-          aspectRatio: 2,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: '銷售額', // 修改此行
-                color: 'black',
-                weight: 'bold'
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: '業務員序號', // 修改此行
-                color: 'black',
-                weight: 'bold'
-              }
+            function resetForm() {
+                document.getElementById('idInput').value = '';
+                if (salesChart) {
+                    salesChart.destroy();
+                }
             }
-          },
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: '業務員&業務員關係'
+            function updateChart(data) {
+                var ctx = document.getElementById('salesChart').getContext('2d');
+                if (salesChart) {
+                    salesChart.destroy();
+                }
+                var config = {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(d => d.業務員序號),
+                        datasets: [{
+                            label: '招攬業務員之總年化保費',
+                            data: data.map(d => d.總保費),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            datalabels: {
+                                color: 'black',
+                                align: 'top',
+                                weight: 'bold'
+                            }
+                        }]
+                    }, plugins: [ChartDataLabels],
+                    options: {
+                        indexAxis: 'x',
+                        aspectRatio: 2,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '總年化保費',
+                                    color: 'black'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '業務員序號',
+                                    color: 'black'
+                                }
+                            }
+                        },
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                };
+                salesChart = new Chart(ctx, config);
             }
-          }
-        }
-      };
-      salesChart = new Chart(ctx, config);
-    }
-  });
+        });
 
-</script>
+
+
+
+    </script>
 
 </head>
 
