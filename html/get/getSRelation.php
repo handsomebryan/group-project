@@ -6,24 +6,20 @@ function getQueryParam($paramName)
     return isset($_GET[$paramName]) ? $_GET[$paramName] : '';
 }
 
+
+
 $id = getQueryParam('id');
 
-// SQL 查詢，計算服務招攬業務員1和招攬業務員2相同序號的保單資料的保險金額總和
-$sql = "SELECT RIGHT(業務員序號, 5) AS 業務員序號, SUM(年化保費) AS 總保費
-        FROM (
-            SELECT 業務員序號, 年化保費
-            FROM 保單資料 a
-            JOIN 服務招攬業務員 b ON a.保單序號 = b.保單序號
-            WHERE RIGHT(b.招攬業務員1序號, 5) LIKE '%$id'
-            UNION ALL
-            SELECT 業務員序號, 年化保費
-            FROM 保單資料 a
-            JOIN 服務招攬業務員 b ON a.保單序號 = b.保單序號
-            WHERE RIGHT(b.招攬業務員2序號, 5) LIKE '%$id'
-        ) AS sales
-        GROUP BY RIGHT(業務員序號, 5)
-        ORDER BY 總保費 DESC
-        LIMIT 5";
+
+$sql = "SELECT a.保單序號, RIGHT(a.業務員序號,5) AS 服務業務員序號, RIGHT(b.業務員序號,5) AS 招待業務員序號, SUM(c.年化保費) AS 總保費
+FROM 業務員保單序號 a
+JOIN 業務員保單序號 b ON a.保單序號 = b.保單序號
+JOIN 保單資料 c ON a.保單序號 = c.保單序號
+WHERE a.是否服務業務員 = 0 AND b.是否服務業務員 = 1 AND a.業務員序號 LIKE '%$id'
+GROUP BY 招待業務員序號
+ORDER BY 總保費 DESC
+LIMIT 10;
+";
 
 $data = [];
 
