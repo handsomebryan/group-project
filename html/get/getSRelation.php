@@ -6,10 +6,7 @@ function getQueryParam($paramName)
     return isset($_GET[$paramName]) ? $_GET[$paramName] : '';
 }
 
-
-
 $id = getQueryParam('id');
-
 
 $sql = "SELECT a.保單序號, RIGHT(b.業務員序號,5) AS 招待業務員序號, SUM(c.年化保費) AS 總保費
 FROM 業務員保單序號 a
