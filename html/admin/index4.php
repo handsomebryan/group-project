@@ -49,7 +49,7 @@ if (!isset($_SESSION["username"])) {
         }
         document.getElementById('message').textContent = '載入中...';
         document.getElementById('message').style.fontSize = '2em';
-        var url = `../get/getPerform.php`; // Change this line
+        var url = `../get/getPerform.php`;
         var queryParams = [];
         if (id) queryParams.push(`id=${id}`);
         if (queryParams.length > 0) {

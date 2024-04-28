@@ -24,7 +24,7 @@ if (!isset($_SESSION["username"])) {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      var salesChart; // Variable for the chart instance
+      var salesChart; 
 
       fetch('../get/getYears.php')
         .then(response => response.json())
@@ -39,7 +39,6 @@ if (!isset($_SESSION["username"])) {
         })
         .catch(error => console.error('Error:', error));
 
-      // Fetch quarters and months when a year is selected
       document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = document.getElementById('yearDropdown').value;
       });
@@ -98,12 +97,9 @@ if (!isset($_SESSION["username"])) {
         if (salesChart) {
           salesChart.destroy();
         }
-
+        
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
-
-        //  unique labels for the x-axis
         var labels = [...new Set(data.map(item => item[1]))];
-
         var datasets = [];
         var groupedData = data.reduce(function (acc, item) {
           if (!acc[item[0]]) {
@@ -116,7 +112,7 @@ if (!isset($_SESSION["username"])) {
 
         Object.keys(groupedData).forEach(function (key, index) {
           datasets.push({
-            label: key, // 商品中文名稱(商品英文代碼)
+            label: key, 
             data: groupedData[key],
             borderColor: specificColors[index % specificColors.length],
             fill: false

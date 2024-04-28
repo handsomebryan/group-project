@@ -3,11 +3,9 @@
 <?php
 session_start();
 
-
 if (!isset($_SESSION["username"])) {
   header("location:authentication-login.php");
 }
-
 ?>
 
 <head>
@@ -21,114 +19,108 @@ if (!isset($_SESSION["username"])) {
     src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
 
-
-        document.addEventListener('DOMContentLoaded', function () {
-            loadSalespersonOptions();
-            var salesChart;
-            document.getElementById('searchButton').addEventListener('click', function () {
-                fetchData();
-            });
-            document.getElementById('resetButton').addEventListener('click', function () {
-                resetForm();
-            });
-            function loadSalespersonOptions() {
-        fetch('../get/getSID.php') 
-        .then(response => response.json())
-        .then(data => {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      loadSalespersonOptions();
+      var salesChart;
+      document.getElementById('searchButton').addEventListener('click', function () {
+        fetchData();
+      });
+      document.getElementById('resetButton').addEventListener('click', function () {
+        resetForm();
+      });
+      function loadSalespersonOptions() {
+        fetch('../get/getSID.php')
+          .then(response => response.json())
+          .then(data => {
             const selectElement = document.getElementById('idInput');
-            selectElement.innerHTML = '<option value="">請選擇業務員序號</option>'; 
+            selectElement.innerHTML = '<option value="">請選擇業務員序號</option>';
             data.forEach(salesperson => {
-                const option = document.createElement('option');
-                option.value = salesperson.id; 
-                option.text = salesperson.id; 
-                selectElement.appendChild(option);
+              const option = document.createElement('option');
+              option.value = salesperson.id;
+              option.text = salesperson.id;
+              selectElement.appendChild(option);
             });
-        })
-        .catch(error => console.error('Fetch error:', error));
+          })
+          .catch(error => console.error('Fetch error:', error));
+      }
+
+      function fetchData() {
+        var id = document.getElementById('idInput').value;
+        var url = `../get/getSRelation.php`;
+        var queryParams = [];
+        if (id) queryParams.push(`id=${id}`);
+        if (queryParams.length > 0) {
+          url += '?' + queryParams.join('&');
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              updateChart(data);
+            })
+            .catch(error => console.error('Fetch error:', error));
+        } else {
+          alert("請選擇業務員序號");
         }
-        function fetchData() {
-            var id = document.getElementById('idInput').value;
-            var url = `../get/getSRelation.php`;
-            var queryParams = [];
-            if (id) queryParams.push(`id=${id}`);
-            if (queryParams.length > 0) {
-                url += '?' + queryParams.join('&');
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        updateChart(data);
-                    })
-                    .catch(error => console.error('Fetch error:', error));
-            } else {
-                alert("請選擇業務員序號");
-            }
+      }
+
+      function resetForm() {
+        document.getElementById('idInput').value = '';
+        if (salesChart) {
+          salesChart.destroy();
         }
+      }
 
-
-            function resetForm() {
-                document.getElementById('idInput').value = '';
-                if (salesChart) {
-                    salesChart.destroy();
+      function updateChart(data) {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+          salesChart.destroy();
+        }
+        var config = {
+          type: 'bar',
+          data: {
+            labels: data.map(d => d.招待業務員序號),
+            datasets: [{
+              label: '招攬業務員之總年化保費',
+              data: data.map(d => d.總保費),
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              datalabels: {
+                color: 'black',
+                align: 'top',
+                weight: 'bold'
+              }
+            }]
+          }, plugins: [ChartDataLabels],
+          options: {
+            aspectRatio: 2,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: '業務員序號',
+                  color: 'black'
                 }
-            }
-            function updateChart(data) {
-                var ctx = document.getElementById('salesChart').getContext('2d');
-                if (salesChart) {
-                    salesChart.destroy();
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '總年化保費',
+                  color: 'black'
                 }
-                var config = {
-                    type: 'bar',
-                    data: {
-                        labels: data.map(d => d.招待業務員序號),
-                        datasets: [{
-                            label: '招攬業務員之總年化保費',
-                            data: data.map(d => d.總保費),
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            datalabels: {
-                                color: 'black',
-                                align: 'top',
-                                weight: 'bold'
-                            }
-                        }]
-                    }, plugins: [ChartDataLabels],
-                    options: {
-                        indexAxis: 'x',
-                        aspectRatio: 2,
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: '業務員序號',
-                                    color: 'black'
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: '總年化保費',
-                                    color: 'black'
-                                }
-                            }
-                        },
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            }
-                        }
-                    }
-                };
-                salesChart = new Chart(ctx, config);
+              }
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              }
             }
-        });
-
-
-
-
-    </script>
-
+          }
+        };
+        salesChart = new Chart(ctx, config);
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -237,6 +229,7 @@ if (!isset($_SESSION["username"])) {
         </nav>
       </div>
     </aside>
+
     <div class="body-wrapper">
       <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -282,8 +275,8 @@ if (!isset($_SESSION["username"])) {
                   <div class="form-group">
                     <div class="input-group">
                       <select id="idInput" class="form-select ">
-                                                <option value="id">業務員序號</option>
-                                            </select>
+                        <option value="id">業務員序號</option>
+                      </select>
                       <button id="searchButton" type="button" class="btn btn-outline-primary">搜尋</button>
                       <button id="resetButton" type="button" class="btn btn-outline-danger">重設</button>
                     </div>

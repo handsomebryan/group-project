@@ -38,7 +38,6 @@ if (!isset($_SESSION["username"])) {
                             document.getElementById('nselfCount').textContent = '';
                             var id = document.getElementById('idInput').value;
 
-                            // After deleting the graph, use Promise.all to wait for all fetch requests to complete
                             Promise.all([
                                 fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
                                 fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
@@ -50,7 +49,6 @@ if (!isset($_SESSION["username"])) {
                                     var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
                                     var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
-                                    // Display selfPerform and nselfPerform
                                     var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
                                     var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
                                     var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
@@ -60,14 +58,12 @@ if (!isset($_SESSION["username"])) {
                                     document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
                                     fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
 
-                                    // Enable the buttons
                                     document.getElementById('relationGraphButtonSelf').disabled = false;
                                     document.getElementById('relationGraphButtonNself').disabled = false; 3
                                 });
                         });
                 });
 
-            // Clear the graph container and search bar when the reset button is clicked
             document.getElementById('resetButton').addEventListener('click', function () {
                 fetch('../deleteGraph.php')
                     .then(function () {

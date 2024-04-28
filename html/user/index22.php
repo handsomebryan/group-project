@@ -27,11 +27,9 @@ if (!isset($_SESSION["username"])) {
     integrity="sha512-+UYTD5L/bU1sgAfWA0ELK5RlQ811q8wZIocqI7+K0Lhh8yVdIoAMEs96wJAIbgFvzynPm36ZCXtkydxu1cs27w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    // Wait for the DOM content to be fully loaded
     document.addEventListener('DOMContentLoaded', function () {
       var salesChart;
 
-      // Fetch years from server
       fetch('../get/getYears.php')
         .then(response => response.json())
         .then(years => {
@@ -45,7 +43,6 @@ if (!isset($_SESSION["username"])) {
         })
         .catch(error => console.error('Error:', error));
 
-      // Fetch quarters and months when a year is selected
       document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = this.value;
 
@@ -58,35 +55,28 @@ if (!isset($_SESSION["username"])) {
       var quarterDropdown = document.getElementById('quarterDropdown');
       var monthDropdown = document.getElementById('monthDropdown');
 
-      // Disable month dropdown if quarter is selected
       quarterDropdown.addEventListener('change', function () {
         monthDropdown.disabled = !!this.value;
       });
 
-      // Disable quarter dropdown if month is selected
       monthDropdown.addEventListener('change', function () {
         quarterDropdown.disabled = !!this.value;
       });
 
-      // search button click
       document.getElementById('searchButton').addEventListener('click', function () {
         fetchData();
       });
 
-      // reset button click
       document.getElementById('resetButton').addEventListener('click', function () {
         resetForm();
       });
 
-      //fetch data based on selected filters
       function fetchData() {
-        // Get values
         var id = '<?php echo $_SESSION["username"] ?>';
         var year = document.getElementById('yearDropdown').value;
         var quarter = document.getElementById('quarterDropdown').value;
         var month = document.getElementById('monthDropdown').value;
 
-        // Construct the query URL with selected parameters
         var url = `../get/getCASData.php`;
         var queryParams = [];
         if (id) queryParams.push(`id=${id}`);
@@ -97,21 +87,19 @@ if (!isset($_SESSION["username"])) {
           alert('請選擇年份');
           return;
         }
-        // Fetch data and update the chart
+
         if (queryParams.length > 0) {
           url += '?' + queryParams.join('&');
           fetch(url)
             .then(response => response.json())
             .then(data => {
-              updateChart(data); // Update chart 
+              updateChart(data); 
             })
             .catch(error => console.error('Fetch error:', error));
         }
       }
 
-      // reset the form and chart
       function resetForm() {
-        // Reset dropdowns and input field
         document.getElementById('yearDropdown').selectedIndex = 0;
         document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
         document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
@@ -121,22 +109,18 @@ if (!isset($_SESSION["username"])) {
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
         monthDropdown.disabled = false;
-        // Destroy the current chart
         if (salesChart) {
           salesChart.destroy();
         }
       }
 
-      //create or update sales chart
       function updateChart(data) {
         var ctx = document.getElementById('salesChart').getContext('2d');
 
-        // Destroy old chart
         if (salesChart) {
           salesChart.destroy();
         }
 
-        // Create a new bar chart with fetched data
         salesChart = new Chart(ctx, {
           type: 'bar',
           data: {

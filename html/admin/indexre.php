@@ -58,7 +58,6 @@ if (!isset($_SESSION["username"])) {
         });
       }
 
-      // Fetch postal codes when the page loads
       fetchPostalCodes();
 
       document.getElementById('searchButton').addEventListener('click', function () {
@@ -86,7 +85,7 @@ if (!isset($_SESSION["username"])) {
         document.getElementById('gender').value = '';
         document.getElementById('postalCode').value = '';
         document.getElementById('age').value = '';
-        updateChart(myChart, []); // Clear the chart
+        updateChart(myChart, []); 
       });
     });
 

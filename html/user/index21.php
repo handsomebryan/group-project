@@ -39,7 +39,6 @@ if (!isset($_SESSION["username"])) {
         })
         .catch(error => console.error('Error:', error));
 
-      // Fetch quarters and months when a year is selected
       document.getElementById('yearDropdown').addEventListener('change', function () {
         var year = this.value;
       });
@@ -99,7 +98,6 @@ if (!isset($_SESSION["username"])) {
 
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
-        //  unique labels for the x-axis
         var labels = ['', ...new Set(data.map(item => item[1]))];
 
         var datasets = [];
