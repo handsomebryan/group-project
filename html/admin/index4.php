@@ -80,9 +80,8 @@ if (!isset($_SESSION["username"])) {
               data: data.user.map(d => d.total_sales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10,
+                color: 'rgba(222, 55, 44, 1)',
+                align: 'end',
                 weight: 'bold'
               }
             }, {
@@ -90,9 +89,8 @@ if (!isset($_SESSION["username"])) {
               data: data.T1.map(d => d.total_sales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10,
+                color: 'rgba(32, 50, 255, 1)',
+                align: 'end',
                 weight: 'bold'
               }
             }, {
@@ -100,29 +98,27 @@ if (!isset($_SESSION["username"])) {
               data: data.T2.map(d => d.total_sales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
-                offset: 10,
+                color: 'rgba(0, 121, 0, 1)',
+                align: 'end',
                 weight: 'bold'
               }
             }]
           },
           plugins: [ChartDataLabels],
-          options: {
-            indexAxis: 'y',
+          options: {           
             aspectRatio: 2,
             scales: {
               x: {
                 title: {
                   display: true,
-                  text: '銷售額',
+                  text: '商品大分類',
                   color: 'black'
                 }
               },
               y: {
                 title: {
                   display: true,
-                  text: '商品大分類',
+                  text: '銷售額',
                   color: 'black'
                 }
               }

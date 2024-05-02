@@ -101,10 +101,6 @@ if (!isset($_SESSION["username"])) {
 
       function resetForm() {
         document.getElementById('yearDropdown').selectedIndex = 0;
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
-        document.getElementById('quarterDropdown').innerHTML = '<option value="">季度</option>';
-        document.getElementById('monthDropdown').innerHTML = '<option value="">月份</option>';
         quarterDropdown.selectedIndex = 0;
         monthDropdown.selectedIndex = 0;
         quarterDropdown.disabled = false;
@@ -130,8 +126,8 @@ if (!isset($_SESSION["username"])) {
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
+                color: 'rgba(222, 55, 44, 1)',
+                align: 'end',
                 weight: 'bold'
               }
             }, {
@@ -139,37 +135,37 @@ if (!isset($_SESSION["username"])) {
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
+                color: 'rgba(32, 50, 255, 1)',
+                align: 'end',
                 weight: 'bold'
+
               }
             }, {
               label: '銷量第二名',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right',
+                color: 'rgba(0, 121, 0, 1)',
+                align: 'end',
                 weight: 'bold'
               }
             }]
           },
           plugins: [ChartDataLabels],
           options: {
-            indexAxis: 'y',
             aspectRatio: 1,
             scales: {
               x: {
                 title: {
                   display: true,
-                  text: '銷售額',
+                  text: '日期',
                   color: 'black'
                 }
               },
               y: {
                 title: {
                   display: true,
-                  text: '日期',
+                  text: '銷售額',
                   color: 'black'
                 },
                 beginAtZero: true,

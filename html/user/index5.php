@@ -117,10 +117,7 @@ if (!isset($_SESSION["username"])) {
                                     text: '次數',
                                     color: 'black'
                                 },
-                                beginAtZero: true,
-                                ticks: {
-                                    precision: 0
-                                }
+                                beginAtZero: true
                             }
                         }
                     }

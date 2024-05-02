@@ -105,45 +105,47 @@ if (!isset($_SESSION["username"])) {
               data: data.user.map(d => d.TotalSales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right'
+                color: 'rgba(222, 55, 44, 1)',
+                align: 'top',
+                weight: 'bold'
               }
             }, {
               label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right'
+                color: 'rgba(32, 50, 255, 1)',
+                align: 'top',
+                weight: 'bold'
               }
             }, {
               label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
-                color: 'black',
-                align: 'right'
+                color: 'rgba(0, 121, 0, 1)',
+                align: 'top',
+                weight: 'bold'
               }
             }]
           }, plugins: [ChartDataLabels],
           options: {
-            indexAxis: 'y',
             aspectRatio: 1,
             scales: {
               x: {
+                barPercentage: 1,
+                categoryPercentage: 1,
                 title: {
                   display: true,
-                  text: '銷售額',
-                  color: 'black',
-                  weight: 'bold'
+                  text: '日期',
+                  color: 'black'
                 }
               },
               y: {
                 title: {
                   display: true,
-                  text: '日期',
-                  color: 'black',
-                  weight: 'bold'
+                  text: '銷售額',
+                  color: 'black'
                 },
                 beginAtZero: true
               }
