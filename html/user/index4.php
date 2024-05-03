@@ -61,7 +61,7 @@ if (!isset($_SESSION["username"])) {
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             datalabels: {
                                 color: 'rgba(222, 55, 44, 1)',
-                                align: 'end',
+                                align: 'center',
                                 weight: 'bold'
                             }
                         }, {
@@ -70,7 +70,7 @@ if (!isset($_SESSION["username"])) {
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             datalabels: {
                                 color: 'rgba(32, 50, 255, 1)',
-                                align: 'end',
+                                align: 'top',
                                 weight: 'bold'
                             }
                         }, {
@@ -79,7 +79,7 @@ if (!isset($_SESSION["username"])) {
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             datalabels: {
                                 color: 'rgba(0, 121, 0, 1)',
-                                align: 'end',
+                                align: 'center',
                                 weight: 'bold'
                             }
                         }]

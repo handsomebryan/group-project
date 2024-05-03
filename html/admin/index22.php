@@ -106,7 +106,7 @@ if (!isset($_SESSION["username"])) {
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               datalabels: {
                 color: 'rgba(222, 55, 44, 1)',
-                align: 'top',
+                align: 'center',
                 weight: 'bold'
               }
             }, {
@@ -124,17 +124,14 @@ if (!isset($_SESSION["username"])) {
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               datalabels: {
                 color: 'rgba(0, 121, 0, 1)',
-                align: 'top',
+                align: 'center',
                 weight: 'bold'
               }
             }]
           }, plugins: [ChartDataLabels],
           options: {
-            aspectRatio: 1,
             scales: {
               x: {
-                barPercentage: 1,
-                categoryPercentage: 1,
                 title: {
                   display: true,
                   text: '日期',
