@@ -52,7 +52,7 @@ if (!isset($_SESSION["username"])) {
                 var idInput = document.getElementById('idInput').value;
                 var c_id = document.getElementById('c_id').value;
                 var totalStatistic = (c_id === '');
-                var url = `../get/getFrequency.php`; 
+                var url = `../get/getFrequency.php`;
                 var queryParams = [];
                 if (idInput) queryParams.push(`idInput=${idInput}`);
                 if (c_id) queryParams.push(`c_id=${c_id}`);
@@ -70,13 +70,17 @@ if (!isset($_SESSION["username"])) {
 
             function resetForm() {
                 document.getElementById('idInput').value = '';
-                document.getElementById('c_id').value = '';
+                document.getElementById('c_id').selectedIndex = 0;
+                for (let i = document.getElementById('c_id').options.length - 1; i > 0; i--) {
+                    document.getElementById('c_id').remove(i);
+                }
                 document.getElementById('totalVisit').textContent = '';
                 document.getElementById('totalContact').textContent = '';
                 if (salesChart) {
                     salesChart.destroy();
                 }
             }
+
 
             function updateChart(data) {
                 var ctx = document.getElementById('salesChart').getContext('2d');
@@ -302,7 +306,8 @@ if (!isset($_SESSION["username"])) {
                                 <div class="form-inline">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="idInput" placeholder="業務員序號(後5碼)">
+                                            <input type="text" class="form-control" id="idInput"
+                                                placeholder="業務員序號(後5碼)">
                                             <select id="c_id" class="form-select ">
                                                 <option value="">最近24月總計</option>
                                             </select>
