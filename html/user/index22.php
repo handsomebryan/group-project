@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 <!doctype html>
 <html lang="en">
 <?php
 session_start();
 
-
-if (!isset($_SESSION["username"])) {
-  header("location:authentication-login.php");
+if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
+  header("location:../login.php");
 }
-
 ?>
 
 <head>
@@ -94,7 +91,7 @@ if (!isset($_SESSION["username"])) {
           fetch(url)
             .then(response => response.json())
             .then(data => {
-              updateChart(data); 
+              updateChart(data);
             })
             .catch(error => console.error('Fetch error:', error));
         }
@@ -342,4 +339,5 @@ if (!isset($_SESSION["username"])) {
           </div>
         </div>
 </body>
+
 </html>

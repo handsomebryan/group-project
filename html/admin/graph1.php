@@ -2,9 +2,11 @@
 <html lang="en">
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
-    header("location:authentication-login.php");
+
+if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
+    header("location:../login.php");
 }
+
 $id = $_SESSION["id"];
 $nselfCount = $_SESSION["nselfCount"];
 $nselfPerform = $_SESSION["nselfPerform"];

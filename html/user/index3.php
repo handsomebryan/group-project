@@ -2,8 +2,9 @@
 <html lang="en">
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
-  header("location:authentication-login.php");
+
+if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
+  header("location:../login.php");
 }
 ?>
 

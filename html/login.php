@@ -26,20 +26,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if ($result) {
     $row = mysqli_fetch_array($result);
 
-    if ($row && $row["是否為主管"] == "0") {
+    if ($row) {
       $_SESSION["username"] = $username;
-      header("location:user/index21.php");
-    } elseif ($row && $row["是否為主管"] == "1") {
-      $_SESSION["username"] = $username;
-      header("location:admin/index21.php");
+      $_SESSION["role"] = $row["是否為主管"]; 
+
+      if ($row["是否為主管"] == "0") {
+        header("location:user/index21.php");
+      } elseif ($row["是否為主管"] == "1") {
+        header("location:admin/index21.php");
+      } else {
+        echo "<script>alert('使用者名稱或密碼不正確');</script>";
+      }
     } else {
       echo "<script>alert('使用者名稱或密碼不正確');</script>";
     }
-  } else {
-    echo "<script>alert('使用者名稱或密碼不正確');</script>";
   }
-
-
 }
 ?>
 
@@ -85,4 +86,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
