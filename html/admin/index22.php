@@ -119,7 +119,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
             }, {
               label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T2.map(d => d.TotalSales),
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {
                 color: 'rgba(0, 121, 0, 1)',
                 align: 'center',

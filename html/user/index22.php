@@ -141,7 +141,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
             }, {
               label: '銷量第二名',
               data: data.T2.map(d => d.TotalSales),
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {
                 color: 'rgba(0, 121, 0, 1)',
                 align: 'center',

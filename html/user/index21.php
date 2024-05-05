@@ -96,7 +96,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
 
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
 
-        var labels = ['', ...new Set(data.map(item => item[1]))];
+        var labels = [...new Set(data.map(item => item[1]))];
 
         var datasets = [];
         var groupedData = data.reduce(function (acc, item) {
