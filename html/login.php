@@ -6,18 +6,15 @@ include 'dbconnect.php';
 
 session_start();
 
-
 $data = mysqli_connect($servername, $username, $password, $dbname);
 
 if ($data === false) {
   die("connection error");
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $username = $_POST["username"];
   $password = $_POST["password"];
-
 
   $sql = "select * from 業務員資料 where username='" . $username . "' AND password='" . $password . "' ";
 
@@ -28,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($row) {
       $_SESSION["username"] = $username;
-      $_SESSION["role"] = $row["是否為主管"]; 
+      $_SESSION["role"] = $row["是否為主管"];
 
       if ($row["是否為主管"] == "0") {
         header("location:user/index21.php");
