@@ -12,7 +12,6 @@ $nselfCount = $_SESSION["nselfCount"];
 $nselfPerform = $_SESSION["nselfPerform"];
 ?>
 
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,10 +24,20 @@ $nselfPerform = $_SESSION["nselfPerform"];
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../assets/js/sidebarmenu.js"></script>
     <script src="../../assets/js/app.min.js"></script>
-    <script>
-    </script>
-
 </head>
+
+<style>
+    #graphImage {
+        width: 100%;
+        height: auto;
+        transition: transform 0.25s ease;
+        transform-origin: top left;
+    }
+
+    #graphImage:hover {
+        transform: scale(3.5);
+    }
+</style>
 
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -198,7 +207,8 @@ $nselfPerform = $_SESSION["nselfPerform"];
                                 </div>
                             </div>
                             <img id="graphImage" src="../../assets/images/1.1/graph1_<?php echo $id; ?>.png"
-                                alt="Graph Image1">
+                                alt="Graph Image1" width="500" height="300">
+
                         </div>
                     </div>
                 </div>
