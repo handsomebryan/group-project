@@ -10,8 +10,6 @@ $year = getQueryParam('year');
 $quarter = getQueryParam('quarter');
 $month = getQueryParam('month');
 
-
-
 $sql = "";
 if ($quarter) {
     // Quarterly condition
