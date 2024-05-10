@@ -129,7 +129,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                 weight: 'bold'
               }
             }, {
-              label: '銷量第一名',
+              label: '除您以外的銷量第一名',
               data: data.T1.map(d => d.TotalSales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
@@ -139,7 +139,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
 
               }
             }, {
-              label: '銷量第二名',
+              label: '除您以外的銷量第二名',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {
@@ -149,7 +149,6 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
               }
             }]
           },
-          plugins: [ChartDataLabels],
           options: {
             scales: {
               x: {

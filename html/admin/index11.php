@@ -29,40 +29,40 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                     alert('請輸入業務員序號');
                     return;
                 }
-                    fetch('../deleteGraph.php')
-                        .then(function () {
-                            document.getElementById('message').textContent = '載入中...';
-                            document.getElementById('message').style.fontSize = '2em';
-                            document.getElementById('count').textContent = '';
-                            document.getElementById('selfCount').textContent = '';
-                            document.getElementById('nselfCount').textContent = '';
-                            var id = document.getElementById('idInput').value;
+                fetch('../deleteGraph.php')
+                    .then(function () {
+                        document.getElementById('message').textContent = '載入中...';
+                        document.getElementById('message').style.fontSize = '2em';
+                        document.getElementById('count').textContent = '';
+                        document.getElementById('selfCount').textContent = '';
+                        document.getElementById('nselfCount').textContent = '';
+                        var id = document.getElementById('idInput').value;
+                        fetch(`../get/getRCID.php?id=${id}`).then(response => response.json())
+                        Promise.all([
+                            fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
+                            fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
+                            fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json()),
 
-                            Promise.all([
-                                fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
-                                fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
-                                fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json())
-                            ])
-                                .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
-                                    document.getElementById('message').textContent = '';
-                                    var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
-                                    var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
-                                    var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
+                        ])
+                            .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
+                                document.getElementById('message').textContent = '';
+                                var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
+                                var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
+                                var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
-                                    var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
-                                    var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
-                                    var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
+                                var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
+                                var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
+                                var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
 
-                                    document.getElementById('count').innerHTML = count + "<br>" + '($' + countPerform + ')';
-                                    document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
-                                    document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
-                                    fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
+                                document.getElementById('count').innerHTML = count + "<br>" + '($' + countPerform + ')';
+                                document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
+                                document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
+                                fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
 
-                                    document.getElementById('relationGraphButtonSelf').disabled = false;
-                                    document.getElementById('relationGraphButtonNself').disabled = false; 3
-                                });
-                        });
-                });
+                                document.getElementById('relationGraphButtonNself').disabled = false; 3
+                            });
+                    });
+            });
 
             document.getElementById('resetButton').addEventListener('click', function () {
                 fetch('../deleteGraph.php')
@@ -70,7 +70,6 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                         document.getElementById('count').textContent = '';
                         document.getElementById('selfCount').textContent = '';
                         document.getElementById('nselfCount').textContent = '';
-                        document.getElementById('relationGraphButtonSelf').disabled = true;
                         document.getElementById('relationGraphButtonNself').disabled = true;
                     });
 
@@ -244,24 +243,21 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                             <div id="message">
                             </div>
                             <div class="col-lg-12">
-                                    <div class="card overflow-hidden">
-                                        <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">總保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="count"
-                                                style="font-size: 300%;"></h3>
-                                        </div>
+                                <div class="card overflow-hidden">
+                                    <div class="card-body p-4 text-center">
+                                        <h5 class="card-title mb-9 fw-semibold">總保單數</h5>
+                                        <h3 class="card-title mb-9 fw-semibold" id="count" style="font-size: 300%;">
+                                        </h3>
                                     </div>
                                 </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5>
+                                            <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5><br>
                                             <h3 class="card-title mb-9 fw-semibold" id="selfCount"
                                                 style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButtonSelf" type="button"
-                                                class="btn btn-outline-primary btn-lg" disabled
-                                                onclick="window.location.href='graph2.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為自己）</button>
                                         </div>
                                     </div>
                                 </div>

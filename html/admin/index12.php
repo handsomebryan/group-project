@@ -90,7 +90,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 weight: 'bold'
               }
             }]
-          }, plugins: [ChartDataLabels],
+          },
           options: {
             aspectRatio: 2,
             scales: {

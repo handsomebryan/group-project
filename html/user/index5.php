@@ -24,7 +24,6 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
         document.addEventListener('DOMContentLoaded', function () {
             var salesChart;
 
-
             var idInput = '<?php echo $_SESSION["username"]; ?>';
             fetch('../get/getCID.php?idInput=' + idInput)
                 .then(response => response.json())

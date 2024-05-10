@@ -10,7 +10,8 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
 $id = $_SESSION["id"];
 $nselfCount = $_SESSION["nselfCount"];
 $nselfPerform = $_SESSION["nselfPerform"];
-?>
+$c_id = $_SESSION["cid"]
+    ?>
 
 <head>
     <meta charset="utf-8">
@@ -24,6 +25,37 @@ $nselfPerform = $_SESSION["nselfPerform"];
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../assets/js/sidebarmenu.js"></script>
     <script src="../../assets/js/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var cid = <?php echo json_encode($cid); ?>; // Convert $cid to a JavaScript array
+
+            // Populate the dropdown list with $cid
+            var select = document.getElementById('c_id');
+            for (var i = 0; i < cid.length; i++) {
+                var option = document.createElement('option');
+                option.value = cid[i];
+                option.text = cid[i];
+                select.appendChild(option);
+            }
+            document.getElementById('searchButton').addEventListener('click', function () {
+                var c_id = document.getElementById('c_id').value;
+                var id = "<?php echo $_SESSION['id']; ?>";
+                setTimeout(function () {
+                    document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
+                    fetch(`../get/getCSpeRelation.php?id=${id}&c_id=${c_id}`).then(response => response.text())
+                }, 2000); // Delay of 2 seconds
+            });
+            document.getElementById('resetButton').addEventListener('click', function () {
+                var id = "<?php echo $_SESSION['id']; ?>";
+                document.getElementById('graphImage').src = `../../assets/images/1.1/graph1_${id}.png`;
+                fetch('../deleteSpecGraph.php')
+                    .then(function () {
+                        document.getElementById('c_id').selectedIndex = '';
+                    });
+            });
+        });
+
+    </script>
 </head>
 
 <style>
@@ -203,6 +235,19 @@ $nselfPerform = $_SESSION["nselfPerform"];
                                             style="font-size: 300%;">
                                             <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
                                         </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <select id="c_id" class="form-select ">
+                                            <option value="">請選擇要保人序號</option>
+                                        </select>
+                                        <button id="searchButton" type="button"
+                                            class="btn btn-outline-primary">搜尋</button>
+                                        <button id="resetButton" type="button"
+                                            class="btn btn-outline-danger">重設</button>
                                     </div>
                                 </div>
                             </div>

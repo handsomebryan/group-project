@@ -102,7 +102,6 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
               }
             }]
           },
-          plugins: [ChartDataLabels],
           options: {           
             aspectRatio: 2,
             scales: {
