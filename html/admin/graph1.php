@@ -10,8 +10,9 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
 $id = $_SESSION["id"];
 $nselfCount = $_SESSION["nselfCount"];
 $nselfPerform = $_SESSION["nselfPerform"];
-$c_id = $_SESSION["cid"]
-    ?>
+$selfCount = $_SESSION["selfCount"];
+$selfPerform = $_SESSION["selfPerform"];
+?>
 
 <head>
     <meta charset="utf-8">
@@ -27,24 +28,18 @@ $c_id = $_SESSION["cid"]
     <script src="../../assets/js/app.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var cid = <?php echo json_encode($cid); ?>; // Convert $cid to a JavaScript array
-
-            // Populate the dropdown list with $cid
-            var select = document.getElementById('c_id');
-            for (var i = 0; i < cid.length; i++) {
-                var option = document.createElement('option');
-                option.value = cid[i];
-                option.text = cid[i];
-                select.appendChild(option);
-            }
             document.getElementById('searchButton').addEventListener('click', function () {
-                var c_id = document.getElementById('c_id').value;
-                var id = "<?php echo $_SESSION['id']; ?>";
-                setTimeout(function () {
-                    document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
-                    fetch(`../get/getCSpeRelation.php?id=${id}&c_id=${c_id}`).then(response => response.text())
-                }, 2000); // Delay of 2 seconds
+                fetch('../deleteSpecGraph.php')
+                    .then(function () {
+                        var c_id = document.getElementById('c_id').value;
+                        var id = "<?php echo $_SESSION['id']; ?>";
+                        fetch(`../get/getCSpeRelation.php?id=${id}&c_id=${c_id}`).then(response => response.text());
+                        setTimeout(function () {
+                            document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
+                        }, 250);
+                    });
             });
+
             document.getElementById('resetButton').addEventListener('click', function () {
                 var id = "<?php echo $_SESSION['id']; ?>";
                 document.getElementById('graphImage').src = `../../assets/images/1.1/graph1_${id}.png`;
@@ -53,6 +48,20 @@ $c_id = $_SESSION["cid"]
                         document.getElementById('c_id').selectedIndex = '';
                     });
             });
+
+            var id = "<?php echo $_SESSION['id']; ?>";
+            fetch(`../get/getRCID.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.getElementById('c_id');
+                    data.forEach(c_id => {
+                        const option = document.createElement('option');
+                        option.value = c_id;
+                        option.text = c_id;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Fetch error:', error));
         });
 
     </script>
@@ -62,12 +71,6 @@ $c_id = $_SESSION["cid"]
     #graphImage {
         width: 100%;
         height: auto;
-        transition: transform 0.25s ease;
-        transform-origin: top left;
-    }
-
-    #graphImage:hover {
-        transform: scale(3.5);
     }
 </style>
 
@@ -214,8 +217,6 @@ $c_id = $_SESSION["cid"]
             <div class="container-fluid">
                 <button onclick="window.location.href='index11.php'" type="button" class="btn btn-warning btn-lg"><i
                         class="ti ti-chevron-left"></i>返回搜尋介面</button>
-                <button onclick="window.location.href='graph2.php'" type="button" class="btn btn-info btn-lg"
-                    style="float: right;">客戶關係圖（被保人為自己）<i class="ti ti-chevron-right"></i></button>
                 <div class="col-lg-12 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body">
@@ -226,15 +227,27 @@ $c_id = $_SESSION["cid"]
                                             </u></b></h5>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
-                                <div class="card overflow-hidden">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">為<b><u><span
-                                                        style="color:red;">別人</span></u></b>買的保單數</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
-                                            style="font-size: 300%;">
-                                            <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
-                                        </h3>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">要保人為自己買的保單數</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="selfCount"
+                                                style="font-size: 300%;">
+                                                <?php echo $selfCount . "<br>" . '($' . $selfPerform . ')'; ?>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">要保人為別人買的保單數</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
+                                                style="font-size: 300%;">
+                                                <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
+                                            </h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

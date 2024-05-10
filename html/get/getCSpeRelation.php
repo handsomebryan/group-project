@@ -18,8 +18,6 @@ JOIN 保單被保人 ON 保單被保人.保單序號 = 保單要保人.保單序
 JOIN 業務員保單序號 ON 業務員保單序號.保單序號 = 保單被保人.保單序號
 JOIN 保單資料 ON 保單資料.保單序號 = 保單被保人.保單序號
 WHERE 業務員保單序號.業務員序號 LIKE '%$id' 
-AND 要保人序號 != 被保人序號 
-AND 保單生效日 >= DATE_SUB(CURDATE(), INTERVAL 10 YEAR)
 AND RIGHT(要保人序號, 5) = '$c_id'
 ";
 
@@ -65,7 +63,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "客戶 ".$c_id." 的客戶關係圖（被保人為別人）");
+$dotContent = createDotFile($graphData, "客戶 ".$c_id." 的客戶關係圖");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents("../../assets/images/1.1spec/graph1_{$id}_{$c_id}.dot", $dotContent);

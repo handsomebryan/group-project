@@ -9,14 +9,20 @@ function getQueryParam($paramName)
 $id = getQueryParam('id');
 
 // Query to select data from your database
-$sql ="SELECT DISTINCT
-CONCAT('客戶', RIGHT(要保人序號, 5)) AS 要保人序號_last5,
-CONCAT('客戶', RIGHT(被保人序號, 5)) AS 被保人序號_last5
-FROM 保單要保人
-JOIN 保單被保人 ON 保單被保人.保單序號 = 保單要保人.保單序號
-JOIN 業務員保單序號 ON 業務員保單序號.保單序號 = 保單被保人.保單序號
-JOIN 保單資料 ON 保單資料.保單序號 = 保單被保人.保單序號
-WHERE 業務員保單序號.業務員序號 LIKE '%$id' AND 要保人序號 != 被保人序號 AND 保單生效日 >= DATE_SUB(CURDATE(), INTERVAL 10 YEAR)
+$sql ="SELECT
+CONCAT('要保人', RIGHT(a.要保人序號, 5)) AS 要保人序號_last5,
+CONCAT('被保人', RIGHT(b.被保人序號, 5)) AS 被保人序號_last5
+FROM 保單要保人 a
+JOIN 保單被保人 b ON b.保單序號 = a.保單序號
+JOIN 業務員保單序號 c ON c.保單序號 = b.保單序號
+JOIN 保單資料 d ON d.保單序號 = b.保單序號
+WHERE c.業務員序號 LIKE '%$id' AND a.要保人序號 != b.被保人序號
+AND a.要保人序號 IN (
+    SELECT 要保人序號
+    FROM 保單要保人
+    GROUP BY 要保人序號
+    HAVING COUNT(*) = 1
+)
 ";
 
 $result = $conn->query($sql);
@@ -61,7 +67,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（被保人為別人）");
+$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（要保人的被保人只有一名）");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents("../../assets/images/1.1/graph1_$id.dot", $dotContent);

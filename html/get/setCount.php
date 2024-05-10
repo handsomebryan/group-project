@@ -6,8 +6,6 @@ if (isset($_GET['nselfCount']) && isset($_GET['nselfPerform']) && isset($_GET['s
     $_SESSION['selfCount'] = $_GET['selfCount'];
     $_SESSION['selfPerform'] = $_GET['selfPerform'];
     $_SESSION['id'] = $_GET['id'];
-}
-if (isset($_SESSION['cid'])) {
-    $cid = $_SESSION['cid']; 
+
 }
 ?>

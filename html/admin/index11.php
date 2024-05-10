@@ -37,29 +37,28 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                         document.getElementById('selfCount').textContent = '';
                         document.getElementById('nselfCount').textContent = '';
                         var id = document.getElementById('idInput').value;
-                        fetch(`../get/getRCID.php?id=${id}`).then(response => response.json())
                         Promise.all([
                             fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCSRelation.php?id=${id}`).then(response => response.text()),
                             fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json()),
-
+                            fetch(`../get/getCSRCount.php?id=${id}`).then(response => response.json()),
+                            fetch(`../get/getCNRCount.php?id=${id}`).then(response => response.json()),
                         ])
-                            .then(function ([cRelationResponse, csRelationResponse, crCountResponse]) {
+                            .then(function ([cRelationResponse, crCountResponse,csrCountResponse,cnrCountResponse]) {
                                 document.getElementById('message').textContent = '';
                                 var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
-                                var selfCount = crCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
-                                var nselfCount = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
+                                var selfCount = csrCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
+                                var nselfCount = cnrCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
 
                                 var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
-                                var selfPerform = crCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
-                                var nselfPerform = crCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
+                                var selfPerform = csrCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
+                                var nselfPerform = cnrCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
 
                                 document.getElementById('count').innerHTML = count + "<br>" + '($' + countPerform + ')';
                                 document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
                                 document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
                                 fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
 
-                                document.getElementById('relationGraphButtonNself').disabled = false; 3
+                                document.getElementById('relationGraphButtonNself').disabled = false; 
                             });
                     });
             });
@@ -255,7 +254,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">為自己買的保單數</h5><br>
+                                            <h5 class="card-title mb-9 fw-semibold">要保人為自己買的保單數</h5>
                                             <h3 class="card-title mb-9 fw-semibold" id="selfCount"
                                                 style="font-size: 300%;"></h3>
                                         </div>
@@ -264,15 +263,15 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">為別人買的保單數</h5>
+                                            <h5 class="card-title mb-9 fw-semibold">要保人為別人買的保單數</h5>
                                             <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
                                                 style="font-size: 300%;"></h3>
-                                            <button id="relationGraphButtonNself" type="button"
-                                                class="btn btn-outline-primary btn-lg" disabled
-                                                onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖（被保人為別人）</button>
                                         </div>
                                     </div>
                                 </div>
+                                <button id="relationGraphButtonNself" type="button"
+                                                class="btn btn-outline-primary btn-lg" disabled
+                                                onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖</button>
                             </div>
 
 
