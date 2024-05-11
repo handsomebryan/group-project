@@ -31,6 +31,8 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
 
             function fetchData() {
                 var id = '<?php echo $_SESSION["username"]; ?>';
+                document.getElementById('message').textContent = '載入中...';
+                document.getElementById('message').style.fontSize = '2em';
                 var url = `../get/getPerform.php`;
                 var queryParams = [];
                 if (id) queryParams.push(`id=${id}`);
@@ -41,7 +43,10 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                         .then(data => {
                             updateChart(data);
                         })
-                        .catch(error => console.error('Fetch error:', error));
+                        .catch(error => console.error('Fetch error:', error))
+                        .finally(() => {
+                            document.getElementById('message').textContent = '';
+                        });
                 }
             }
 
@@ -96,7 +101,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                             y: {
                                 title: {
                                     display: true,
-                                    text: '銷售額',
+                                    text: '銷售額（元）',
                                     color: 'black'
                                 }
                             }
@@ -236,7 +241,9 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                                     <div class="mb-3 mb-sm-0">
                                         <h5 class="card-title fw-semibold">業務員與保險關係</h5>
                                     </div>
+
                                 </div>
+                                <div id="message"></div>
                                 <canvas id="salesChart"></canvas>
                             </div>
                         </div>

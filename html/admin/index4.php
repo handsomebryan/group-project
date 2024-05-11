@@ -115,7 +115,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
               y: {
                 title: {
                   display: true,
-                  text: '銷售額',
+                  text: '銷售額（元）',
                   color: 'black'
                 }
               }
