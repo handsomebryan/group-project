@@ -23,10 +23,9 @@ AND a.要保人序號 IN (
     JOIN 保單被保人  ON 保單被保人.保單序號 = 保單要保人.保單序號
     where 要保人序號 != 被保人序號
     GROUP BY 要保人序號
-    HAVING COUNT(*) = 2
+    HAVING COUNT(*) > 3
 )
 ";
-
 
 $result = $conn->query($sql);
 
@@ -52,27 +51,31 @@ if ($result->num_rows > 0) {
 function createDotFile($graphData, $title)
 {
     $dotFileContent = "digraph G {\n";
-        $dotFileContent .= "graph [fontname=\"Tahoma\"];\n";
+    $dotFileContent .= "graph [fontname=\"Tahoma\"];\n";
     $dotFileContent .= "labelloc=\"t\";\n"; // Position label at the top
     $dotFileContent .= "label=\"$title\";\n"; // Set the label as the title
+    $dotFileContent .= "splines=ortho;\n";
     $dotFileContent .= "node [height=0.1,fontname=\"Tahoma\"];\n"; // Set a minimum height for nodes
+    
     foreach ($graphData as $node => $edges) {
         foreach ($edges as $edge) {
-            $dotFileContent .= "\"$node\" \"$edge\" [len=0.1];\n"; // Set len to 2.0 for longer lines
+            // Define the edge without dir attribute
+            $dotFileContent .= "\"$node\" -> \"$edge\" [len=2.0];\n";
         }
     }
+    
     $dotFileContent .= "}";
     return $dotFileContent;
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（被保人為自己）");
+$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（3個以上被保人）");
 
 // Save the dot content to a file in the 'assets/images' directory
-file_put_contents("../../assets/images/1.1/graph2_$id.dot", $dotContent);
+file_put_contents("../../assets/images/1.1/graph1_4_$id.dot", $dotContent);
 
 // Run Graphviz to generate the diagram and save it to the 'assets/images' directory
-shell_exec("neato -Tpng -Gnodesep=2 -Granksep=2 ../../assets/images/1.1/graph2_$id.dot -o ../../assets/images/1.1/graph2_$id.png");
+shell_exec("neato -Tpng -Gnodesep=2 -Granksep=2 ../../assets/images/1.1/graph1_4_$id.dot -o ../../assets/images/1.1/graph1_4_$id.png");
 
 // Close the database connection
 $conn->close();

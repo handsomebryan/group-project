@@ -20,8 +20,10 @@ WHERE c.業務員序號 LIKE '%$id' AND a.要保人序號 != b.被保人序號
 AND a.要保人序號 IN (
     SELECT 要保人序號
     FROM 保單要保人
+    JOIN 保單被保人  ON 保單被保人.保單序號 = 保單要保人.保單序號
+    where 要保人序號 != 被保人序號
     GROUP BY 要保人序號
-    HAVING COUNT(*) = 1
+    HAVING COUNT(*) = 3
 )
 ";
 
@@ -67,13 +69,13 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（1個被保人）");
+$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（3個被保人）");
 
 // Save the dot content to a file in the 'assets/images' directory
-file_put_contents("../../assets/images/1.1/graph1_$id.dot", $dotContent);
+file_put_contents("../../assets/images/1.1/graph1_3_$id.dot", $dotContent);
 
 // Run Graphviz to generate the diagram and save it to the 'assets/images' directory
-shell_exec("neato -Tpng -Gnodesep=2 -Granksep=2 ../../assets/images/1.1/graph1_$id.dot -o ../../assets/images/1.1/graph1_$id.png");
+shell_exec("neato -Tpng -Gnodesep=2 -Granksep=2 ../../assets/images/1.1/graph1_3_$id.dot -o ../../assets/images/1.1/graph1_3_$id.png");
 
 // Close the database connection
 $conn->close();

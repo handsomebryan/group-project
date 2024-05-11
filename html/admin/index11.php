@@ -39,11 +39,14 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                         var id = document.getElementById('idInput').value;
                         Promise.all([
                             fetch(`../get/getCRelation.php?id=${id}`).then(response => response.text()),
+                            fetch(`../get/getCRelation2.php?id=${id}`).then(response => response.text()),
+                            fetch(`../get/getCRelation3.php?id=${id}`).then(response => response.text()),
+                            fetch(`../get/getCRelation4.php?id=${id}`).then(response => response.text()),
                             fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json()),
                             fetch(`../get/getCSRCount.php?id=${id}`).then(response => response.json()),
                             fetch(`../get/getCNRCount.php?id=${id}`).then(response => response.json()),
                         ])
-                            .then(function ([cRelationResponse, crCountResponse,csrCountResponse,cnrCountResponse]) {
+                            .then(function ([cRelationResponse, cRelationResponse2, cRelationResponse3, cRelationResponse4, crCountResponse,csrCountResponse,cnrCountResponse]) {
                                 document.getElementById('message').textContent = '';
                                 var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
                                 var selfCount = csrCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);

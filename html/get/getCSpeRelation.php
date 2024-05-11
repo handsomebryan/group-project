@@ -11,8 +11,8 @@ $c_id = getQueryParam('c_id');
 
 
 $sql ="SELECT DISTINCT
-CONCAT('客戶', RIGHT(要保人序號, 5)) AS 要保人序號_last5,
-CONCAT('客戶', RIGHT(被保人序號, 5)) AS 被保人序號_last5
+CONCAT('要保人', RIGHT(要保人序號, 5)) AS 要保人序號_last5,
+CONCAT('被保人', RIGHT(被保人序號, 5)) AS 被保人序號_last5
 FROM 保單要保人
 JOIN 保單被保人 ON 保單被保人.保單序號 = 保單要保人.保單序號
 JOIN 業務員保單序號 ON 業務員保單序號.保單序號 = 保單被保人.保單序號
@@ -63,7 +63,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "客戶 ".$c_id." 的客戶關係圖");
+$dotContent = createDotFile($graphData, "要保人 ".$c_id." 的客戶關係圖");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents("../../assets/images/1.1spec/graph1_{$id}_{$c_id}.dot", $dotContent);

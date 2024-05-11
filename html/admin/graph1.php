@@ -28,6 +28,17 @@ $selfPerform = $_SESSION["selfPerform"];
     <script src="../../assets/js/app.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('graphImage').addEventListener('mouseover', function () {
+                var src = this.src;
+                // Check if the source matches the pattern
+                if (src.includes('1.1spec/graph1_')) {
+                    this.classList.remove('zoom');
+                    this.classList.add('no-zoom');
+                } else {
+                    this.classList.remove('no-zoom');
+                    this.classList.add('zoom');
+                }
+            });
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetch('../deleteSpecGraph.php')
                     .then(function () {
@@ -37,6 +48,10 @@ $selfPerform = $_SESSION["selfPerform"];
                         setTimeout(function () {
                             document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
                         }, 250);
+
+                        document.getElementById('graphImage2').style.display = 'none';
+                        document.getElementById('graphImage3').style.display = 'none';
+                        document.getElementById('graphImage4').style.display = 'none';
                     });
             });
 
@@ -46,6 +61,10 @@ $selfPerform = $_SESSION["selfPerform"];
                 fetch('../deleteSpecGraph.php')
                     .then(function () {
                         document.getElementById('c_id').selectedIndex = '';
+
+                        document.getElementById('graphImage2').style.display = 'block';
+                        document.getElementById('graphImage3').style.display = 'block';
+                        document.getElementById('graphImage4').style.display = 'block';
                     });
             });
 
@@ -63,14 +82,25 @@ $selfPerform = $_SESSION["selfPerform"];
                 })
                 .catch(error => console.error('Fetch error:', error));
         });
-
     </script>
 </head>
 
 <style>
-    #graphImage {
+    #graphImage,
+    #graphImage2,
+    #graphImage3,
+    #graphImage4 {
         width: 100%;
         height: auto;
+        transition: transform 0.25s ease;
+        transform-origin: top left;
+    }
+
+    #graphImage:hover,
+    #graphImage2:hover,
+    #graphImage3:hover,
+    #graphImage4:hover {
+        transform: scale(1.5);
     }
 </style>
 
@@ -255,7 +285,7 @@ $selfPerform = $_SESSION["selfPerform"];
                                 <div class="form-group">
                                     <div class="input-group">
                                         <select id="c_id" class="form-select ">
-                                            <option value="">請選擇要保人序號</option>
+                                            <option value="" disabled>請選擇要保人序號</option>
                                         </select>
                                         <button id="searchButton" type="button"
                                             class="btn btn-outline-primary">搜尋</button>
@@ -265,8 +295,13 @@ $selfPerform = $_SESSION["selfPerform"];
                                 </div>
                             </div>
                             <img id="graphImage" src="../../assets/images/1.1/graph1_<?php echo $id; ?>.png"
-                                alt="Graph Image1" width="500" height="300">
-
+                                alt="Graph Image1">
+                            <img id="graphImage2" src="../../assets/images/1.1/graph1_2_<?php echo $id; ?>.png"
+                                alt="Graph Image2">
+                            <img id="graphImage3" src="../../assets/images/1.1/graph1_3_<?php echo $id; ?>.png"
+                                alt="Graph Image3">
+                            <img id="graphImage4" src="../../assets/images/1.1/graph1_4_<?php echo $id; ?>.png"
+                                alt="Graph Image4">
                         </div>
                     </div>
                 </div>
