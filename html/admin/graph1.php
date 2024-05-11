@@ -285,7 +285,7 @@ $selfPerform = $_SESSION["selfPerform"];
                                 <div class="form-group">
                                     <div class="input-group">
                                         <select id="c_id" class="form-select ">
-                                            <option value="" disabled>請選擇要保人序號</option>
+                                            <option>請選擇要保人序號</option>
                                         </select>
                                         <button id="searchButton" type="button"
                                             class="btn btn-outline-primary">搜尋</button>
