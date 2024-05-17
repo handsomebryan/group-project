@@ -83,7 +83,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 weight: 'bold'
               }
             }, {
-              label: '銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '除指定業務員外的銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T1.map(d => d.total_sales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               datalabels: {
@@ -92,7 +92,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 weight: 'bold'
               }
             }, {
-              label: '銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '除指定業務員外的銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T2.map(d => d.total_sales),
               backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {
