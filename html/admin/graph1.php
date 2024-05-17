@@ -28,26 +28,25 @@ $selfPerform = $_SESSION["selfPerform"];
     <script src="../../assets/js/app.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('graphImage').addEventListener('mouseover', function () {
-                var src = this.src;
-                // Check if the source matches the pattern
-                if (src.includes('1.1spec/graph1_')) {
-                    this.classList.remove('zoom');
-                    this.classList.add('no-zoom');
-                } else {
-                    this.classList.remove('no-zoom');
-                    this.classList.add('zoom');
-                }
-            });
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetch('../deleteSpecGraph.php')
                     .then(function () {
                         var c_id = document.getElementById('c_id').value;
                         var id = "<?php echo $_SESSION['id']; ?>";
+                        fetch(`../get/getSRCount.php?id=${id}&c_id=${c_id}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                countChart.data.datasets[0].data = [data.SR[0].count, data.NSR[0].count];
+                                performChart.data.datasets[0].data = [data.SR[0].SRPerform, data.NSR[0].NSRPerform];
+
+                                countChart.update();
+                                performChart.update();
+                            });
                         fetch(`../get/getCSpeRelation.php?id=${id}&c_id=${c_id}`).then(response => response.text());
                         setTimeout(function () {
                             document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
-                        }, 250);
+                        }, 400);
+
 
                         document.getElementById('graphImage2').style.display = 'none';
                         document.getElementById('graphImage3').style.display = 'none';
@@ -65,8 +64,17 @@ $selfPerform = $_SESSION["selfPerform"];
                         document.getElementById('graphImage2').style.display = 'block';
                         document.getElementById('graphImage3').style.display = 'block';
                         document.getElementById('graphImage4').style.display = 'block';
+
+                        // Update the charts with the original data
+                        countChart.data.datasets[0].data = [<?php echo $selfCount; ?>, <?php echo $nselfCount; ?>];
+                        performChart.data.datasets[0].data = [<?php echo $selfPerform; ?>, <?php echo $nselfPerform; ?>];
+
+                        // Update the chart visuals
+                        countChart.update();
+                        performChart.update();
                     });
             });
+
 
             var id = "<?php echo $_SESSION['id']; ?>";
             fetch(`../get/getRCID.php?id=${id}`)
@@ -81,6 +89,31 @@ $selfPerform = $_SESSION["selfPerform"];
                     });
                 })
                 .catch(error => console.error('Fetch error:', error));
+
+            var countCtx = document.getElementById('countChart').getContext('2d');
+            var countChart = new Chart(countCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['要保人為自己買的保單數', '要保人為別人買的保單數'],
+                    datasets: [{
+                        data: [<?php echo $selfCount; ?>, <?php echo $nselfCount; ?>],
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                    }]
+                }
+            });
+
+            // Create the perform chart
+            var performCtx = document.getElementById('performChart').getContext('2d');
+            var performChart = new Chart(performCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['要保人為自己買的保單金額', '要保人為別人買的保單金額'],
+                    datasets: [{
+                        data: [<?php echo $selfPerform; ?>, <?php echo $nselfPerform; ?>],
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                    }]
+                }
+            });
         });
     </script>
 </head>
@@ -261,22 +294,20 @@ $selfPerform = $_SESSION["selfPerform"];
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">要保人為自己買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="selfCount"
-                                                style="font-size: 300%;">
-                                                <?php echo $selfCount . "<br>" . '($' . $selfPerform . ')'; ?>
-                                            </h3>
+                                            <h5 class="card-title mb-9 fw-semibold">保單數</h5>
+                                            <h9 class="card-title mb-9 fw-semibold" id="selfCount"
+                                                style="font-size: 300%; display: none;"></h9>
+                                            <canvas id="countChart"></canvas>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">要保人為別人買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
-                                                style="font-size: 300%;">
-                                                <?php echo $nselfCount . "<br>" . '($' . $nselfPerform . ')'; ?>
-                                            </h3>
+                                            <h5 class="card-title mb-9 fw-semibold">保單金額</h5>
+                                            <h9 class="card-title mb-9 fw-semibold" id="nselfCount"
+                                                style="font-size: 300%; display: none;"></h9>
+                                            <canvas id="performChart"></canvas>
                                         </div>
                                     </div>
                                 </div>

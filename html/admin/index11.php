@@ -14,16 +14,37 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
     <title>業務一把罩</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/logo-sm.png" />
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../assets/js/sidebarmenu.js"></script>
     <script src="../../assets/js/app.min.js"></script>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </body>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var countChart;
+            var performChart;
+
+            function resetCharts() {
+                if (countChart) {
+                    countChart.destroy();
+                }
+                if (performChart) {
+                    performChart.destroy();
+                }
+
+                // Remove old canvases and create new ones
+                ['countChart', 'performChart'].forEach(function (id) {
+                    var oldCanvas = document.getElementById(id);
+                    var newCanvas = document.createElement('canvas');
+                    newCanvas.id = id;
+                    oldCanvas.parentNode.replaceChild(newCanvas, oldCanvas);
+                });
+            }
+
             document.getElementById('searchButton').addEventListener('click', function () {
+                resetCharts();
                 var id = document.getElementById('idInput').value;
                 if (!id) {
                     alert('請輸入業務員序號');
@@ -46,7 +67,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                             fetch(`../get/getCSRCount.php?id=${id}`).then(response => response.json()),
                             fetch(`../get/getCNRCount.php?id=${id}`).then(response => response.json()),
                         ])
-                            .then(function ([cRelationResponse, cRelationResponse2, cRelationResponse3, cRelationResponse4, crCountResponse,csrCountResponse,cnrCountResponse]) {
+                            .then(function ([cRelationResponse, cRelationResponse2, cRelationResponse3, cRelationResponse4, crCountResponse, csrCountResponse, cnrCountResponse]) {
                                 document.getElementById('message').textContent = '';
                                 var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
                                 var selfCount = csrCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
@@ -61,24 +82,47 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
                                 fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
 
-                                document.getElementById('relationGraphButtonNself').disabled = false; 
+                                document.getElementById('relationGraphButtonNself').disabled = false;
+
+                                // Create the count chart
+                                var countCtx = document.getElementById('countChart').getContext('2d');
+                                var countChart = new Chart(countCtx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: ['要保人為自己買的保單數', '要保人為別人買的保單數'],
+                                        datasets: [{
+                                            data: [selfCount, nselfCount],
+                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                                        }]
+                                    }
+                                });
+
+                                // Create the perform chart
+                                var performCtx = document.getElementById('performChart').getContext('2d');
+                                var performChart = new Chart(performCtx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: ['要保人為自己買的保單金額', '要保人為別人買的保單金額'],
+                                        datasets: [{
+                                            data: [selfPerform, nselfPerform],
+                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                                        }]
+                                    }
+                                });
                             });
                     });
             });
-
             document.getElementById('resetButton').addEventListener('click', function () {
+                resetCharts();
                 fetch('../deleteGraph.php')
                     .then(function () {
                         document.getElementById('count').textContent = '';
-                        document.getElementById('selfCount').textContent = '';
-                        document.getElementById('nselfCount').textContent = '';
                         document.getElementById('relationGraphButtonNself').disabled = true;
                     });
 
                 document.getElementById('idInput').value = '';
             });
         });
-
     </script>
 </head>
 
@@ -257,24 +301,26 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">要保人為自己買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="selfCount"
-                                                style="font-size: 300%;"></h3>
+                                            <h5 class="card-title mb-9 fw-semibold">保單數</h5>
+                                            <h9 class="card-title mb-9 fw-semibold" id="selfCount"
+                                                style="font-size: 300%; display: none;"></h9>
+                                            <canvas id="countChart"></canvas>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">要保人為別人買的保單數</h5>
-                                            <h3 class="card-title mb-9 fw-semibold" id="nselfCount"
-                                                style="font-size: 300%;"></h3>
+                                            <h5 class="card-title mb-9 fw-semibold">保單金額</h5>
+                                            <h9 class="card-title mb-9 fw-semibold" id="nselfCount"
+                                                style="font-size: 300%; display: none;"></h9>
+                                            <canvas id="performChart"></canvas>
                                         </div>
                                     </div>
                                 </div>
                                 <button id="relationGraphButtonNself" type="button"
-                                                class="btn btn-outline-primary btn-lg" disabled
-                                                onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖</button>
+                                    class="btn btn-outline-primary btn-lg" disabled
+                                    onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖</button>
                             </div>
 
 

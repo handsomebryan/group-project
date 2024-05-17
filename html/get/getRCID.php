@@ -11,8 +11,7 @@ $id = getQueryParam('id');
 $query = "SELECT DISTINCT RIGHT(要保人序號, 5) AS 要保人序號 
             FROM 保單要保人
             JOIN 業務員保單序號 ON 業務員保單序號.保單序號=保單要保人.保單序號
-            JOIN 保單資料 ON 保單資料.保單序號 = 保單要保人.保單序號
-            WHERE 業務員序號 LIKE '%$id' AND 保單生效日 >= DATE_SUB(CURDATE(), INTERVAL 10 YEAR)
+            WHERE 業務員序號 LIKE '%$id'
             ORDER BY 要保人序號 ASC;";
 $result = $conn->query($query);
 $c_id = [];

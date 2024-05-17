@@ -10,7 +10,7 @@ $id = getQueryParam('id');
 $c_id = getQueryParam('c_id');
 
 
-$sql ="SELECT DISTINCT
+$sql ="SELECT
 CONCAT('要保人', RIGHT(要保人序號, 5)) AS 要保人序號_last5,
 CONCAT('被保人', RIGHT(被保人序號, 5)) AS 被保人序號_last5
 FROM 保單要保人
