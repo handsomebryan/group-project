@@ -22,9 +22,7 @@ if ($id) {
 // Fetch top 1 and top 2 salesperson's data excluding user-specific ID
 $topSalesSql = "WITH salesperson_sales AS (
     SELECT 
-        c.業務員序號,
-        SUM(a.年化保費) as total_sales,
-        ROW_NUMBER() OVER (ORDER BY SUM(a.年化保費) DESC) as rank
+        c.業務員序號,SUM(a.年化保費) as total_sales,ROW_NUMBER() OVER (ORDER BY SUM(a.年化保費) DESC) as rank
     FROM 
         保單資料 a
     JOIN 
@@ -36,18 +34,14 @@ $topSalesSql = "WITH salesperson_sales AS (
 ),
 top_salesperson AS (
     SELECT 
-        業務員序號,
-        rank
+        業務員序號,rank
     FROM 
         salesperson_sales
     WHERE 
         rank <= 2
 )
 SELECT 
-    b.商品大分類,
-    c.業務員序號,
-    SUM(a.年化保費) as total_sales,
-    ts.rank
+    b.商品大分類,c.業務員序號,SUM(a.年化保費) as total_sales,ts.rank
 FROM 
     保單資料 a
 JOIN 
@@ -57,11 +51,7 @@ JOIN
 JOIN 
     top_salesperson ts ON c.業務員序號 = ts.業務員序號
 GROUP BY 
-    b.商品大分類,
-    c.業務員序號,
-    ts.rank
-ORDER BY 
-    total_sales DESC;";
+    b.商品大分類,c.業務員序號,ts.rank";
 
 $userResult = $conn->query($userSql);
 while ($row = $userResult->fetch_assoc()) {

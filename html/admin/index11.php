@@ -18,9 +18,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
     <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../assets/js/sidebarmenu.js"></script>
     <script src="../../assets/js/app.min.js"></script>
-    </body>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </body>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var countChart;
@@ -337,8 +335,6 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                     class="btn btn-outline-primary btn-lg" disabled
                                     onclick="window.location.href='graph1.php?id=' + document.getElementById('idInput').value">客戶關係圖</button>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
