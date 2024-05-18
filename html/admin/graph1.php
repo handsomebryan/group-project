@@ -12,6 +12,7 @@ $nselfCount = $_SESSION["nselfCount"];
 $nselfPerform = $_SESSION["nselfPerform"];
 $selfCount = $_SESSION["selfCount"];
 $selfPerform = $_SESSION["selfPerform"];
+$avg = $_SESSION["avg"];
 ?>
 
 <head>
@@ -28,6 +29,10 @@ $selfPerform = $_SESSION["selfPerform"];
     <script src="../../assets/js/app.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var avg = Number("<?php echo $_SESSION['avg']; ?>");
+            document.getElementById('avg').innerHTML = "$ " + avg.toLocaleString();
+
+
             document.getElementById('searchButton').addEventListener('click', function () {
                 fetch('../deleteSpecGraph.php')
                     .then(function () {
@@ -38,7 +43,12 @@ $selfPerform = $_SESSION["selfPerform"];
                             .then(data => {
                                 countChart.data.datasets[0].data = [data.SR[0].count, data.NSR[0].count];
                                 performChart.data.datasets[0].data = [data.SR[0].SRPerform, data.NSR[0].NSRPerform];
-
+                                var srCount = Number(data.SR[0].count);
+                                var nsrCount = Number(data.NSR[0].count);
+                                var srPerform = Number(data.SR[0].SRPerform);
+                                var nsrPerform = Number(data.NSR[0].NSRPerform);
+                                var cavg = (srPerform + nsrPerform) / (srCount + nsrCount);
+                                document.getElementById('cavg').innerHTML = "$ " + cavg.toLocaleString();
                                 countChart.update();
                                 performChart.update();
                             });
@@ -46,7 +56,6 @@ $selfPerform = $_SESSION["selfPerform"];
                         setTimeout(function () {
                             document.getElementById('graphImage').src = `../../assets/images/1.1spec/graph1_${id}_${c_id}.png`;
                         }, 400);
-
 
                         document.getElementById('graphImage2').style.display = 'none';
                         document.getElementById('graphImage3').style.display = 'none';
@@ -60,7 +69,7 @@ $selfPerform = $_SESSION["selfPerform"];
                 fetch('../deleteSpecGraph.php')
                     .then(function () {
                         document.getElementById('c_id').selectedIndex = '';
-
+                        document.getElementById('cavg').textContent = '';
                         document.getElementById('graphImage2').style.display = 'block';
                         document.getElementById('graphImage3').style.display = 'block';
                         document.getElementById('graphImage4').style.display = 'block';
@@ -308,6 +317,26 @@ $selfPerform = $_SESSION["selfPerform"];
                                             <h9 class="card-title mb-9 fw-semibold" id="nselfCount"
                                                 style="font-size: 300%; display: none;"></h9>
                                             <canvas id="performChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">總平均保單金額</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="avg" style="font-size: 300%;">
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">客戶平均保單金額</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="cavg" style="font-size: 300%;">
+                                            </h3>
                                         </div>
                                     </div>
                                 </div>

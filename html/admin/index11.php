@@ -63,24 +63,27 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                             fetch(`../get/getCRelation2.php?id=${id}`).then(response => response.text()),
                             fetch(`../get/getCRelation3.php?id=${id}`).then(response => response.text()),
                             fetch(`../get/getCRelation4.php?id=${id}`).then(response => response.text()),
-                            fetch(`../get/getCRCount.php?id=${id}`).then(response => response.json()),
                             fetch(`../get/getCSRCount.php?id=${id}`).then(response => response.json()),
                             fetch(`../get/getCNRCount.php?id=${id}`).then(response => response.json()),
                         ])
-                            .then(function ([cRelationResponse, cRelationResponse2, cRelationResponse3, cRelationResponse4, crCountResponse, csrCountResponse, cnrCountResponse]) {
+                            .then(function ([cRelationResponse, cRelationResponse2, cRelationResponse3, cRelationResponse4, csrCountResponse, cnrCountResponse]) {
                                 document.getElementById('message').textContent = '';
-                                var count = crCountResponse.count.reduce((total, count) => total + parseInt(count['count(*)']), 0);
+
                                 var selfCount = csrCountResponse.self.reduce((total, self) => total + parseInt(self['count(*)']), 0);
                                 var nselfCount = cnrCountResponse.nself.reduce((total, nself) => total + parseInt(nself['count(*)']), 0);
+                                var count = selfCount + nselfCount;
 
-                                var countPerform = crCountResponse.count.reduce((total, count) => total + parseInt(count['countPerform']), 0);
                                 var selfPerform = csrCountResponse.self.reduce((total, self) => total + parseInt(self['selfPerform']), 0);
                                 var nselfPerform = cnrCountResponse.nself.reduce((total, nself) => total + parseInt(nself['nselfPerform']), 0);
+                                var countPerform = selfPerform + nselfPerform;
 
-                                document.getElementById('count').innerHTML = count + "<br>" + '($' + countPerform + ')';
-                                document.getElementById('selfCount').innerHTML = selfCount + "<br>" + '($' + selfPerform + ')';
-                                document.getElementById('nselfCount').innerHTML = nselfCount + "<br>" + '($' + nselfPerform + ')';
-                                fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}`);
+                                var avg = countPerform / count;
+
+                                document.getElementById('avg').innerHTML = "<br> $ " + avg.toLocaleString() + "<br>";
+                                document.getElementById('count').innerHTML = count.toLocaleString() + "<br>" + '($ ' + countPerform.toLocaleString() + ')';
+                                document.getElementById('selfCount').innerHTML = selfCount;
+                                document.getElementById('nselfCount').innerHTML = nselfCount;
+                                fetch(`../get/setCount.php?nselfCount=${nselfCount}&selfCount=${selfCount}&nselfPerform=${nselfPerform}&selfPerform=${selfPerform}&id=${id}&avg=${avg}`);
 
                                 document.getElementById('relationGraphButtonNself').disabled = false;
 
@@ -117,6 +120,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 fetch('../deleteGraph.php')
                     .then(function () {
                         document.getElementById('count').textContent = '';
+                        document.getElementById('avg').textContent = '';
                         document.getElementById('relationGraphButtonNself').disabled = true;
                     });
 
@@ -288,12 +292,23 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                             </div>
                             <div id="message">
                             </div>
-                            <div class="col-lg-12">
-                                <div class="card overflow-hidden">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title mb-9 fw-semibold">總保單數</h5>
-                                        <h3 class="card-title mb-9 fw-semibold" id="count" style="font-size: 300%;">
-                                        </h3>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">總保單數</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="count" style="font-size: 300%;">
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card overflow-hidden">
+                                        <div class="card-body p-4 text-center">
+                                            <h5 class="card-title mb-9 fw-semibold">總平均保單金額</h5>
+                                            <h3 class="card-title mb-9 fw-semibold" id="avg" style="font-size: 300%;">
+                                            </h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -301,7 +316,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">保單數</h5>
+                                            <h5 class="card-title mb-9 fw-semibold">保單數分佈</h5>
                                             <h9 class="card-title mb-9 fw-semibold" id="selfCount"
                                                 style="font-size: 300%; display: none;"></h9>
                                             <canvas id="countChart"></canvas>
@@ -311,7 +326,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 <div class="col-lg-6">
                                     <div class="card overflow-hidden">
                                         <div class="card-body p-4 text-center">
-                                            <h5 class="card-title mb-9 fw-semibold">保單金額</h5>
+                                            <h5 class="card-title mb-9 fw-semibold">保單金額分佈</h5>
                                             <h9 class="card-title mb-9 fw-semibold" id="nselfCount"
                                                 style="font-size: 300%; display: none;"></h9>
                                             <canvas id="performChart"></canvas>
