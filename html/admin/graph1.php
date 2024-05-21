@@ -105,12 +105,27 @@ $avg = $_SESSION["avg"];
                 data: {
                     labels: ['要保人為自己買的保單數', '要保人為別人買的保單數'],
                     datasets: [{
-                        label:'#. 保單數',
+                        label: '#. 保單數',
                         data: [<?php echo $selfCount; ?>, <?php echo $nselfCount; ?>],
                         backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
                     }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    if (value % 1 === 0) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             });
+
 
             // Create the perform chart
             var performCtx = document.getElementById('performChart').getContext('2d');
@@ -119,7 +134,7 @@ $avg = $_SESSION["avg"];
                 data: {
                     labels: ['要保人為自己買的保單金額', '要保人為別人買的保單金額'],
                     datasets: [{
-                        label:'#. 保單金額',
+                        label: '#. 保單金額',
                         data: [<?php echo $selfPerform; ?>, <?php echo $nselfPerform; ?>],
                         backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
                     }]
