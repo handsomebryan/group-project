@@ -88,10 +88,11 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 // Create the count chart
                                 var countCtx = document.getElementById('countChart').getContext('2d');
                                 var countChart = new Chart(countCtx, {
-                                    type: 'pie',
+                                    type: 'bar',
                                     data: {
                                         labels: ['要保人為自己買的保單數', '要保人為別人買的保單數'],
                                         datasets: [{
+                                            label:'#. 保單數',
                                             data: [selfCount, nselfCount],
                                             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
                                         }]
@@ -101,10 +102,11 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                 // Create the perform chart
                                 var performCtx = document.getElementById('performChart').getContext('2d');
                                 var performChart = new Chart(performCtx, {
-                                    type: 'pie',
+                                    type: 'bar',
                                     data: {
                                         labels: ['要保人為自己買的保單金額', '要保人為別人買的保單金額'],
                                         datasets: [{
+                                            label:'#. 保單金額',
                                             data: [selfPerform, nselfPerform],
                                             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
                                         }]

@@ -69,7 +69,7 @@ function createDotFile($graphData, $title)
 }
 
 // Generate the dot file content
-$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（3個被保人）");
+$dotContent = createDotFile($graphData, "業務員 ".$id." 的客戶關係圖（3張保單）");
 
 // Save the dot content to a file in the 'assets/images' directory
 file_put_contents("../../assets/images/1.1/graph1_3_$id.dot", $dotContent);
