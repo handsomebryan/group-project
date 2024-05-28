@@ -4,7 +4,7 @@
 session_start();
 
 if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
-    header("location:../../login.php");
+    header("location:../login.php");
 }
 ?>
 
@@ -26,14 +26,39 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            loadSalespersonOptions();
             var salesChart;
-            fetchData();
+            document.getElementById('searchButton').addEventListener('click', function () {
+                fetchData();
+            });
+            document.getElementById('resetButton').addEventListener('click', function () {
+                resetForm();
+            });
 
+            function getQueryParam(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            function loadSalespersonOptions() {
+                var sid = '<?php echo $_SESSION["username"]; ?>';
+                fetch('../get/getCID2.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        const selectElement = document.getElementById('idInput');
+                        selectElement.innerHTML = '<option value="">請選擇客戶序號</option>';
+                        data.forEach(salesperson => {
+                            const option = document.createElement('option');
+                            option.value = salesperson.id;
+                            option.text = salesperson.id;
+                            selectElement.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            }
             function fetchData() {
-                var id = '<?php echo $_SESSION["username"]; ?>';
-                document.getElementById('message').textContent = '載入中...';
-                document.getElementById('message').style.fontSize = '2em';
-                var url = `../get/getPerform.php`;
+                var id = document.getElementById('idInput').value;
+                var url = `../get/getCproduct.php`;
                 var queryParams = [];
                 if (id) queryParams.push(`id=${id}`);
                 if (queryParams.length > 0) {
@@ -43,71 +68,63 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                         .then(data => {
                             updateChart(data);
                         })
-                        .catch(error => console.error('Fetch error:', error))
-                        .finally(() => {
-                            document.getElementById('message').textContent = '';
-                        });
+                        .catch(error => console.error('Fetch error:', error));
+                } else {
+                    alert("請選擇客戶序號");
                 }
             }
 
+            function resetForm() {
+                document.getElementById('idInput').value = '';
+                if (salesChart) {
+                    salesChart.destroy();
+                }
+            }
             function updateChart(data) {
                 var ctx = document.getElementById('salesChart').getContext('2d');
                 if (salesChart) {
                     salesChart.destroy();
                 }
-                salesChart = new Chart(ctx, {
+                var config = {
                     type: 'bar',
                     data: {
-                        labels: data.user.map(d => d.商品大分類),
+                        labels: data.user.map(d => d.商品中文名稱+'('+d.商品英文代碼+')'),
                         datasets: [{
-                            label: '您 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
+                            label: '客戶購買金額（客戶序號: ' + (data.user.length > 0 ? data.user[0].要保人序號.slice(-5) : 'N/A') + '）',
                             data: data.user.map(d => d.total_sales),
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            datalabels: {
-                                color: 'rgba(222, 55, 44, 1)',
-                                align: 'center',
-                                weight: 'bold'
-                            }
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)'
                         }, {
-                            label: '銷量第一名',
-                            data: data.T1.map(d => d.total_sales),
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            datalabels: {
-                                color: 'rgba(32, 50, 255, 1)',
-                                align: 'top',
-                                weight: 'bold'
-                            }
-                        }, {
-                            label: '銷量第二名',
-                            data: data.T2.map(d => d.total_sales),
-                            backgroundColor: 'rgba(0, 225, 0, 0.2)',
-                            datalabels: {
-                                color: 'rgba(0, 121, 0, 1)',
-                                align: 'center',
-                                weight: 'bold'
-                            }
+                            label: '該產品平均銷售量',
+                            data: data.T1.map(d => d.avg_sales),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)'
                         }]
                     },
                     options: {
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
                         aspectRatio: 2,
                         scales: {
                             x: {
                                 title: {
                                     display: true,
-                                    text: '商品大分類',
+                                    text: '商品分類',
                                     color: 'black'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: '銷售額（元）',
+                                    text: '已購買產品之金額(元）',
                                     color: 'black'
                                 }
                             }
                         }
                     }
-                });
+                };
+                salesChart = new Chart(ctx, config);
             }
         });
     </script>
@@ -247,16 +264,28 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
                             <div class="card-body">
                                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                                     <div class="mb-3 mb-sm-0">
-                                        <h5 class="card-title fw-semibold">業務員與保險關係</h5>
+                                        <h5 class="card-title fw-semibold">客戶產品一覽</h5>
                                     </div>
-
                                 </div>
-                                <div id="message"></div>
-                                <canvas id="salesChart"></canvas>
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <select id="idInput" class="form-select ">
+                                                <option value="id">客戶序號</option>
+                                            </select>
+                                            <button id="searchButton" type="button"
+                                                class="btn btn-outline-primary">搜尋</button>
+                                            <button id="resetButton" type="button"
+                                                class="btn btn-outline-danger">重設</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            <canvas id="salesChart"></canvas>
                         </div>
                     </div>
                 </div>
+            </div>
 </body>
 
 </html>

@@ -4,7 +4,7 @@
 session_start();
 
 if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
-    header("location:../login.php");
+  header("location:../login.php");
 }
 ?>
 
@@ -22,7 +22,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      var salesChart; 
+      var salesChart;
 
       fetch('../get/getYears.php')
         .then(response => response.json())
@@ -95,7 +95,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
         if (salesChart) {
           salesChart.destroy();
         }
-        
+
         var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
         var labels = [...new Set(data.map(item => item[1]))];
         var datasets = [];
@@ -110,7 +110,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
 
         Object.keys(groupedData).forEach(function (key, index) {
           datasets.push({
-            label: key, 
+            label: key,
             data: groupedData[key],
             borderColor: specificColors[index % specificColors.length],
             fill: false
@@ -247,9 +247,17 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
             <li class="sidebar-item">
               <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
                 <span>
-                  <i class="ti ti-compass"></i>
+                  <i class="ti ti-chart-arrows-vertical"></i>
                 </span>
                 <span class="hide-menu">客戶產品推薦</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./indexcr.php" aria-expanded="false">
+                <span>
+                  <i class="ti ti-brand-cashapp"></i>
+                </span>
+                <span class="hide-menu">客戶產品推薦客製化</span>
               </a>
             </li>
         </nav>

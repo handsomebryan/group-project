@@ -4,7 +4,7 @@
 session_start();
 
 if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
-    header("location:../login.php");
+  header("location:../login.php");
 }
 ?>
 
@@ -102,7 +102,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
               }
             }]
           },
-          options: {           
+          options: {
             aspectRatio: 2,
             scales: {
               x: {
@@ -225,12 +225,19 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
             <li class="sidebar-item">
               <a class="sidebar-link" href="./indexre.php" aria-expanded="false">
                 <span>
-                  <i class="ti ti-compass"></i>
+                  <i class="ti ti-chart-arrows-vertical"></i>
                 </span>
                 <span class="hide-menu">客戶產品推薦</span>
               </a>
             </li>
-        </nav>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./indexcr.php" aria-expanded="false">
+                <span>
+                  <i class="ti ti-brand-cashapp"></i>
+                </span>
+                <span class="hide-menu">客戶產品推薦客製化</span>
+              </a>
+            </li>
       </div>
     </aside>
     <div class="body-wrapper">
@@ -291,4 +298,5 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
           </div>
         </div>
 </body>
+
 </html>
