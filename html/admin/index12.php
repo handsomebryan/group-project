@@ -226,14 +226,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 <span class="hide-menu">客戶產品推薦</span>
               </a>
             </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./indexcr.php" aria-expanded="false">
-                <span>
-                  <i class="ti ti-brand-cashapp"></i>
-                </span>
-                <span class="hide-menu">客戶產品推薦客製化</span>
-              </a>
-            </li>
+
         </nav>
       </div>
     </aside>
