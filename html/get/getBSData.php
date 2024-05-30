@@ -28,7 +28,7 @@ if ($quarter) {
             P.商品英文代碼, P.商品中文名稱 
         ORDER BY 
             銷售額 DESC
-        LIMIT 3
+        LIMIT 4
     )
     SELECT 
         TP.商品英文代碼, 
@@ -63,7 +63,7 @@ if ($quarter) {
             PD.商品英文代碼, GD.商品中文名稱
         ORDER BY 
             總銷售額 DESC
-        LIMIT 3
+        LIMIT 4
     )
     SELECT 
         TP.商品英文代碼,
@@ -97,7 +97,7 @@ if ($quarter) {
             PD.商品英文代碼, G.商品中文名稱
         ORDER BY 
             銷售額 DESC
-        LIMIT 3
+        LIMIT 4
     )
     SELECT 
         TP.商品英文代碼,

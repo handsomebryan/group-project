@@ -14,7 +14,7 @@ $query = "SELECT DISTINCT RIGHT(要保人序號, 5) AS id
           JOIN 保單資料 ON 保單資料.保單序號 = 保單要保人.保單序號
           JOIN 業務員保單序號 ON 保單要保人.保單序號 = 業務員保單序號.保單序號
           WHERE 保單資料.年化保費 IS NOT NULL
-          AND 保單資料.年化保費 <> 0           
+          AND 保單資料.年化保費 <> 0
           AND 業務員序號 LIKE '%$sid'
           order by id ASC";
 

@@ -139,7 +139,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
 
               }
             }, {
-              label: '除您以外的銷量第二名',
+              label: '平均銷量',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {

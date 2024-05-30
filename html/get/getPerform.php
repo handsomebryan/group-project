@@ -19,10 +19,11 @@ if ($id) {
         GROUP BY b.商品大分類;";
 }
 
-// Fetch top 1 and top 2 salesperson's data excluding user-specific ID
-$topSalesSql = "WITH salesperson_sales AS (
+// Fetch top 1 salesperson's data excluding user-specific ID
+$top1SalesSql = "WITH salesperson_sales AS (
     SELECT 
-        c.業務員序號,SUM(a.年化保費) as total_sales,ROW_NUMBER() OVER (ORDER BY SUM(a.年化保費) DESC) as rank
+        c.業務員序號,
+        SUM(a.年化保費) as total_sales
     FROM 
         保單資料 a
     JOIN 
@@ -34,14 +35,17 @@ $topSalesSql = "WITH salesperson_sales AS (
 ),
 top_salesperson AS (
     SELECT 
-        業務員序號,rank
+        業務員序號
     FROM 
         salesperson_sales
-    WHERE 
-        rank <= 2
+    ORDER BY 
+        total_sales DESC
+    LIMIT 1
 )
 SELECT 
-    b.商品大分類,c.業務員序號,SUM(a.年化保費) as total_sales,ts.rank
+    b.商品大分類,
+    c.業務員序號,
+    SUM(a.年化保費) as total_sales
 FROM 
     保單資料 a
 JOIN 
@@ -51,19 +55,35 @@ JOIN
 JOIN 
     top_salesperson ts ON c.業務員序號 = ts.業務員序號
 GROUP BY 
-    b.商品大分類,c.業務員序號,ts.rank";
+    b.商品大分類,
+    c.業務員序號
+ORDER BY 
+    total_sales DESC;";
 
+// T2 salesperson
+$top2SalesSql = "SELECT 
+    b.商品大分類,
+    AVG(a.年化保費) as total_sales
+FROM 
+    保單資料 a
+JOIN 
+    商品資料 b ON a.商品英文代碼 = b.商品英文代碼
+GROUP BY 
+    b.商品大分類
+ORDER BY 
+    total_sales DESC;
+                    ";
 $userResult = $conn->query($userSql);
 while ($row = $userResult->fetch_assoc()) {
     $data['user'][] = $row;
 }
-$topSalesResult = $conn->query($topSalesSql);
-while ($row = $topSalesResult->fetch_assoc()) {
-    if ($row['rank'] == 1) {
-        $data['T1'][] = $row;
-    } else if ($row['rank'] == 2) {
-        $data['T2'][] = $row;
-    }
+$top1Result = $conn->query($top1SalesSql);
+while ($row = $top1Result->fetch_assoc()) {
+    $data['T1'][] = $row;
+}
+$top2Result = $conn->query($top2SalesSql);
+while ($row = $top2Result->fetch_assoc()) {
+    $data['T2'][] = $row;
 }
 
 echo json_encode($data);

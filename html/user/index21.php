@@ -94,7 +94,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '0') {
           salesChart.destroy();
         }
 
-        var specificColors = ['#ed5739', '#64b579', '#a46ce0'];
+        var specificColors = ['#ed5739', '#64b579', '#a46ce0','#ffads0'];
 
         var labels = [...new Set(data.map(item => item[1]))];
 

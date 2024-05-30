@@ -23,7 +23,7 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND MONTH(保單生效日) = '$month' 
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND MONTH(保單生效日) = '$month' AND 年化保費 != 0
                     GROUP BY 
                         DATE(保單生效日)";
     }
@@ -36,7 +36,7 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' 
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND 年化保費 != 0
                     GROUP BY 
                         YEAR(保單生效日), MONTH(保單生效日)
                     ";
@@ -50,13 +50,14 @@ if ($id) {
                     JOIN 
                         業務員保單序號 ON 保單資料.保單序號 = 業務員保單序號.保單序號
                     WHERE 
-                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter' 
+                        業務員保單序號.業務員序號 LIKE '%$id' AND YEAR(保單生效日) = '$year' AND QUARTER(保單生效日) = '$quarter' AND 年化保費 != 0
                     GROUP BY 
                         MONTH(保單生效日)";
     }
 }
 
 // Fetch top 1 salesperson's data excluding user-specific ID
+//Daily condition (specific month and year)
 if ($month && $year) {
     // Daily condition
     $top1SalesSql = "WITH SalespersonTotalSales AS (
@@ -67,7 +68,7 @@ if ($month && $year) {
                         JOIN 
                             保單資料 pol ON sp.保單序號 = pol.保單序號
                         WHERE 
-                            YEAR(pol.保單生效日) = '$year' AND MONTH(pol.保單生效日) = '$month' AND sp.業務員序號 NOT LIKE '%$id'
+                            YEAR(pol.保單生效日) = '$year' AND sp.業務員序號 NOT LIKE '%$id'
                         GROUP BY 
                             sp.業務員序號
                     ),
@@ -171,89 +172,27 @@ if ($month && $year) {
 // T2 salesperson
 if ($month && $year) {
     // Daily condition
-    $top2SalesSql = "WITH SalespersonTotalSales AS (
-                        SELECT 
-                            sp.業務員序號, 
-                            SUM(pol.年化保費) AS TotalSales
-                        FROM 
-                            業務員保單序號 sp
-                        JOIN 
-                            保單資料 pol ON sp.保單序號 = pol.保單序號
-                        WHERE 
-                            YEAR(pol.保單生效日) = '$year' AND MONTH(pol.保單生效日) = '$month' AND sp.業務員序號 NOT LIKE '%$id'
-                        GROUP BY 
-                            sp.業務員序號
-                    ),
-                    RankedSalespersons AS (
-                        SELECT 
-                            業務員序號, 
-                            TotalSales,
-                            RANK() OVER (ORDER BY TotalSales DESC) AS SalesRank
-                        FROM 
-                            SalespersonTotalSales
-                    ),
-                    SecondTopSalesperson AS (
-                        SELECT 
-                            業務員序號
-                        FROM 
-                            RankedSalespersons
-                        WHERE 
-                            SalesRank = 2
-                    )
-                    SELECT 
-                        sp.業務員序號, DATE(pol.保單生效日) AS Date, SUM(pol.年化保費) AS TotalSales
+    $top2SalesSql = "SELECT 
+                        sp.業務員序號, DATE(pol.保單生效日) AS Date, AVG(pol.年化保費) AS TotalSales
                     FROM 
                         業務員保單序號 sp
                     JOIN 
                         保單資料 pol ON sp.保單序號 = pol.保單序號
-                    JOIN 
-                        SecondTopSalesperson tp ON sp.業務員序號 = tp.業務員序號
                     WHERE 
                         YEAR(pol.保單生效日) = '$year' AND MONTH(pol.保單生效日) = '$month'
                     GROUP BY 
                         DATE(pol.保單生效日)
                     HAVING 
-                        SUM(pol.年化保費) > 0
+                        AVG(pol.年化保費) > 0
                     ";
 } elseif ($quarter && $year) {
     // Quarterly condition
-    $top2SalesSql = "WITH SalespersonTotalSales AS (
-                        SELECT 
-                            sp.業務員序號, 
-                            SUM(pol.年化保費) AS TotalSales
-                        FROM 
-                            業務員保單序號 sp
-                        JOIN 
-                            保單資料 pol ON sp.保單序號 = pol.保單序號
-                        WHERE 
-                            YEAR(pol.保單生效日) = '$year' AND QUARTER(pol.保單生效日) = '$quarter' AND sp.業務員序號 NOT LIKE '%$id'
-                        GROUP BY 
-                            sp.業務員序號
-                    ),
-                    RankedSalespersons AS (
-                        SELECT 
-                            業務員序號, 
-                            TotalSales,
-                            RANK() OVER (ORDER BY TotalSales DESC) AS SalesRank
-                        FROM 
-                            SalespersonTotalSales
-                    ),
-                    SecondTopSalesperson AS (
-                        SELECT 
-                            業務員序號
-                        FROM 
-                            RankedSalespersons
-                        WHERE 
-                            SalesRank = 2
-                    )
-                    SELECT 
-                        sp.業務員序號, YEAR(pol.保單生效日) AS Year, MONTH(pol.保單生效日) AS Month, SUM(pol.年化保費) AS TotalSales
+    $top2SalesSql = "SELECT 
+                        sp.業務員序號, YEAR(pol.保單生效日) AS Year, MONTH(pol.保單生效日) AS Month, AVG(pol.年化保費) AS TotalSales
                     FROM 
                         業務員保單序號 sp
                     JOIN 
                         保單資料 pol ON sp.保單序號 = pol.保單序號
-                    JOIN 
-                        SecondTopSalesperson tp ON sp.業務員序號 = tp.業務員序號
                     WHERE 
                         YEAR(pol.保單生效日) = '$year' AND QUARTER(pol.保單生效日) = '$quarter'
                     GROUP BY 
@@ -261,43 +200,12 @@ if ($month && $year) {
                     ";
 } elseif ($year && !$month) {
     // Monthly condition
-    $top2SalesSql = "WITH SalespersonTotalSales AS (
-                        SELECT 
-                            sp.業務員序號, 
-                            SUM(pol.年化保費) AS TotalSales
-                        FROM 
-                            業務員保單序號 sp
-                        JOIN 
-                            保單資料 pol ON sp.保單序號 = pol.保單序號
-                        WHERE 
-                            YEAR(pol.保單生效日) = '$year' AND sp.業務員序號 NOT LIKE '%$id'
-                        GROUP BY 
-                            sp.業務員序號
-                    ),
-                    RankedSalespersons AS (
-                        SELECT 
-                            業務員序號, 
-                            TotalSales,
-                            RANK() OVER (ORDER BY TotalSales DESC) AS SalesRank
-                        FROM 
-                            SalespersonTotalSales
-                    ),
-                    SecondTopSalesperson AS (
-                        SELECT 
-                            業務員序號
-                        FROM 
-                            RankedSalespersons
-                        WHERE 
-                            SalesRank = 2
-                    )
-                    SELECT 
-                        sp.業務員序號, YEAR(pol.保單生效日) AS Year, MONTH(pol.保單生效日) AS Month, SUM(pol.年化保費) AS TotalSales
+    $top2SalesSql = "SELECT 
+                        sp.業務員序號, YEAR(pol.保單生效日) AS Year, MONTH(pol.保單生效日) AS Month, AVG(pol.年化保費) AS TotalSales
                     FROM 
                         業務員保單序號 sp
                     JOIN 
                         保單資料 pol ON sp.保單序號 = pol.保單序號
-                    JOIN 
-                        SecondTopSalesperson tp ON sp.業務員序號 = tp.業務員序號
                     WHERE 
                         YEAR(pol.保單生效日) = '$year'
                     GROUP BY 

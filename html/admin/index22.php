@@ -117,7 +117,7 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                 weight: 'bold'
               }
             }, {
-              label: '除指定業務員外的銷量第二名 (業務員序號: ' + (data.T2.length > 0 ? data.T2[0].業務員序號.slice(-5) : 'N/A') + ')',
+              label: '平均銷量',
               data: data.T2.map(d => d.TotalSales),
               backgroundColor: 'rgba(0, 225, 0, 0.2)',
               datalabels: {
