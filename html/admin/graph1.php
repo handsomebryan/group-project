@@ -107,7 +107,9 @@ $avg = $_SESSION["avg"];
                     datasets: [{
                         label: '#. 保單數',
                         data: [<?php echo $selfCount; ?>, <?php echo $nselfCount; ?>],
-                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -136,7 +138,9 @@ $avg = $_SESSION["avg"];
                     datasets: [{
                         label: '#. 保單金額',
                         data: [<?php echo $selfPerform; ?>, <?php echo $nselfPerform; ?>],
-                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                        borderWidth: 1
                     }]
                 }
             });

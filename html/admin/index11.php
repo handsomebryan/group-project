@@ -94,7 +94,9 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                         datasets: [{
                                             label: '#. 保單數',
                                             data: [selfCount, nselfCount],
-                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                                            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                                            borderWidth: 1
                                         }]
                                     },
                                     options: {
@@ -122,7 +124,9 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
                                         datasets: [{
                                             label: '#. 保單金額',
                                             data: [selfPerform, nselfPerform],
-                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                                            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                                            borderWidth: 1
                                         }]
                                     }
                                 });

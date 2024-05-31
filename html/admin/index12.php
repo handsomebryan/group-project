@@ -84,11 +84,8 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
               label: '招攬業務員之總年化保費',
               data: data.map(d => d.總保費),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              datalabels: {
-                color: 'black',
-                align: 'top',
-                weight: 'bold'
-              }
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
             }]
           },
           options: {

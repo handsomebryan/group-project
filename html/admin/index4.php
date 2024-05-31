@@ -77,14 +77,20 @@ if (!isset($_SESSION["username"]) || $_SESSION["role"] != '1') {
               label: '指定業務員 (業務員序號: ' + (data.user.length > 0 ? data.user[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.user.map(d => d.total_sales),
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
             }, {
               label: '除指定業務員外的銷量第一名 (業務員序號: ' + (data.T1.length > 0 ? data.T1[0].業務員序號.slice(-5) : 'N/A') + ')',
               data: data.T1.map(d => d.total_sales),
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
             }, {
               label: '平均銷量',
               data: data.T2.map(d => d.total_sales),
               backgroundColor: 'rgba(30, 225, 54, 0.2)',
+              borderColor: 'rgba(30, 225, 54, 1)',
+              borderWidth: 1
             }]
           },
           options: {
